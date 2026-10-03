@@ -39,7 +39,7 @@ Descrição do projeto: $ARGUMENTS
 ## Nomes dos subagentes
 
 Instalada como plugin, a skill tem subagentes com prefixo: `molbytes:scaffold-architect`,
-`molbytes:scaffold-implementer` etc. Copiada para `.claude/`, eles não têm
+`molbytes:scaffold-implementer` etc. Copiada manualmente para `.claude/`, eles não têm
 prefixo: `scaffold-architect`. Antes do primeiro delegamento, veja qual das duas
 formas existe na lista de agentes disponíveis e use sempre essa. Nas tabelas
 abaixo os nomes aparecem sem prefixo.

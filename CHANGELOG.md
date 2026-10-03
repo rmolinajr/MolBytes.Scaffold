@@ -2,6 +2,12 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.5.1
+
+- Layout padrão de plugin: `skills/` e `agents/` na raiz do repositório. Com
+  os caminhos personalizados em `.claude/`, o plugin carregava a skill mas não
+  os 8 subagentes.
+
 ## v0.5
 
 - Ticket `INFRA-000` obrigatório: estrutura, runner de testes, linter e todas as

@@ -73,22 +73,21 @@ Outras formas de instalar e pré-requisitos (Docker): [INSTALL.md](INSTALL.md). 
 .claude-plugin/
   plugin.json                   # manifesto do plugin (autor, versão, licença)
   marketplace.json              # permite instalar com /plugin
-.claude/
-  skills/molbytes-scaffold/
-    SKILL.md                    # orquestrador
-    references/
-      stages.md                 # instruções de cada estágio
-      model-routing.md          # qual modelo em cada estágio/ticket
-      security.md               # ameaças, código seguro, auditoria, rescan
-      watchdog.md               # limites, orçamento de tempo, reexecução
-      state-template.md         # modelo do .project/state.md
-  agents/
-    scaffold-*.md               # 8 subagentes
+skills/molbytes-scaffold/
+  SKILL.md                      # orquestrador
+  references/
+    stages.md                   # instruções de cada estágio
+    model-routing.md            # qual modelo em cada estágio/ticket
+    security.md                 # ameaças, código seguro, auditoria, rescan
+    watchdog.md                 # limites, orçamento de tempo, reexecução
+    state-template.md           # modelo do .project/state.md
+agents/
+  scaffold-*.md                 # 8 subagentes
 ```
 
 ## Status
 
-v0.5, ainda não validada numa execução completa. Não substitui um pentest
+v0.5.1, ainda não validada numa execução completa. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor
