@@ -12,7 +12,7 @@ No Claude Code:
 Para atualizar depois: `/plugin marketplace update molbytes`.
 
 Como plugin, o comando fica `/molbytes:molbytes-scaffold` e os subagentes
-aparecem como `molbytes:scaffold-*` em `/agents`.
+aparecem como `molbytes:scaffold-*` (confira em `/plugin` → Installed → molbytes).
 
 ## Opção 2 — cópia manual em todos os projetos
 
@@ -43,7 +43,8 @@ Vantagem: a skill vai junto no git do projeto.
 ## Usar
 
 1. Abra o Claude Code na pasta do projeto.
-2. Confira que os subagentes aparecem: `/agents`.
+2. Confira que os subagentes foram carregados: em `/plugin` → Installed, ou
+   pergunte ao Claude "liste os subagentes scaffold disponíveis".
 3. Rode (como plugin, use `/molbytes:molbytes-scaffold`):
 
        /molbytes-scaffold Sistema PDV para restaurante: terminal, cozinha, admin, offline-first, Stripe e PIX

@@ -61,11 +61,11 @@ Em cada verificação, para cada START sem END, calcule o tempo decorrido:
 - acima de **2x**: avise o usuário:
 
   > ⚠️ `BE-004` (scaffold-implementer, sonnet) está rodando há 34 min;
-  > o esperado era 15. Veja em `/agents` (aba Running) ou `/tasks`.
+  > o esperado era 15. Veja em `/tasks`.
   > Se estiver repetindo a mesma coisa, pare ele por lá e me diga `parei BE-004`.
 
 O orquestrador não força a parada de um subagente: quem para é o usuário, pelo
-`/tasks` ou `/agents`. Os outros subagentes da onda continuam.
+`/tasks`. Os outros subagentes da onda continuam.
 
 ## Tratamento do resultado
 

@@ -18,6 +18,7 @@ Todas as mudanças relevantes do molbytes.scaffold.
 - Reexecução de ticket também apaga arquivos novos (`git clean`).
 - Texto genérico ("o usuário"), sem nomes nem caminhos pessoais.
 - Licença MIT.
+- `/agents` saiu do Claude Code: verificação agora por `/plugin` e parada por `/tasks`.
 - Distribuição como plugin do Claude Code (`/plugin install molbytes@molbytes`).
 
 ## v0.4 — segurança
