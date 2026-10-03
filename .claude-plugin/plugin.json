@@ -10,7 +10,24 @@
   "homepage": "https://www.molbytes.io",
   "repository": "https://github.com/rmolinajr/MolBytes.Scaffold",
   "license": "MIT",
-  "keywords": ["scaffold", "pipeline", "spec", "tickets", "security", "code-review", "subagents"],
+  "keywords": [
+    "scaffold",
+    "pipeline",
+    "spec",
+    "tickets",
+    "security",
+    "code-review",
+    "subagents"
+  ],
   "skills": "./.claude/skills/",
-  "agents": "./.claude/agents/"
+  "agents": [
+    "./.claude/agents/scaffold-architect.md",
+    "./.claude/agents/scaffold-designer.md",
+    "./.claude/agents/scaffold-implementer.md",
+    "./.claude/agents/scaffold-planner.md",
+    "./.claude/agents/scaffold-reviewer.md",
+    "./.claude/agents/scaffold-router.md",
+    "./.claude/agents/scaffold-security.md",
+    "./.claude/agents/scaffold-tester.md"
+  ]
 }
