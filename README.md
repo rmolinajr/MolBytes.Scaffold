@@ -1,5 +1,7 @@
 # MolBytes.Scaffold
 
+![MolBytes Scaffold](assets/cover.png)
+
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
 ![versão](https://img.shields.io/badge/versão-0.5-blue)

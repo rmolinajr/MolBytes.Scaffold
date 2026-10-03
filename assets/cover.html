@@ -1,0 +1,45 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1600px;height:900px;overflow:hidden}
+  body{background:#0b0f17;font-family:"Segoe UI",Inter,system-ui,sans-serif;color:#e6edf3;position:relative}
+  .grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:48px 48px}
+  .glow{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,#2563eb40,transparent 65%);top:-300px;right:-250px}
+  .glow2{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,#d9775722,transparent 65%);bottom:-380px;left:-200px}
+  .wrap{position:absolute;inset:0;padding:96px 110px;display:flex;flex-direction:column}
+  .brand{font-size:26px;letter-spacing:6px;color:#7aa2ff;font-weight:600}
+  h1{font-size:118px;font-weight:800;letter-spacing:-3px;margin-top:22px;line-height:1}
+  h1 span{background:linear-gradient(90deg,#4f8bff,#7cc4ff);-webkit-background-clip:text;color:transparent}
+  .sub{font-size:36px;color:#9fb0c3;margin-top:28px;max-width:1150px;line-height:1.35}
+  .pipe{margin-top:auto;display:flex;align-items:center}
+  .st{display:flex;flex-direction:column;align-items:center;width:100px}
+  .dot{width:54px;height:54px;border-radius:50%;border:2px solid #2f6bff;background:#101a2e;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#cfe0ff}
+  .dot.k{background:#2563eb;border-color:#5b8cff;color:#fff;box-shadow:0 0 24px #2563eb88}
+  .lb{font-size:15px;color:#7d8da1;margin-top:12px;white-space:nowrap}
+  .ln{flex:1;height:2px;background:linear-gradient(90deg,#2f6bff,#2f6bff55);margin-bottom:30px;min-width:16px}
+  .tags{position:absolute;top:96px;right:110px;display:flex;gap:12px}
+  .tag{border:1px solid #2a3547;background:#111826cc;border-radius:999px;padding:10px 20px;font-size:20px;color:#b8c6d8}
+  .tag b{color:#d97757}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div><div class="glow2"></div>
+<div class="tags"><div class="tag">para <b>Claude Code</b></div><div class="tag">MIT</div><div class="tag">v0.5.1</div></div>
+<div class="wrap">
+  <div class="brand">MOLBYTES</div>
+  <h1>MolBytes <span>Scaffold</span></h1>
+  <div class="sub">Da ideia ao código testado, auditado e revisado — 11 estágios orquestrados por subagentes especializados.</div>
+  <div class="pipe">
+    <div class="st"><div class="dot">1</div><div class="lb">grill-me</div></div><div class="ln"></div>
+    <div class="st"><div class="dot k">2</div><div class="lb">spec</div></div><div class="ln"></div>
+    <div class="st"><div class="dot">3</div><div class="lb">riscos</div></div><div class="ln"></div>
+    <div class="st"><div class="dot">4</div><div class="lb">design</div></div><div class="ln"></div>
+    <div class="st"><div class="dot">5</div><div class="lb">tickets</div></div><div class="ln"></div>
+    <div class="st"><div class="dot k">6</div><div class="lb">modelos</div></div><div class="ln"></div>
+    <div class="st"><div class="dot">7</div><div class="lb">código</div></div><div class="ln"></div>
+    <div class="st"><div class="dot">8</div><div class="lb">testes</div></div><div class="ln"></div>
+    <div class="st"><div class="dot">9</div><div class="lb">segurança</div></div><div class="ln"></div>
+    <div class="st"><div class="dot k">10</div><div class="lb">review</div></div><div class="ln"></div>
+    <div class="st"><div class="dot">11</div><div class="lb">gate</div></div>
+  </div>
+</div>
+</body></html>
