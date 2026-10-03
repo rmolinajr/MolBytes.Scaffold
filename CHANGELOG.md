@@ -2,6 +2,15 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.5.2
+
+- Agentes sem viés de PDV: o designer adapta o design ao produto e aos
+  dispositivos da spec; o reviewer prioriza os riscos altos de `risks.yaml` em
+  vez de uma ordem fixa (dinheiro, sync offline).
+- `references/security.md`: superfícies de ataque, pagamentos e revisão manual
+  passam a valer conforme o projeto ("se houver", "ex.:").
+- INSTALL.md: seção "Recomendados (opcional)".
+
 ## v0.5.1
 
 - Layout padrão de plugin: `skills/` e `agents/` na raiz do repositório. Com

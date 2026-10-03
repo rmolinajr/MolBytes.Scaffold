@@ -1,4 +1,4 @@
-# Instalar molbytes.scaffold (Claude Code) — v0.5.1
+# Instalar molbytes.scaffold (Claude Code) — v0.5.2
 
 A skill são arquivos Markdown que o Claude Code lê. Há três formas de instalar.
 
@@ -78,7 +78,7 @@ de `~/.claude/skills/` e `~/.claude/agents/`.
 
 ## Status
 
-v0.5.1, ainda não testada numa execução real. Espere ajustes depois do primeiro
+v0.5.2, ainda não testada numa execução real. Espere ajustes depois do primeiro
 projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 
@@ -94,6 +94,28 @@ Com o Docker Desktop aberto, baixe uma vez (PowerShell):
 
 Isso continua não substituindo um pentest profissional antes de processar
 pagamentos reais.
+
+## Recomendados (opcional)
+
+O pipeline funciona sozinho; nada abaixo é dependência. São complementos para
+antes ou depois dele:
+
+| Complemento | Quando ajuda |
+|---|---|
+| `frontend-design` | Estágio 7, tickets de frontend: transforma os wireframes do designer em interface com acabamento. |
+| `superpowers` | Depois do pipeline: debugging guiado, TDD e verificação antes de dar como pronto, para quando um ticket trava ou surge um bug. |
+| `/security-review` e `/code-review` | Nos PRs depois da entrega: revisam cada mudança nova. Já vêm no Claude Code. |
+
+Os dois plugins estão no marketplace oficial da Anthropic:
+
+    /plugin install frontend-design@claude-plugins-official
+    /plugin install superpowers@claude-plugins-official
+
+Se o marketplace não estiver adicionado: `/plugin marketplace add anthropics/claude-plugins-official`.
+
+Não recomendados junto: uma skill `grill-me` completa (o estágio 1 já faz a
+entrevista no formato que o `qa.json` espera) e plugins de memória de sessão
+(duplicam o papel de `.project/state.md` + git na retomada).
 
 ---
 

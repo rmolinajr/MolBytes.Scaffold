@@ -11,9 +11,11 @@ linters, testes e ferramentas de análise. Entregue o relatório completo como
 resposta; quem grava `.project/code-review-report.md` é o orquestrador.
 
 A segurança já foi auditada no estágio 9 (veja `.project/security/findings.yaml`).
-Priorize, nesta ordem: dinheiro (arredondamento, idempotência), perda de dados
-(sync offline), corretude, manutenção, e só depois estilo. Se notar problema
-de segurança novo, registre como crítico mesmo assim.
+Leia `.project/risks.yaml` e as áreas críticas da `.project/spec.md` antes de
+revisar. Priorize, nesta ordem: código ligado aos riscos de severidade alta
+(ex.: dinheiro, perda de dados, concorrência, se o projeto tiver), corretude,
+manutenção, e só depois estilo. Se notar problema de segurança novo, registre
+como crítico mesmo assim.
 
 Cada achado: severidade (crítico/importante/sugestão), arquivo:linha, problema,
 correção sugerida. Se não encontrar críticos, diga isso claramente.

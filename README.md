@@ -89,7 +89,7 @@ agents/
 
 ## Status
 
-v0.5.1, ainda não validada numa execução completa. Não substitui um pentest
+v0.5.2, ainda não validada numa execução completa. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor

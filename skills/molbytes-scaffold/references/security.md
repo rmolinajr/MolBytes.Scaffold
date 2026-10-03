@@ -10,15 +10,15 @@ processar pagamentos reais.
 
 ### Na spec: seção "Segurança e dados pessoais"
 
-1. **Dados pessoais:** tabela com dado, onde fica (servidor, SQLite local,
+1. **Dados pessoais:** tabela com dado, onde fica (servidor, banco local,
    logs, backups), quem acessa, por quanto tempo é guardado, base legal
    (LGPD/RGPD).
-2. **Superfícies de ataque:** login, APIs públicas, webhooks (Stripe, PIX),
-   sincronização offline, painel admin, uploads.
+2. **Superfícies de ataque:** as que o projeto tiver, ex.: login, APIs
+   públicas, webhooks, sincronização offline, painel admin, uploads.
 3. **Ameaças por superfície (STRIDE resumido):** quem falsifica identidade,
    adultera dados, nega ter feito algo, vaza informação, derruba o serviço,
    ganha permissão que não tem. Só as que se aplicam de verdade.
-4. **Pagamentos:** cartão nunca passa pelo nosso servidor (Stripe Checkout ou
+4. **Pagamentos (se houver):** cartão nunca passa pelo nosso servidor (Stripe Checkout ou
    Elements). Webhooks validados por assinatura. Operações de cobrança
    idempotentes.
 
@@ -90,7 +90,8 @@ Se o Docker não estiver rodando, avise o usuário em vez de pular as ferramenta
 Depois das ferramentas, revisar o código contra:
 - OWASP Top 10 (controle de acesso, injeção, autenticação, configuração...);
 - os `security_requirements` (cada um tem teste e está implementado?);
-- fluxos de pagamento, webhook e sincronização offline, linha a linha.
+- os fluxos críticos do projeto (ex.: pagamento, webhook, sincronização
+  offline, controle de acesso), linha a linha.
 
 ### 9.2 Triagem → `.project/security/findings.yaml`
 
