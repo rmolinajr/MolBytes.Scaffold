@@ -1,5 +1,11 @@
 # MolBytes.Scaffold
 
+> Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
+
+![versão](https://img.shields.io/badge/versão-0.5-blue)
+![licença](https://img.shields.io/badge/licença-MIT-green)
+![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
+
 Skill para o [Claude Code](https://claude.com/claude-code) que leva um projeto
 de software da ideia ao código testado, auditado e revisado, em 11 estágios.
 
@@ -44,17 +50,29 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 
 ## Uso rápido
 
+Instale como plugin no Claude Code:
+
 ```
-/molbytes-scaffold Sistema PDV para restaurante: terminal, cozinha, admin, offline-first, Stripe e PIX
+/plugin marketplace add rmolinajr/MolBytes.Scaffold
+/plugin install molbytes@molbytes
+```
+
+E rode:
+
+```
+/molbytes:molbytes-scaffold Sistema PDV para restaurante: terminal, cozinha, admin, offline-first, Stripe e PIX
 ```
 
 Flags no texto do pedido: `--ate <estágio>`, `--sem-design`, `--economico`.
 
-Instalação, pré-requisitos (Docker) e histórico de versões: [INSTALL.md](INSTALL.md).
+Outras formas de instalar e pré-requisitos (Docker): [INSTALL.md](INSTALL.md). Histórico: [CHANGELOG.md](CHANGELOG.md).
 
 ## Estrutura
 
 ```
+.claude-plugin/
+  plugin.json                   # manifesto do plugin (autor, versão, licença)
+  marketplace.json              # permite instalar com /plugin
 .claude/
   skills/molbytes-scaffold/
     SKILL.md                    # orquestrador
@@ -72,3 +90,19 @@ Instalação, pré-requisitos (Docker) e histórico de versões: [INSTALL.md](IN
 
 v0.5, ainda não validada numa execução completa. Não substitui um pentest
 profissional antes de processar pagamentos reais.
+
+## Autor
+
+Criado por **Roberto Molina**, fundador da **MolBytes**.
+
+- Site: [www.molbytes.io](https://www.molbytes.io)
+
+## Suporte e contato
+
+Dúvidas, sugestões ou uso em empresa: fale com a MolBytes pelo site
+[www.molbytes.io](https://www.molbytes.io).
+
+## Licença
+
+[MIT](LICENSE) — livre para usar, modificar e distribuir, mantendo o aviso de
+copyright da MolBytes.

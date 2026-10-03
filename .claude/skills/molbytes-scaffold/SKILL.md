@@ -36,6 +36,14 @@ Descrição do projeto: $ARGUMENTS
   `references/watchdog.md` (orçamento de tempo, resultado parcial, travamento).
   O usuário pode digitar `status` a qualquer momento.
 
+## Nomes dos subagentes
+
+Instalada como plugin, a skill tem subagentes com prefixo: `molbytes:scaffold-architect`,
+`molbytes:scaffold-implementer` etc. Copiada para `.claude/`, eles não têm
+prefixo: `scaffold-architect`. Antes do primeiro delegamento, veja qual das duas
+formas existe na lista de agentes disponíveis e use sempre essa. Nas tabelas
+abaixo os nomes aparecem sem prefixo.
+
 ## Pipeline
 
 | # | Estágio | Quem executa | Saída | Pausa? |
