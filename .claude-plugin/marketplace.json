@@ -9,7 +9,7 @@
       "name": "molbytes",
       "source": "./",
       "description": "Pipeline de 11 estágios: ideia → spec → tickets → implementação paralela → testes → segurança → code review.",
-      "version": "0.5.2"
+      "version": "0.6.0"
     }
   ]
 }

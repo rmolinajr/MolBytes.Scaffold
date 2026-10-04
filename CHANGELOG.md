@@ -2,6 +2,13 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.6
+
+- Extensões: antes do estágio 1 (e ao retomar), o orquestrador carrega uma
+  skill `molbytes-extension` se houver uma instalada e segue a tabela dela
+  sobre em que estágio entra cada referência. Permite templates por stack,
+  domínio ou empresa sem alterar o pipeline.
+
 ## v0.5.2
 
 - Agentes sem viés de PDV: o designer adapta o design ao produto e aos

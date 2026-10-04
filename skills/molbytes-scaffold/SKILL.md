@@ -44,6 +44,18 @@ prefixo: `scaffold-architect`. Antes do primeiro delegamento, veja qual das duas
 formas existe na lista de agentes disponíveis e use sempre essa. Nas tabelas
 abaixo os nomes aparecem sem prefixo.
 
+## Extensões
+
+Antes do estágio 1, e sempre que retomar, veja na lista de skills disponíveis
+se existe uma chamada `molbytes-extension` (com ou sem prefixo de plugin) ou
+cuja descrição comece com "Extensão" do molbytes.scaffold. Se existir,
+invoque-a e siga a tabela dela sobre em que estágio entra cada referência.
+Diga ao usuário em uma linha qual extensão foi carregada.
+
+Extensões complementam o pipeline; não removem as pausas de aprovação, o
+roteamento explícito de modelo nem o gate do estágio 11. Sem extensão, o
+pipeline funciona igual.
+
 ## Pipeline
 
 | # | Estágio | Quem executa | Saída | Pausa? |
