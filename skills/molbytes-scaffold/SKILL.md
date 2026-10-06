@@ -21,6 +21,16 @@ com git próprio. Neste arquivo e nas referências, **`.project/` significa a
 pasta de documentos**; no modo externo, use o caminho real e informe-o a cada
 subagente.
 
+## Projeto novo ou alteração
+
+Logo depois, se o projeto já tiver código, pergunte se é projeto novo ou
+alteração do sistema existente e siga `references/alteracao.md`. No modo
+alteração, antes do estágio 1: registre o ponto de partida (`base_commit` e os
+testes que já falham) e verifique a **documentação do sistema** (no projeto ou
+fora dele). Se o sistema tiver documentação, ela é atualizada junto com o
+código e entra no gate do estágio 11; se não tiver, só o sistema é alterado.
+Informe o modo a cada subagente.
+
 ## Regras gerais
 
 - Artefatos de planejamento vão em `.project/`. Código de produção vai na raiz do

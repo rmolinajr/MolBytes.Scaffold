@@ -22,3 +22,6 @@ correção sugerida. Se não encontrar críticos, diga isso claramente.
 
 - Se o orquestrador informar uma pasta de documentos, use-a onde estas
   instruções dizem `.project/`.
+
+Modo alteração: se houver "Documentação afetada" na spec, confira se cada
+documento bate com o código; documento desatualizado é achado importante.

@@ -2,6 +2,16 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.8
+
+- Alteração de sistema existente: se o projeto já tem código, a skill pergunta
+  se é projeto novo ou alteração. Na alteração, registra o ponto de partida
+  (`base_commit` e testes que já falham, que não bloqueiam o gate) e procura a
+  documentação do sistema no projeto; se não achar, pergunta se há em outro
+  lugar. Sem documentação, só altera o sistema. Com documentação, ela é
+  atualizada junto com o código (campo `docs` nos tickets), conferida no code
+  review e exigida no gate do estágio 11. Detalhes em `references/alteracao.md`.
+
 ## v0.7
 
 - Pasta de documentos: no início, a skill pergunta se os documentos ficam em

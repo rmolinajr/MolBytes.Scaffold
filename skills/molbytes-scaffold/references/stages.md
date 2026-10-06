@@ -1,5 +1,8 @@
 # Estágios em detalhe
 
+No **modo alteração**, siga também `references/alteracao.md` (ponto de
+partida, documentação do sistema e as regras de cada estágio marcadas abaixo).
+
 ## 1. grill-me (sessão principal)
 
 Entreviste o usuário sobre o projeto. Uma pergunta por vez, no máximo 8.
@@ -19,6 +22,9 @@ Peça ao architect para gerar `.project/spec.md` a partir de `qa.json`, com:
 visão geral, arquitetura, modelos de dados, endpoints/contratos, fluxos de
 usuário, requisitos não funcionais, fora do escopo, e a seção
 **"Segurança e dados pessoais"** descrita em `references/security.md` (parte A).
+
+**Modo alteração com documentação do sistema:** a spec ganha a seção
+"Documentação afetada" (ver `alteracao.md`).
 
 Depois: mostre um resumo de 10 linhas, peça ao usuário para revisar o arquivo e
 **espere a aprovação explícita** antes de continuar. Se ele pedir mudanças,
@@ -59,6 +65,7 @@ Gere `.project/tickets.yaml`. Cada ticket:
   area: backend|frontend|infra
   depende_de: []
   arquivos: [backend/app/auth.py]   # diretórios/arquivos que o ticket toca
+  docs: [README.md]                 # modo alteração: documentos do sistema que o ticket atualiza
   criterios_aceite: [...]
   testes: [...]
 ```
@@ -112,6 +119,8 @@ Para cada onda, em ordem:
 - Ao terminar a onda, rode os testes unitários da área. Aplique o escalonamento
   de `model-routing.md` se falharem.
 - Commit por onda: `scaffold(7): onda N`.
+- **Modo alteração:** passe ao implementador a lista `docs` do ticket; ele
+  atualiza esses documentos junto com o código.
 
 ## 8. tests → scaffold-tester
 
@@ -152,6 +161,9 @@ Rode também os linters do projeto, se existirem. A segurança já foi auditada 
 estágio 9: o reviewer foca em corretude e manutenção, mas ainda registra
 qualquer problema de segurança que notar.
 
+**Modo alteração com documentação do sistema:** o reviewer confere se cada
+documento da "Documentação afetada" bate com o código.
+
 Apresente o resumo ao usuário e **pergunte** se quer que os críticos sejam
 corrigidos (em opus) antes de seguir.
 
@@ -163,7 +175,10 @@ corrigidos (em opus) antes de seguir.
 3. **Gate:** o pipeline só termina como "concluído" se:
    - todos os testes passam;
    - não há achado crítico ou alto aberto;
-   - todo achado médio aberto está em `accepted.md`.
+   - todo achado médio aberto está em `accepted.md`;
+   - **modo alteração:** nenhuma falha de teste nova em relação ao ponto de
+     partida, e todo documento do sistema da "Documentação afetada" foi
+     atualizado (os de `site` vão para o relatório como atualização manual).
    Se algo falhar, mostre o motivo e pergunte ao usuário: corrigir agora, ou
    encerrar como "concluído com pendências" (registrado no relatório).
 4. Gere `.project/pipeline-report.md`: estágios, modelos usados, escaladas,

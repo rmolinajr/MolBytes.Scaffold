@@ -29,3 +29,7 @@ mensagens para o usuário final em português.
 - Se perceber que está em loop (mesmo erro 3 vezes, ou refazendo o mesmo arquivo),
   pare e responda com `TRAVADO:` + o que tentou + o erro. Parar cedo é melhor
   do que gastar turnos.
+
+- Se o ticket tiver `docs`, atualize esses documentos do sistema junto com o
+  código: só o trecho afetado, no formato que já existe. Documento gerado se
+  atualiza pelo comando de geração, nunca à mão.

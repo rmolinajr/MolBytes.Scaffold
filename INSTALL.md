@@ -1,4 +1,4 @@
-# Instalar molbytes.scaffold (Claude Code) — v0.7
+# Instalar molbytes.scaffold (Claude Code) — v0.8
 
 A skill são arquivos Markdown que o Claude Code lê. Há três formas de instalar.
 
@@ -51,6 +51,12 @@ Vantagem: a skill vai junto no git do projeto.
 
 4. Responda o grill-me, aprove a spec, aprove o plano de implementação
    (estágio 6) e aprove o code review no final.
+
+Para alterar um sistema que já existe, abra o Claude Code na pasta dele e
+descreva a mudança (ex.: `/molbytes-scaffold Alteração: aceitar PIX no
+checkout`). A skill procura a documentação do sistema; se não achar, pergunta
+se há em outro lugar. Se houver, ela é atualizada junto com o código; se não
+houver, só o sistema é alterado.
 
 Sugestão: rode a sessão principal em sonnet (`/model sonnet`). Os estágios
 pesados já vão para opus pelos subagentes, então não precisa pagar opus na
@@ -112,7 +118,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.7, ainda não testada numa execução real. Espere ajustes depois do primeiro
+v0.8, ainda não testada numa execução real. Espere ajustes depois do primeiro
 projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 
