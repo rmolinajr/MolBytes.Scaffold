@@ -14,3 +14,6 @@ modelos, escolha o mais forte.
 
 Monte ondas respeitando `depende_de`. `INFRA-000` fica sozinho na onda 1. Dentro de uma onda, nenhum par de tickets
 pode compartilhar arquivos em `arquivos`. Escreva apenas `.project/agent-map.json`.
+
+- Se o orquestrador informar uma pasta de documentos, use-a onde estas
+  instruções dizem `.project/`.

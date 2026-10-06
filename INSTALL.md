@@ -1,4 +1,4 @@
-# Instalar molbytes.scaffold (Claude Code) — v0.6
+# Instalar molbytes.scaffold (Claude Code) — v0.7
 
 A skill são arquivos Markdown que o Claude Code lê. Há três formas de instalar.
 
@@ -56,6 +56,38 @@ Sugestão: rode a sessão principal em sonnet (`/model sonnet`). Os estágios
 pesados já vão para opus pelos subagentes, então não precisa pagar opus na
 conversa inteira.
 
+## Onde ficam os documentos
+
+No início de um projeto novo, a skill pergunta onde guardar os documentos
+(spec, design, tickets, relatórios):
+
+1. **Dentro do projeto**, em `.project/` (padrão).
+2. **Em outra pasta**, para não misturar documentos com o código do cliente.
+   Você escolhe a pasta-mãe (ex.: `D:\Clientes`) e a skill cria
+   `<pasta-mãe>/<nome-do-projeto>/`.
+
+**A pasta de documentos precisa estar em git para não haver perdas.** Na opção
+2, a skill roda `git init` nela e faz um commit por estágio. O git local não
+protege contra perda do disco: configure um remoto privado para ela
+(ex.: um repositório privado no GitHub) e faça push.
+
+Para o Claude Code não pedir permissão a cada arquivo gravado fora do projeto,
+autorize a pasta-mãe uma vez em `~/.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "additionalDirectories": ["D:/Clientes"]
+  }
+}
+```
+
+ou use `/add-dir D:\Clientes` na sessão.
+
+O vínculo entre projeto e documentos fica em `~/.molbytes/projetos.json`, fora
+do projeto do cliente. Se a pasta for movida ou apagada, a skill avisa onde
+procurou e pergunta onde estão os documentos.
+
 ## Compactação de contexto (uma vez só)
 
 Rode no Claude Code:
@@ -67,18 +99,20 @@ segurança. Fica salvo nas suas configurações para as próximas sessões. Para
 voltar ao padrão: `/autocompact auto`.
 
 Além disso, a skill avisa nos fins dos estágios 2, 5, 7 e 9 que é um bom momento
-para `/compact`. Rode, depois digite `continuar`: ela relê `.project/state.md`
+para `/compact`. Rode, depois digite `continuar`: ela relê o `state.md` da pasta de documentos
 e segue de onde parou. Isso também funciona para retomar em outro dia, numa
 sessão nova.
 
 ## Backup (antes de formatar o PC)
 
 Como plugin, basta reinstalar pelo marketplace. Na cópia manual, faça backup
-de `~/.claude/skills/` e `~/.claude/agents/`.
+de `~/.claude/skills/` e `~/.claude/agents/`. Se usa pasta de documentos
+externa, faça backup também de `~/.molbytes/projetos.json` (ou apenas responda
+onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.6, ainda não testada numa execução real. Espere ajustes depois do primeiro
+v0.7, ainda não testada numa execução real. Espere ajustes depois do primeiro
 projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 

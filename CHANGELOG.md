@@ -2,6 +2,14 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.7
+
+- Pasta de documentos: no início, a skill pergunta se os documentos ficam em
+  `.project/` (padrão) ou numa pasta separada, com git próprio, para não sujar
+  o projeto do cliente. O vínculo fica em `~/.molbytes/projetos.json`; se a
+  pasta sumir, a skill diz onde procurou e pergunta onde estão os documentos.
+  Subagentes recebem o caminho real. Detalhes em `references/documentos.md`.
+
 ## v0.6
 
 - Extensões: antes do estágio 1 (e ao retomar), o orquestrador carrega uma

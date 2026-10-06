@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.6-blue)
+![versão](https://img.shields.io/badge/versão-0.7-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 
@@ -33,8 +33,11 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 
 ## Destaques
 
-- **Retomável:** `.project/state.md` + git são a fonte da verdade. Depois de
+- **Retomável:** `state.md` + git são a fonte da verdade. Depois de
   `/compact` ou numa sessão nova, digite `continuar`.
+- **Documentos fora do projeto, se quiser:** spec, design e relatórios ficam em
+  `.project/` ou numa pasta separada com git próprio, para não sujar o projeto
+  do cliente. Ver [INSTALL.md](INSTALL.md#onde-ficam-os-documentos).
 - **Paralelismo sem conflito:** tickets da mesma onda nunca tocam os mesmos
   arquivos; um ticket `INFRA-000` prepara estrutura, testes e dependências antes
   de tudo.
@@ -83,13 +86,14 @@ skills/molbytes-scaffold/
     security.md                 # ameaças, código seguro, auditoria, rescan
     watchdog.md                 # limites, orçamento de tempo, reexecução
     state-template.md           # modelo do .project/state.md
+    documentos.md               # pasta de documentos: interna ou externa
 agents/
   scaffold-*.md                 # 8 subagentes
 ```
 
 ## Status
 
-v0.6, ainda não validada numa execução completa. Não substitui um pentest
+v0.7, ainda não validada numa execução completa. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor

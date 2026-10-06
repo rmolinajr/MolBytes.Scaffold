@@ -7,6 +7,7 @@ Reescreva o arquivo inteiro ao fim de cada estágio. Não acumule histórico aqu
 # Estado do scaffold
 
 Projeto: <uma linha>
+Documentos: <caminho da pasta de documentos (.project/ ou externa)>
 Atualizado: <data/hora> — fim do estágio <N> (<nome>)
 
 ## Estágios

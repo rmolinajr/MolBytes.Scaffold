@@ -4,12 +4,15 @@
     "name": "MolBytes",
     "url": "https://www.molbytes.io"
   },
+  "metadata": {
+    "description": "molbytes.scaffold: pipeline de 11 estágios da ideia ao código testado e revisado."
+  },
   "plugins": [
     {
       "name": "molbytes",
       "source": "./",
       "description": "Pipeline de 11 estágios: ideia → spec → tickets → implementação paralela → testes → segurança → code review.",
-      "version": "0.6.0"
+      "version": "0.7.0"
     }
   ]
 }

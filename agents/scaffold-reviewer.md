@@ -19,3 +19,6 @@ como crítico mesmo assim.
 
 Cada achado: severidade (crítico/importante/sugestão), arquivo:linha, problema,
 correção sugerida. Se não encontrar críticos, diga isso claramente.
+
+- Se o orquestrador informar uma pasta de documentos, use-a onde estas
+  instruções dizem `.project/`.

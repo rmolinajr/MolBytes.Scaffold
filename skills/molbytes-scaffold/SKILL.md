@@ -12,6 +12,15 @@ Você mesmo não escreve código de produção.
 
 Descrição do projeto: $ARGUMENTS
 
+## Pasta de documentos
+
+Antes de tudo (antes das extensões e do estágio 1) e sempre que retomar,
+resolva onde ficam os documentos seguindo `references/documentos.md`: dentro
+do projeto (`.project/`, padrão) ou numa pasta separada escolhida pelo usuário,
+com git próprio. Neste arquivo e nas referências, **`.project/` significa a
+pasta de documentos**; no modo externo, use o caminho real e informe-o a cada
+subagente.
+
 ## Regras gerais
 
 - Artefatos de planejamento vão em `.project/`. Código de produção vai na raiz do
@@ -20,10 +29,12 @@ Descrição do projeto: $ARGUMENTS
   modelo explicitamente. Nunca deixe um subagente herdar o modelo da sessão por acaso.
 - Ao fim de cada estágio: confira que o arquivo esperado existe e não está vazio,
   atualize `.project/state.md` (ver "Estado e compactação"), depois faça
-  `git add` + `git commit -m "scaffold(N): <estágio>"`.
+  `git add` + `git commit -m "scaffold(N): <estágio>"` (no modo externo, nos
+  dois repositórios: documentos e, se houve mudança de código, projeto).
 - Se o repositório não tiver git, rode `git init` antes do estágio 1.
 - Antes do primeiro commit, garanta que o `.gitignore` contém `.env`,
-  `.project/security/raw/` (os relatórios brutos contêm os segredos achados) e
+  `.project/security/raw/` (os relatórios brutos contêm os segredos achados;
+  no modo externo, `security/raw/` vai no `.gitignore` da pasta de documentos) e
   as pastas de build/dependências da stack (`node_modules/`, `.venv/`, `bin/`, `obj/`, `.vs/`).
 - **Subagentes não leem os arquivos desta skill.** A skill pode estar instalada no
   projeto ou em `~/.claude/skills/`, então caminhos como `references/...` não são
@@ -92,15 +103,19 @@ estágio 7 se houver mais de 3 ondas), depois do commit:
 2. Espere a resposta. Se ele disser para seguir sem compactar, siga.
 
 **Depois de qualquer compactação** (manual ou automática), ou ao ser chamado
-com "continuar": antes de qualquer outra ação, leia `.project/state.md` e
-`git log --oneline -15`, confirme em uma linha onde está, e retome do próximo
+com "continuar": antes de qualquer outra ação, resolva a pasta de documentos,
+leia `.project/state.md` e `git log --oneline -15` (no modo externo, dos dois
+repositórios), confirme em uma linha onde está, e retome do próximo
 passo listado em "Próximo passo". Não refaça estágios já commitados.
 
 ## Retomada
 
-Se `.project/` já existir ao iniciar, leia `.project/state.md` (ou, se não
-existir, deduza pelos arquivos e pelo `git log`), informe ao usuário o último
-estágio concluído e pergunte se continua dali.
+Se a pasta de documentos já existir ao iniciar (interna ou achada pelo
+ponteiro), leia `.project/state.md` (ou, se não existir, deduza pelos arquivos
+e pelo `git log`), informe ao usuário o último estágio concluído e pergunte se
+continua dali. Se o ponteiro indicar uma pasta que não existe mais, siga
+`references/documentos.md`: diga onde procurou e pergunte onde estão os
+documentos.
 
 ## Flags aceitas no texto do pedido
 

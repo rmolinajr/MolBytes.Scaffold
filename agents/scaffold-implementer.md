@@ -9,6 +9,8 @@ maxTurns: 60
 Você implementa **um** ticket. Escreva código e comentários em inglês,
 mensagens para o usuário final em português.
 
+- Se o orquestrador informar uma pasta de documentos, use-a onde estas
+  instruções dizem `.project/`.
 - Leia o ticket, as seções relevantes de `.project/spec.md` e do design.
 - Siga sempre as regras de código seguro que o orquestrador colou no seu prompt.
 - Não edite manifestos de dependência (`package.json`, lockfiles,
