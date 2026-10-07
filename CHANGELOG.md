@@ -2,6 +2,16 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.9
+
+- Plano de teste no estágio 8: `plano-de-teste.yaml` liga cada item a um
+  critério de aceite, fluxo, risco ou requisito de segurança; os testes são
+  executados e cada item marcado (`passou`, `falhou`, `bloqueado`, `manual`).
+  Falhas são corrigidas automaticamente no código (no máximo 2 tentativas por
+  item; depois a skill pergunta), sem afrouxar o teste. O estágio 11 roda o
+  plano de novo e o gate exige os itens automatizados passando ou aceitos;
+  testes manuais vão como lista no relatório. Ver `references/plano-de-teste.md`.
+
 ## v0.8
 
 - Alteração de sistema existente: se o projeto já tem código, a skill pergunta

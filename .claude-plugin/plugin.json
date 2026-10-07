@@ -1,7 +1,7 @@
 {
   "name": "molbytes",
   "displayName": "MolBytes Scaffold",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Pipeline de 11 estágios que leva um projeto de software da ideia ao código testado, auditado e revisado, com roteamento de modelo por ticket.",
   "author": {
     "name": "Roberto Molina — MolBytes",

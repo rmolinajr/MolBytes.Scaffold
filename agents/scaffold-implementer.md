@@ -33,3 +33,7 @@ mensagens para o usuário final em português.
 - Se o ticket tiver `docs`, atualize esses documentos do sistema junto com o
   código: só o trecho afetado, no formato que já existe. Documento gerado se
   atualiza pelo comando de geração, nunca à mão.
+
+- Ao corrigir uma falha do plano de teste, corrija o código de produção. Só
+  mude o teste se ele estiver errado em relação à spec, e explique o motivo na
+  resposta. Nunca apague, pule ou afrouxe um teste para fazê-lo passar.

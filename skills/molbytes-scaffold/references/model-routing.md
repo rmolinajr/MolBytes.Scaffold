@@ -20,7 +20,8 @@ e deixa o item 2 como padrão seguro para o resto.
 | 5 tickets | sonnet | sonnet | decomposição da spec |
 | 6 assign | haiku | haiku | classificação simples |
 | 7 implement | por ticket (abaixo) | sonnet em tudo | depende da complexidade |
-| 8 tests | sonnet | sonnet | escrever e rodar testes |
+| 8 tests: plano e execução | sonnet | sonnet | escrever e rodar testes |
+| 8 tests: correção de falha | modelo do ticket; opus na 2ª tentativa | sonnet; opus na 2ª | corrigir sem afrouxar o teste |
 | 9 security: audit, triage, verify | opus | opus | auditor precisa ser o mais forte |
 | 9 security: fix | opus | opus | correção de segurança não pode ser superficial |
 | 10 code-review | opus | sonnet | segurança já foi auditada no 9 |

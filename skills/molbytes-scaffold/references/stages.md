@@ -122,13 +122,22 @@ Para cada onda, em ordem:
 - **Modo alteração:** passe ao implementador a lista `docs` do ticket; ele
   atualiza esses documentos junto com o código.
 
-## 8. tests → scaffold-tester
+## 8. tests → scaffold-tester + scaffold-implementer
 
-Escreva testes de integração cobrindo os fluxos de `user-flows.md`, os riscos
-altos e os `security_requirements` (ex.: webhook sem assinatura é rejeitado,
-pagamento não duplica cobrança). Rode tudo. Gere `.project/test-report.md` com:
-comandos usados, resultado real, cobertura real (se a ferramenta medir).
-Só números que a ferramenta mostrou.
+Siga `references/plano-de-teste.md`:
+
+1. **8.1 plano** — o tester gera `.project/plano-de-teste.yaml`, ligando cada
+   item a um critério de aceite, fluxo, risco alto ou `security_requirements`
+   (ex.: webhook sem assinatura é rejeitado, pagamento não duplica cobrança).
+   Mostre só o resumo ao usuário e siga.
+2. **8.2 executar** — o tester escreve os testes que faltam, roda tudo e marca
+   cada item (`passou`, `falhou`, `bloqueado`, `manual`).
+3. **8.3 corrigir** — cada `falhou` vai para um `scaffold-implementer`, que
+   corrige o código (não afrouxa o teste). Máximo de 2 tentativas por item;
+   depois, pergunte ao usuário.
+4. **8.4 relatório** — `.project/test-report.md` com totais reais, correções,
+   aceites e a lista "Testes manuais a fazer". Só números que a ferramenta
+   mostrou.
 
 ## 9. security → scaffold-security + scaffold-implementer
 
@@ -169,11 +178,13 @@ corrigidos (em opus) antes de seguir.
 
 ## 11. final → testes + rescan + gate
 
-1. Rode a suíte completa de testes (unitários + integração).
+1. Rode a suíte completa de testes (unitários + integração) e atualize o
+   `plano-de-teste.yaml`; falha nova passa pela correção do 8.3.
 2. Rode o **rescan rápido** de `references/security.md`, parte D (só
    ferramentas, sem o agente de segurança, exceto se aparecer achado novo).
 3. **Gate:** o pipeline só termina como "concluído" se:
-   - todos os testes passam;
+   - todos os testes passam e todo item automatizado do plano está `passou`
+     ou `aceito` (itens `manual` não bloqueiam);
    - não há achado crítico ou alto aberto;
    - todo achado médio aberto está em `accepted.md`;
    - **modo alteração:** nenhuma falha de teste nova em relação ao ponto de
@@ -183,4 +194,5 @@ corrigidos (em opus) antes de seguir.
    encerrar como "concluído com pendências" (registrado no relatório).
 4. Gere `.project/pipeline-report.md`: estágios, modelos usados, escaladas,
    resultado dos testes, resumo de segurança (achados por severidade:
-   corrigidos, aceitos, em dívida), pendências. Commit final.
+   corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status)
+   e a lista "Testes manuais a fazer", pendências. Commit final.

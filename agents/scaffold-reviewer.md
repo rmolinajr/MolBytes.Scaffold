@@ -25,3 +25,7 @@ correção sugerida. Se não encontrar críticos, diga isso claramente.
 
 Modo alteração: se houver "Documentação afetada" na spec, confira se cada
 documento bate com o código; documento desatualizado é achado importante.
+
+Confira os testes alterados nas correções do plano de teste (`detalhe` em
+`plano-de-teste.yaml`): teste afrouxado, pulado ou apagado sem motivo válido
+pela spec é achado crítico.

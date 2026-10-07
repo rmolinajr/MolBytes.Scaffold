@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.8-blue)
+![versão](https://img.shields.io/badge/versão-0.9-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 
@@ -26,7 +26,7 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 | 5 | tickets | `scaffold-planner` | `.project/tickets.yaml` | — |
 | 6 | roteamento de modelos e ondas | `scaffold-router` | `.project/agent-map.json` | **aprovar plano e custo** |
 | 7 | implementação paralela por ondas | `scaffold-implementer` | código | — |
-| 8 | testes de integração | `scaffold-tester` | `tests/integration/` | — |
+| 8 | plano de teste → executar → corrigir falhas | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes | se a correção falhar 2x |
 | 9 | segurança: audit → triage → fix → verify | `scaffold-security` + `scaffold-implementer` | `.project/security/` | achados médios |
 | 10 | code review | `scaffold-reviewer` | `.project/code-review-report.md` | **decidir correções** |
 | 11 | testes finais + rescan + gate | sessão principal | `.project/pipeline-report.md` | se bloquear |
@@ -53,6 +53,9 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
   agente.
 - **Watchdog:** `maxTurns` por subagente, orçamento de tempo em
   `.project/runs.log`, comando `status` a qualquer momento.
+- **Plano de teste com correção:** cada requisito vira item de um plano de
+  teste; o que falha é corrigido no código (sem afrouxar o teste) e testado de
+  novo; testes manuais vão como lista no relatório.
 - **Sem números inventados:** relatórios só com o que testes e ferramentas
   mostraram.
 
@@ -91,13 +94,14 @@ skills/molbytes-scaffold/
     state-template.md           # modelo do .project/state.md
     documentos.md               # pasta de documentos: interna ou externa
     alteracao.md                # alteração de sistema existente e sua documentação
+    plano-de-teste.md           # plano de teste, execução, correção automática
 agents/
   scaffold-*.md                 # 8 subagentes
 ```
 
 ## Status
 
-v0.8, ainda não validada numa execução completa. Não substitui um pentest
+v0.9, ainda não validada numa execução completa. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor

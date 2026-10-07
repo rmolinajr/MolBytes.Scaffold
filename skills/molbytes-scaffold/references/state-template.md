@@ -32,6 +32,10 @@ Atualizado: <data/hora> — fim do estágio <N> (<nome>)
 - Concluídos: BE-001 (opus), BE-002 (sonnet), ...
 - Falharam/escalados: FE-003 sonnet→opus (testes falharam 2x)
 
+## Plano de teste (a partir do estágio 8)
+- Itens: passou X, falhou X, bloqueado X, manual X, aceito X
+- Em correção: TP-007 (tentativa 1 de 2)
+
 ## Segurança (a partir do estágio 9)
 - Achados: crítica X, alta X, média X, baixa X
 - Corrigidos: SECURITY-001, ...
