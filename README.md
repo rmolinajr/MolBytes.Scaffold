@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.10-blue)
+![versão](https://img.shields.io/badge/versão-0.10.1-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 

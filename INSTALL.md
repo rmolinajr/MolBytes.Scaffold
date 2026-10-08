@@ -95,6 +95,23 @@ O vínculo entre projeto e documentos fica em `~/.molbytes/projetos.json`, fora
 do projeto do cliente. Se a pasta for movida ou apagada, a skill avisa onde
 procurou e pergunta onde estão os documentos.
 
+## Custo
+
+- Sessão principal em **sonnet com esforço médio**: orquestrar não precisa de
+  mais, e o raciocínio da sessão principal conta como saída, o token mais caro.
+- **Uma sessão por ciclo** (projeto novo ou cada alteração): o `state.md`
+  permite retomar numa sessão nova sem perder nada; conversa de dias fica cara.
+- **Plugins de processo** (ex.: `superpowers`) competem com o pipeline e geram
+  etapas a mais. Desligue só no projeto onde roda o pipeline, em
+  `.claude/settings.local.json` (não vai para o git):
+
+  ```json
+  { "enabledPlugins": { "superpowers@claude-plugins-official": false } }
+  ```
+
+- Plugins e skills que você não usa entram no contexto de toda sessão:
+  desligue-os.
+
 ## Compactação de contexto (uma vez só)
 
 Rode no Claude Code:

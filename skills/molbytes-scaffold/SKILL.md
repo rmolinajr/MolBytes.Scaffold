@@ -62,9 +62,14 @@ Informe o modo a cada subagente.
 A sessão principal é o maior gasto do pipeline: ela relê todo o contexto a cada
 chamada. Por isso:
 
-- **Modelo:** se a sessão estiver em opus, diga uma vez, no início: "Sugiro
-  `/model sonnet` para a sessão principal: os estágios pesados já usam opus nos
-  subagentes." Siga mesmo que o usuário não troque.
+- **Modelo e esforço:** se a sessão estiver em opus ou com esforço alto, diga
+  uma vez, no início: "Sugiro `/model sonnet` e esforço médio para a sessão
+  principal: os estágios pesados já usam opus nos subagentes." Siga mesmo que o
+  usuário não troque.
+- **Um processo só.** Não invoque skills de processo de outros plugins
+  (brainstorming, planos, desenvolvimento por subagentes) durante o pipeline: o
+  processo é este. Se um plugin desses estiver ativo, sugira uma vez
+  desligá-lo neste projeto (ver INSTALL.md, "Custo").
 - **Você só orquestra.** Não faça trabalho pesado na sessão principal: merge com
   conflito, correção de teste, depuração, investigação de falha e refatoração
   vão para um subagente (`scaffold-implementer`) com o problema descrito.

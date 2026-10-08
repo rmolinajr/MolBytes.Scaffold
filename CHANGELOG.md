@@ -2,6 +2,13 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.10.1
+
+- O orquestrador sugere também esforço médio para a sessão principal e não
+  invoca skills de processo de outros plugins durante o pipeline.
+- INSTALL: seção "Custo" (sonnet com esforço médio, uma sessão por ciclo,
+  desligar plugins de processo como `superpowers` no projeto do pipeline).
+
 ## v0.10
 
 Menos gasto de tokens, a partir de uma execução real (sessão principal em opus
