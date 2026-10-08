@@ -57,6 +57,23 @@ Informe o modo a cada subagente.
   `references/watchdog.md` (orçamento de tempo, resultado parcial, travamento).
   O usuário pode digitar `status` a qualquer momento.
 
+## Custo
+
+A sessão principal é o maior gasto do pipeline: ela relê todo o contexto a cada
+chamada. Por isso:
+
+- **Modelo:** se a sessão estiver em opus, diga uma vez, no início: "Sugiro
+  `/model sonnet` para a sessão principal: os estágios pesados já usam opus nos
+  subagentes." Siga mesmo que o usuário não troque.
+- **Você só orquestra.** Não faça trabalho pesado na sessão principal: merge com
+  conflito, correção de teste, depuração, investigação de falha e refatoração
+  vão para um subagente (`scaffold-implementer`) com o problema descrito.
+- **Leia pouco.** Nunca leia arquivo grande inteiro (spec, tickets, logs,
+  relatórios de ferramenta): use busca e trechos. Saída de teste e build sempre
+  filtrada (só falhas e o resumo final).
+- **Compacte cedo** nos pontos de compactação abaixo, inclusive a cada onda do
+  estágio 7.
+
 ## Nomes dos subagentes
 
 Instalada como plugin, a skill tem subagentes com prefixo: `molbytes:scaffold-architect`,
@@ -106,8 +123,8 @@ Ao fim de **cada** estágio, reescreva `.project/state.md` com o modelo em
 `references/state-template.md`. Mantenha curto (menos de 80 linhas): decisões e
 pendências, não cópias dos artefatos.
 
-**Pontos de compactação:** ao terminar os estágios **2, 5, 7 e 9** (e cada onda do
-estágio 7 se houver mais de 3 ondas), depois do commit:
+**Pontos de compactação:** ao terminar os estágios **2, 5, 8 e 9**, **cada onda
+do estágio 7** e a cada 10 itens corrigidos no estágio 8, depois do commit:
 1. Diga ao usuário: "Estágio N salvo e commitado. Bom momento para rodar
    `/compact` antes de seguir. Quando terminar, digite `continuar`."
 2. Espere a resposta. Se ele disser para seguir sem compactar, siga.

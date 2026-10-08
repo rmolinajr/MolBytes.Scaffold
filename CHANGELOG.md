@@ -2,6 +2,23 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.10
+
+Menos gasto de tokens, a partir de uma execução real (sessão principal em opus
+gastou mais que todos os subagentes; 77% dos tickets em opus; implementadores
+lendo spec e tickets inteiros):
+
+- Seção "Custo" no orquestrador: sugere `/model sonnet` para a sessão
+  principal, proíbe trabalho pesado nela (merge, depuração e correção vão para
+  subagente), leitura só por trechos e saída de teste filtrada; compactação a
+  cada onda do estágio 7.
+- Tickets em dois níveis: índice curto `tickets.yaml` e um arquivo
+  autossuficiente por ticket em `tickets/<id>.md` (até ~4 mil caracteres). O
+  implementador lê só o dele; o router lê só o índice.
+- Spec com até ~30 mil caracteres; ciclos acima de ~30 tickets são divididos.
+- Roteamento: opus só com motivo de uma lista fechada; na dúvida, sonnet;
+  acima de 25% em opus, o plano do estágio 6 mostra a lista com os motivos.
+
 ## v0.9
 
 - Plano de teste no estágio 8: `plano-de-teste.yaml` liga cada item a um

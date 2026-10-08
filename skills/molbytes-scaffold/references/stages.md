@@ -26,6 +26,10 @@ usuário, requisitos não funcionais, fora do escopo, e a seção
 **Modo alteração com documentação do sistema:** a spec ganha a seção
 "Documentação afetada" (ver `alteracao.md`).
 
+**Tamanho:** a spec tem no máximo ~30 mil caracteres. Ela descreve decisões,
+contratos e regras; detalhe de implementação fica nos tickets. Spec maior é
+lida inteira por vários agentes e multiplica o custo.
+
 Depois: mostre um resumo de 10 linhas, peça ao usuário para revisar o arquivo e
 **espere a aprovação explícita** antes de continuar. Se ele pedir mudanças,
 reenvie ao architect com as mudanças.
@@ -58,7 +62,23 @@ Gere em `.project/design/`: `design-system.md` (cores, tipografia, espaçamento)
 
 ## 5. to-tickets → scaffold-planner
 
-Gere `.project/tickets.yaml`. Cada ticket:
+Gere dois tipos de arquivo:
+
+- `.project/tickets.yaml`: o **índice**, só com os campos abaixo (sem descrição
+  longa). É o que o router e o orquestrador leem.
+- `.project/tickets/<id>.md`: **um arquivo por ticket**, autossuficiente, com a
+  descrição, os critérios, os testes e os **trechos da spec, do design e dos
+  riscos que o ticket usa** (copiados, não referenciados). O implementador lê
+  só este arquivo. Máximo de ~4 mil caracteres por ticket.
+
+Convenções que valem para todos os tickets ficam no topo do índice, curtas, e o
+orquestrador as cola no prompt do implementador.
+
+**Tamanho do ciclo:** se passar de ~30 tickets, pare e proponha ao usuário
+dividir em ciclos menores (cada um com seus estágios 5 a 11). Ciclo grande faz
+o contexto do orquestrador crescer sem parar.
+
+Cada ticket no índice:
 ```yaml
 - id: BE-001
   titulo: ...
@@ -87,7 +107,8 @@ adiciona entre ondas.
 
 ## 6. assign-to-agents → scaffold-router (haiku)
 
-O router lê `tickets.yaml` e `references/model-routing.md` e gera
+O router lê só o índice `tickets.yaml` e as regras de `references/model-routing.md`
+(coladas no prompt) e gera
 `.project/agent-map.json`:
 ```json
 { "ondas": [
@@ -97,6 +118,10 @@ O router lê `tickets.yaml` e `references/model-routing.md` e gera
 ```
 Ondas respeitam `depende_de`. Dentro de uma onda, dois tickets **não podem**
 tocar os mesmos arquivos (evita conflito na execução paralela).
+
+**Limite de opus:** se mais de 25% dos tickets ficarem em opus, o router lista
+cada um com o motivo da lista fechada de `model-routing.md`; mostre essa lista
+ao usuário junto com o plano.
 
 Mostre ao usuário: total de tickets, quantos em opus/sonnet/haiku, número de
 ondas e tempo estimado (soma dos orçamentos de `watchdog.md` pela onda mais
@@ -108,16 +133,19 @@ usuário pedir, rebaixe tickets ou aplique `--economico` e reenvie ao router.
 Para cada onda, em ordem:
 - Lance um `scaffold-implementer` por ticket, **em paralelo**, passando
   `model` = o valor do `agent-map.json` para aquele ticket.
-- Cada implementador recebe no prompt: o ticket, os trechos relevantes da spec
-  e do design, a regra de só mexer nos arquivos listados, e o **texto** das
-  regras de código seguro de `references/security.md` (parte B).
+- Cada implementador recebe no prompt: o caminho de `.project/tickets/<id>.md`
+  (o único documento do pipeline que ele lê), as convenções do topo do índice,
+  a regra de só mexer nos arquivos listados, e o **texto** das regras de código
+  seguro de `references/security.md` (parte B). Não mande ler a spec nem o
+  `tickets.yaml` inteiros.
 - Testes unitários rodados durante a onda não podem depender de banco real,
   porta fixa ou serviço externo (vários implementadores rodam ao mesmo tempo na
   mesma pasta). Testes que precisam disso ficam para o estágio 8.
 - Registre START de cada um em `.project/runs.log`. A cada subagente que
   termina, faça a verificação de `references/watchdog.md` nos que ainda rodam.
-- Ao terminar a onda, rode os testes unitários da área. Aplique o escalonamento
-  de `model-routing.md` se falharem.
+- Ao terminar a onda, rode os testes unitários da área, com saída filtrada (só
+  falhas e resumo). Aplique o escalonamento de `model-routing.md` se falharem.
+  Conflito de merge ou falha a investigar vai para um subagente, não para você.
 - Commit por onda: `scaffold(7): onda N`.
 - **Modo alteração:** passe ao implementador a lista `docs` do ticket; ele
   atualiza esses documentos junto com o código.

@@ -19,4 +19,9 @@ Você é um tech lead quebrando trabalho para um time. Escreva em português.
   `.gitignore`, `.env.example`, todas as dependências previstas); todos os
   outros dependem dele.
 - Manifestos de dependência só entram em `arquivos` de tickets de infra.
-- Escreva apenas `.project/tickets.yaml`.
+- Escreva o índice `.project/tickets.yaml` (só id, titulo, area, depende_de,
+  arquivos, docs, security_reqs, criterios em uma linha cada) e um arquivo por
+  ticket em `.project/tickets/<id>.md`, autossuficiente: descrição, critérios,
+  testes e os trechos da spec, do design e dos riscos que o ticket usa,
+  copiados. Máximo de ~4 mil caracteres por ticket.
+- Mais de ~30 tickets: pare e proponha ao orquestrador dividir em ciclos.

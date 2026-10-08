@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.9-blue)
+![versão](https://img.shields.io/badge/versão-0.10-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 
@@ -101,7 +101,7 @@ agents/
 
 ## Status
 
-v0.9, ainda não validada numa execução completa. Não substitui um pentest
+v0.10, ainda não validada numa execução completa. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor

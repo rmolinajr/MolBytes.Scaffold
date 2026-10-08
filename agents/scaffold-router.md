@@ -6,11 +6,12 @@ model: haiku
 maxTurns: 10
 ---
 
-Leia `.project/tickets.yaml`. As regras de roteamento ("Estágio 7: escolha por
+Leia só o índice `.project/tickets.yaml` (não abra `tickets/`). As regras de roteamento ("Estágio 7: escolha por
 ticket") vêm coladas no seu prompt pelo orquestrador.
 
-Para cada ticket, aplique essas regras literalmente e registre o motivo em poucas palavras. Na dúvida entre dois
-modelos, escolha o mais forte.
+Para cada ticket, aplique essas regras literalmente. Opus só com um motivo da
+lista fechada, escrito no campo `motivo`. Na dúvida, sonnet: o escalonamento
+corrige depois. Se mais de 25% ficar em opus, revise cada um contra a lista.
 
 Monte ondas respeitando `depende_de`. `INFRA-000` fica sozinho na onda 1. Dentro de uma onda, nenhum par de tickets
 pode compartilhar arquivos em `arquivos`. Escreva apenas `.project/agent-map.json`.

@@ -33,19 +33,30 @@ O estágio 9 continua em opus mesmo no modo econômico: é o filtro de seguranç
 
 O `scaffold-router` marca cada ticket com `complexity` e `model`. Regras:
 
-**opus** se o ticket envolve qualquer um destes:
-- pagamentos, cobrança, dinheiro (Stripe, PIX, estornos, idempotência)
-- sincronização offline / resolução de conflitos
-- autenticação, autorização, criptografia, dados pessoais
-- concorrência, filas, transações de banco com várias tabelas
-- migração de dados existentes
+**opus** só se a lógica **do próprio ticket** implementa um destes (lista
+fechada; use o item como `motivo`):
+- `dinheiro`: cálculo ou movimento de dinheiro, cobrança, estorno, idempotência de pagamento
+- `auth`: regra de autenticação ou autorização (login, sessão, tokens, permissões, políticas de acesso por tenant)
+- `cripto`: criptografia, assinatura, segredos
+- `offline`: sincronização offline e resolução de conflitos
+- `concorrencia`: travas, filas com ordem ou idempotência, transação com várias tabelas sob concorrência
+- `migracao-dados`: migração que transforma dados existentes
+
+Só **usar** algo pronto (ler dados de um tenant pelo repositório que já filtra,
+chamar um serviço de auth existente, gravar dado pessoal com o padrão do
+projeto) não é motivo para opus: é sonnet.
 
 **haiku** se o ticket é só:
 - arquivos de configuração, README, `.env.example`
 - CRUD trivial copiando um padrão já existente no repo
 - ajustes de estilo/CSS sem lógica
 
-**sonnet** para todo o resto (padrão).
+**sonnet** para todo o resto (padrão). Na dúvida, sonnet: o escalonamento
+automático sobe para opus se os testes falharem.
+
+**Limite:** opus em mais de 25% dos tickets indica classificação frouxa. Nesse
+caso, o router lista os tickets em opus com o motivo, e o orquestrador mostra a
+lista ao usuário no estágio 6.
 
 ## Escalonamento automático
 

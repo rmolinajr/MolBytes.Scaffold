@@ -1,4 +1,4 @@
-# Instalar molbytes.scaffold (Claude Code) — v0.9
+# Instalar molbytes.scaffold (Claude Code) — v0.10
 
 A skill são arquivos Markdown que o Claude Code lê. Há três formas de instalar.
 
@@ -58,9 +58,10 @@ checkout`). A skill procura a documentação do sistema; se não achar, pergunta
 se há em outro lugar. Se houver, ela é atualizada junto com o código; se não
 houver, só o sistema é alterado.
 
-Sugestão: rode a sessão principal em sonnet (`/model sonnet`). Os estágios
-pesados já vão para opus pelos subagentes, então não precisa pagar opus na
-conversa inteira.
+**Rode a sessão principal em sonnet** (`/model sonnet`). É a decisão que mais
+pesa no custo: a sessão principal relê todo o contexto a cada passo, e os
+estágios pesados já vão para opus pelos subagentes. Numa execução real com a
+sessão principal em opus, ela gastou mais que todos os subagentes juntos.
 
 ## Onde ficam os documentos
 
@@ -98,13 +99,13 @@ procurou e pergunta onde estão os documentos.
 
 Rode no Claude Code:
 
-    /autocompact 500k
+    /autocompact 200k
 
-Isso compacta a conversa quando ela chega a ~50% da janela de 1M, como rede de
-segurança. Fica salvo nas suas configurações para as próximas sessões. Para
+Isso compacta a conversa quando ela chega a ~200 mil tokens, como rede de
+segurança (contexto grande é relido a cada passo e encarece tudo). Fica salvo nas suas configurações para as próximas sessões. Para
 voltar ao padrão: `/autocompact auto`.
 
-Além disso, a skill avisa nos fins dos estágios 2, 5, 7 e 9 que é um bom momento
+Além disso, a skill avisa nos fins dos estágios 2, 5, 8 e 9 e a cada onda do 7 que é um bom momento
 para `/compact`. Rode, depois digite `continuar`: ela relê o `state.md` da pasta de documentos
 e segue de onde parou. Isso também funciona para retomar em outro dia, numa
 sessão nova.
@@ -118,7 +119,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.9, ainda não testada numa execução real. Espere ajustes depois do primeiro
+v0.10, ainda não testada numa execução real. Espere ajustes depois do primeiro
 projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 
