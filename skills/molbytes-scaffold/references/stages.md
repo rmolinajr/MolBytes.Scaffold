@@ -70,18 +70,23 @@ Gere dois tipos de arquivo:
   longa). É o que o router e o orquestrador leem.
 - `.project/tickets/<id>.md`: **um arquivo por ticket**, autossuficiente, com a
   descrição, os critérios, os testes e os **trechos da spec, do design e dos
-  riscos que o ticket usa** (copiados, não referenciados). O implementador lê
-  só este arquivo. Máximo de ~4 mil caracteres por ticket.
+  riscos que o ticket usa** (copiados, não referenciados). Do pipeline, o
+  implementador lê só este arquivo e o `regras-implementacao.md` (estágio 7).
+  Máximo de ~4 mil caracteres por ticket.
 
-Convenções que valem para todos os tickets ficam no topo do índice, curtas, e o
-orquestrador as cola no prompt do implementador.
+Convenções que valem para todos os tickets (nomes, estrutura, padrão de
+testes) ficam no topo do índice, em `convencoes:`, curtas; no estágio 7 elas
+vão para a seção "Todos" de `regras-implementacao.md`.
 
 **Tamanho do ciclo:** se passar de ~30 tickets, pare e proponha ao usuário
 dividir em ciclos menores (cada um com seus estágios 5 a 11). Ciclo grande faz
 o contexto do orquestrador crescer sem parar.
 
-Cada ticket no índice:
+Topo do índice e cada ticket:
 ```yaml
+convencoes:                         # até ~10 linhas, valem para todos os tickets
+  - ...
+tickets:
 - id: BE-001
   titulo: ...
   area: backend|frontend|infra
@@ -141,8 +146,9 @@ Para cada onda, em ordem:
   de cada um que termina e pode responder `status` enquanto a onda roda.
 - Antes da onda 1, grave **uma vez** `.project/regras-implementacao.md`: as
   convenções do topo do índice (seção "Todos") e, se houver extensão ou
-  convenção do projeto existente, uma seção por área (`backend`, `frontend`,
-  `banco`, `infra`, `interface`). Atualize o arquivo só se uma regra mudar.
+  convenção do projeto existente, uma seção por camada (`backend`, `frontend`,
+  `banco`, `infra`, `interface`); o implementador lê as das camadas que os
+  arquivos do ticket tocam. Atualize o arquivo só se uma regra mudar.
 - O prompt do implementador é curto: o caminho de `.project/tickets/<id>.md`,
   o de `.project/regras-implementacao.md` e o modelo. As regras de código
   seguro já estão no próprio agente. Não cole regras no prompt nem mande ler a
@@ -153,12 +159,13 @@ Para cada onda, em ordem:
 - Registre START de cada um em `.project/runs.log`. A cada subagente que
   termina, faça a verificação de `references/watchdog.md` nos que ainda rodam.
 - Ao terminar a onda, rode os testes unitários da área, com saída filtrada (só
-  falhas e resumo). Aplique o escalonamento de `model-routing.md` se falharem.
-  Conflito de merge ou falha a investigar vai para um subagente com um
-  **ticket de correção** (fim deste arquivo), não para você.
+  falhas e resumo). Falha atribuível a um ticket: relance esse ticket conforme
+  o escalonamento de `model-routing.md`. Conflito de merge ou falha que não é
+  de um ticket só vai para um subagente com um **ticket de correção** (fim
+  deste arquivo), não para você.
 - Commit por onda: `scaffold(7): onda N`.
-- **Modo alteração:** passe ao implementador a lista `docs` do ticket; ele
-  atualiza esses documentos junto com o código.
+- **Modo alteração:** o ticket traz a lista `docs`; o implementador atualiza
+  esses documentos junto com o código.
 
 ## 8. tests → scaffold-tester + scaffold-implementer
 
@@ -245,8 +252,9 @@ em opus.
 ## Ticket de correção (implementador fora da onda)
 
 Sempre que um `scaffold-implementer` for lançado fora de um ticket do estágio 5
-(falha de testes ao fim da onda, conflito de merge, item do plano de teste,
-achado de segurança, crítico do code review, falha nova no estágio 11),
+(conflito de merge, falha da onda que não é de um ticket só, item do plano
+de teste, achado de segurança, crítico do code review, falha nova no estágio
+11),
 escreva antes `.project/tickets/<id>.md`, com até ~2 mil caracteres:
 
 - **id:** `FIX-<origem>` (ex.: `FIX-TP-007`, `FIX-REVIEW-3`, `FIX-MERGE-2`) ou
@@ -260,5 +268,7 @@ escreva antes `.project/tickets/<id>.md`, com até ~2 mil caracteres:
 - **critério:** quando está corrigido.
 
 O ticket de correção não entra no `tickets.yaml`. O implementador o trata
-como qualquer ticket: lê só esse arquivo e mexe só nos arquivos listados.
-Registre o START no `runs.log` com esse id.
+como qualquer ticket: no prompt, o caminho dele, o de `regras-implementacao.md`
+e o modelo; mexe só nos arquivos listados. Modelo: o da regra do estágio de
+origem (8.3, 9.3, 10); sem regra (merge, falha da onda), sonnet e, na 2ª
+tentativa, opus. Registre o START no `runs.log` com esse id.

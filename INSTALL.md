@@ -1,4 +1,4 @@
-# Instalar molbytes.scaffold (Claude Code) — v0.10
+# Instalar molbytes.scaffold (Claude Code)
 
 A skill são arquivos Markdown que o Claude Code lê. Há três formas de instalar.
 
@@ -28,7 +28,8 @@ Resultado esperado:
 Se já existir `~/.claude/agents/`, só acrescente os arquivos.
 
 Os subagentes não dependem de onde a skill está instalada: o orquestrador cola
-no prompt de cada um as regras de que ele precisa.
+no prompt de cada um as regras de que ele precisa (o implementador lê as dele
+de `.project/regras-implementacao.md`, gravado uma vez).
 
 ## Opção 3 — só num projeto
 
@@ -134,7 +135,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.13, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
+v0.13.2, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
 ajustes a cada projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 

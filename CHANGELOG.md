@@ -2,6 +2,22 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.13.2
+
+Coerência depois das mudanças da v0.10.2 à v0.13.1 (revisão de todos os
+arquivos):
+
+- Nenhum texto manda mais colar regras no prompt do implementador; as
+  convenções saem de `convencoes:` no topo do `tickets.yaml` (o planner as
+  escreve) para a seção "Todos" de `regras-implementacao.md`.
+- O implementador lê as seções das camadas que os seus arquivos tocam (antes,
+  `banco` e `interface` nunca eram lidas).
+- Falha de testes ao fim da onda: o ticket que falhou é relançado pelo
+  escalonamento; ticket de correção só para merge e falha que não é de um
+  ticket só. Modelo e orçamento definidos para o ticket de correção.
+- `END` do `runs.log` aceita estágio, como o `START`. Versões e destaque de
+  retomada atualizados no README e no INSTALL.
+
 ## v0.13.1
 
 Estágio 9 mais seguro para o código do cliente (comandos testados num projeto

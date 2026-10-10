@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.13.1-blue)
+![versão](https://img.shields.io/badge/versão-0.13.2-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 
@@ -33,9 +33,9 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 
 ## Destaques
 
-- **Retomável:** `state.md` + git são a fonte da verdade. Depois de
-  `/compact`, digite `continuar`; numa sessão nova,
-  `/molbytes:molbytes-scaffold continuar`.
+- **Retomável:** `state.md` + git são a fonte da verdade. Nos pontos de
+  pausa, `/clear` e `/molbytes:molbytes-scaffold continuar` (o mesmo comando
+  serve numa sessão nova); depois de `/compact`, só `continuar`.
 - **Extensível:** uma skill de extensão acrescenta regras por stack, domínio
   ou compliance sem mudar o pipeline; o contrato está em
   `references/extensoes.md`.
@@ -169,7 +169,7 @@ agents/
 
 ## Status
 
-v0.13, em evolução: os ajustes da v0.10 vieram de uma execução real. Não substitui um pentest
+v0.13.2, em evolução: os ajustes da v0.10 vieram de uma execução real. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor

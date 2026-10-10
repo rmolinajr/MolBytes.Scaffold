@@ -54,7 +54,9 @@ Informe o modo a cada subagente.
   projeto ou em `~/.claude/skills/`, então caminhos como `references/...` não são
   confiáveis para eles. Ao delegar, cole no prompt o trecho de referência de que o
   subagente precisa (ex.: a parte C de `security.md` para o auditor, a seção
-  "Estágio 7: escolha por ticket" de `model-routing.md` para o router).
+  "Estágio 7: escolha por ticket" de `model-routing.md` para o router). O
+  implementador é a exceção: as regras dele ficam no próprio agente e em
+  `.project/regras-implementacao.md` (estágio 7).
 - Mostre ao usuário uma linha de status por estágio: estágio, modelo usado, resultado.
 - Se um estágio falhar, pare e explique. Não invente resultados.
 - Todo subagente lançado é registrado em `.project/runs.log` e vigiado conforme

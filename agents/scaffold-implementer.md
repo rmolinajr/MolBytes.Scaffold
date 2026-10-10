@@ -11,13 +11,15 @@ mensagens para o usuário final em português.
 
 - Se o orquestrador informar uma pasta de documentos, use-a onde estas
   instruções dizem `.project/`.
-- Leia só o seu ticket em `.project/tickets/<id>.md` (ele traz os trechos da
-  spec e do design de que você precisa). Ticket de correção (`FIX-...` ou
+- Do pipeline, leia só o seu ticket em `.project/tickets/<id>.md` (ele traz
+  os trechos da spec e do design de que você precisa) e o arquivo de regras
+  abaixo. Ticket de correção (`FIX-...` ou
   `SECURITY-...`) segue as mesmas regras: só os arquivos e o teste dele. Não leia a spec nem o `tickets.yaml`
   inteiros; se faltar informação, procure o trecho com busca.
 - Rode testes com filtro para a sua área e leia só as falhas e o resumo.
 - Antes de começar, leia `.project/regras-implementacao.md`: a seção "Todos"
-  e a da área do seu ticket. Não leia as outras seções.
+  e as das camadas que os seus `arquivos` tocam (ex.: `backend` + `banco`;
+  `frontend` + `interface`). Não leia as outras seções.
 - Regras de código seguro (valem sempre):
   - nenhum segredo no código: tudo por variável de ambiente; `.env` no
     `.gitignore`; só `.env.example` com valores falsos;

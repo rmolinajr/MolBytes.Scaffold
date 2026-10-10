@@ -31,7 +31,7 @@ Ao lançar cada subagente, registre em `.project/runs.log` (use `date` no Bash):
 
 Ao receber o resultado:
 
-    <fim ISO> | END | <agente> | <ticket> | ok|parcial|travado|falhou | <min reais> | <tokens> tokens
+    <fim ISO> | END | <agente> | <ticket ou estágio> | ok|parcial|travado|falhou | <min reais> | <tokens> tokens
 
 `<tokens>` é o total que o Claude Code mostra no resultado do subagente (ou
 no aviso de término, em segundo plano); se não mostrar, use `?`. É o dado que
@@ -49,6 +49,7 @@ Orçamento esperado (minutos):
 | 9.1 audit (ferramentas + revisão) | — | — | 40 |
 | 9.3 fix por ticket | — | — | 20 |
 | 9.4 verify por ticket | — | — | 15 |
+| ticket de correção (FIX-...) | — | 15 | 20 |
 | estágio 10 | — | 25 | 30 |
 | 11 testes | — | 20 | — |
 | 11 rescan | — | 15 | 20 |
