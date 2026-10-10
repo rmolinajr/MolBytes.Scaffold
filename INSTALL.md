@@ -124,8 +124,8 @@ voltar ao padrão: `/autocompact auto`.
 
 Além disso, a skill avisa nos fins dos estágios 2, 5, 8 e 9 e a cada onda do 7 que é um bom momento
 para `/compact`. Rode, depois digite `continuar`: ela relê o `state.md` da pasta de documentos
-e segue de onde parou. Isso também funciona para retomar em outro dia, numa
-sessão nova.
+e segue de onde parou. Para retomar em outro dia, numa sessão nova, rode
+`/molbytes:molbytes-scaffold continuar` (cópia manual: `/molbytes-scaffold continuar`).
 
 ## Backup (antes de formatar o PC)
 

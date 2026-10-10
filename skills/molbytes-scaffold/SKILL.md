@@ -12,6 +12,10 @@ Você mesmo não escreve código de produção.
 
 Descrição do projeto: $ARGUMENTS
 
+Se a descrição for só `continuar`, é a retomada de um pipeline numa sessão
+nova: não é um projeto novo. Siga "Depois de qualquer compactação" (em
+"Estado e compactação") sem perguntar se continua.
+
 ## Pasta de documentos
 
 Antes de tudo (antes das extensões e do estágio 1) e sempre que retomar,
@@ -93,7 +97,8 @@ Antes do estágio 1, e sempre que retomar, veja na lista de skills disponíveis
 se existe uma chamada `molbytes-extension` (com ou sem prefixo de plugin) ou
 cuja descrição comece com "Extensão" do molbytes.scaffold. Se existir,
 invoque-a e siga a tabela dela sobre em que estágio entra cada referência.
-Diga ao usuário em uma linha qual extensão foi carregada.
+Diga ao usuário em uma linha qual extensão foi carregada e registre o nome em
+`state.md` (`Extensão:`); a compactação apaga o conteúdo dela da conversa.
 
 Extensões complementam o pipeline; não removem as pausas de aprovação, o
 roteamento explícito de modelo nem o gate do estágio 11. Sem extensão, o
@@ -137,8 +142,9 @@ do estágio 7** e a cada 10 itens corrigidos no estágio 8, depois do commit:
 **Depois de qualquer compactação** (manual ou automática), ou ao ser chamado
 com "continuar": antes de qualquer outra ação, resolva a pasta de documentos,
 leia `.project/state.md` e `git log --oneline -15` (no modo externo, dos dois
-repositórios), confirme em uma linha onde está, e retome do próximo
-passo listado em "Próximo passo". Não refaça estágios já commitados.
+repositórios), invoque de novo a extensão de `Extensão:` (se houver),
+reaplique as flags de `Flags:`, confirme em uma linha onde está, e retome do
+próximo passo listado em "Próximo passo". Não refaça estágios já commitados.
 
 ## Retomada
 
@@ -151,6 +157,11 @@ documentos.
 
 ## Flags aceitas no texto do pedido
 
-- `--ate <estágio>`: para depois do estágio indicado (ex.: `--ate tickets`).
-- `--sem-design`: pula o estágio 4.
+- `--ate <estágio>`: para depois do estágio indicado, pelo número ou pelo nome
+  da tabela do pipeline, com ou sem o prefixo `to-` (ex.: `--ate 5`,
+  `--ate tickets`).
+- `--sem-design`: pula o estágio 4. Sem `.project/design/`, os estágios
+  seguintes usam a spec no lugar do design (fluxos e telas vêm dela).
 - `--economico`: aplica a coluna "econômico" do roteamento de modelos.
+
+Registre as flags em `state.md` (`Flags:`); valem até o fim do ciclo.

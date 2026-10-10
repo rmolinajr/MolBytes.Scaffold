@@ -8,9 +8,9 @@ inteiro outra vez antes do gate.
 ## 8.1 Gerar o plano (scaffold-tester)
 
 `.project/plano-de-teste.yaml`, a partir de: critérios de aceite de
-`tickets.yaml`, fluxos de `design/user-flows.md`, riscos altos do MVP em
-`risks.yaml` e `security_requirements`. Todo critério de aceite e todo
-`security_requirements` aparece em pelo menos um item.
+`tickets.yaml`, fluxos de `design/user-flows.md` (sem design, os da spec),
+riscos altos do MVP em `risks.yaml` e `security_requirements`. Todo critério
+de aceite e todo `security_requirements` aparece em pelo menos um item.
 
 ```yaml
 itens:

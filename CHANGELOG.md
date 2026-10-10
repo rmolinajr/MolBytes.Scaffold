@@ -2,6 +2,18 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.10.2
+
+- Retomada numa sessão nova: `/molbytes:molbytes-scaffold continuar` (só
+  `continuar` não carrega a skill numa sessão nova).
+- `state.md` registra `Flags:` e `Extensão:`; depois de uma compactação o
+  orquestrador reaplica as flags e invoca a extensão de novo.
+- `--sem-design`: planner, tester e plano de teste usam a spec quando não há
+  `.project/design/`. `--ate` aceita número ou nome do estágio.
+- Estágio 9: comandos em bash (a ferramenta do Claude Code), relatórios brutos
+  na pasta de documentos (no modo externo, nada é criado no projeto do
+  cliente) e varreduras sem `.project/`.
+
 ## v0.10.1
 
 - O orquestrador sugere também esforço médio para a sessão principal e não

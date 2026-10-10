@@ -9,6 +9,8 @@ Reescreva o arquivo inteiro ao fim de cada estágio. Não acumule histórico aqu
 Projeto: <uma linha>
 Documentos: <caminho da pasta de documentos (.project/ ou externa)>
 Modo: novo | alteração (base_commit <sha>)
+Flags: <ex.: --sem-design --ate tickets> | nenhuma
+Extensão: <nome da skill de extensão carregada> | nenhuma
 Testes que já falhavam: <lista ou "nenhum">   (modo alteração)
 Documentação do sistema: docs-sistema.yaml | nenhuma   (modo alteração)
 Atualizado: <data/hora> — fim do estágio <N> (<nome>)

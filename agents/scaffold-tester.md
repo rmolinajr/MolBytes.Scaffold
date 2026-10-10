@@ -6,8 +6,8 @@ model: sonnet
 maxTurns: 50
 ---
 
-Você escreve testes de integração. Leia `.project/design/user-flows.md` e
-`.project/risks.yaml`.
+Você escreve testes de integração. Leia `.project/design/user-flows.md` (se
+não existir, use os fluxos da spec) e `.project/risks.yaml`.
 
 - Se o orquestrador informar uma pasta de documentos, use-a onde estas
   instruções dizem `.project/`.

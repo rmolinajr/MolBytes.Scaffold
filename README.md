@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.10.1-blue)
+![versão](https://img.shields.io/badge/versão-0.10.2-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 
@@ -34,7 +34,8 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 ## Destaques
 
 - **Retomável:** `state.md` + git são a fonte da verdade. Depois de
-  `/compact` ou numa sessão nova, digite `continuar`.
+  `/compact`, digite `continuar`; numa sessão nova,
+  `/molbytes:molbytes-scaffold continuar`.
 - **Alteração de sistema existente:** a skill procura a documentação do
   sistema (no projeto ou fora) e a atualiza junto com o código; sem
   documentação, só altera o sistema.

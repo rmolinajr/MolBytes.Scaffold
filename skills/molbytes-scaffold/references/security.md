@@ -54,33 +54,44 @@ security_requirements:
 
 ### 9.1 Ferramentas (via Docker, sem instalar nada no Windows)
 
-Rode da raiz do projeto, no PowerShell. Saídas em `.project/security/raw/`.
-Essa pasta **nunca vai para o git** (precisa estar no `.gitignore`): o relatório
-do gitleaks contém os próprios segredos encontrados. O que vai para o git é o
-`findings.yaml`, sem valores de segredo.
+Rode da raiz do projeto, na ferramenta Bash (no Windows é o Git Bash). Saídas
+em `security/raw/` da pasta de documentos. Essa pasta **nunca vai para o git**
+(precisa estar no `.gitignore`): o relatório do gitleaks contém os próprios
+segredos encontrados. O que vai para o git é o `findings.yaml`, sem valores de
+segredo. As varreduras pulam `.project/`: os relatórios não são código do
+projeto e não podem ser reanalisados.
 Se algum comando mudar de sintaxe numa versão nova da ferramenta, rode com
 `--help`, ajuste, e anote o comando usado no relatório.
 
-```powershell
-mkdir -Force .project/security/raw
+```bash
+# Pasta de documentos: .project (modo interno) ou o caminho externo
+DOCS=.project
+RAW="$DOCS/security/raw"
+mkdir -p "$RAW"
+
+# Caminhos para o Docker. No Git Bash, pwd -W dá D:/...; MSYS_NO_PATHCONV
+# impede que /src vire C:/Program Files/Git/src.
+export MSYS_NO_PATHCONV=1
+SRC="$(pwd -W 2>/dev/null || pwd)"
+OUT="$(cd "$RAW" && { pwd -W 2>/dev/null || pwd; })"
 
 # Segredos no código e no histórico do git
-docker run --rm -v "${PWD}:/repo" zricethezav/gitleaks:latest detect --source /repo --report-format json --report-path /repo/.project/security/raw/gitleaks.json
+docker run --rm -v "$SRC:/src" -v "$OUT:/out" zricethezav/gitleaks:latest detect --source /src --report-format json --report-path /out/gitleaks.json
 
 # Padrões inseguros no código (OWASP, injeção, etc.)
-docker run --rm -v "${PWD}:/src" semgrep/semgrep semgrep scan --config auto --json -o /src/.project/security/raw/semgrep.json /src
+docker run --rm -v "$SRC:/src" -v "$OUT:/out" semgrep/semgrep semgrep scan --config auto --exclude .project --json -o /out/semgrep.json /src
 
 # Dependências vulneráveis, segredos e configuração (Dockerfile, compose)
-docker run --rm -v "${PWD}:/src" aquasec/trivy fs --scanners vuln,secret,misconfig --format json -o /src/.project/security/raw/trivy.json /src
+docker run --rm -v "$SRC:/src" -v "$OUT:/out" aquasec/trivy fs --scanners vuln,secret,misconfig --skip-dirs "**/.project" --format json -o /out/trivy.json /src
 ```
 
-Complementares, se o projeto tiver a stack correspondente:
+Complementares, se o projeto tiver a stack correspondente (mesmo `$OUT`):
 
-```powershell
-cd frontend; npm audit --json > ../.project/security/raw/npm-audit.json; cd ..
+```bash
+(cd frontend && npm audit --json > "$OUT/npm-audit.json")
 pip install pip-audit bandit
-pip-audit -r backend/requirements.txt -f json -o .project/security/raw/pip-audit.json
-bandit -r backend -f json -o .project/security/raw/bandit.json
+pip-audit -r backend/requirements.txt -f json -o "$OUT/pip-audit.json"
+bandit -r backend -f json -o "$OUT/bandit.json"
 ```
 
 Se o Docker não estiver rodando, avise o usuário em vez de pular as ferramentas.
