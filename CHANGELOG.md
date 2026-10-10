@@ -13,6 +13,8 @@ Todas as mudanças relevantes do molbytes.scaffold.
 - Estágio 9: comandos em bash (a ferramenta do Claude Code), relatórios brutos
   na pasta de documentos (no modo externo, nada é criado no projeto do
   cliente) e varreduras sem `.project/`.
+- README: exemplos de execução (projeto novo, alteração, `--ate`,
+  `--sem-design`, retomada), tabela de flags e comandos durante o pipeline.
 
 ## v0.10.1
 

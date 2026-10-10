@@ -69,13 +69,68 @@ Instale como plugin no Claude Code:
 /plugin install molbytes@molbytes
 ```
 
-E rode:
+E rode, com o Claude Code aberto na pasta do projeto:
 
 ```
 /molbytes:molbytes-scaffold Sistema PDV para restaurante: terminal, cozinha, admin, offline-first, Stripe e PIX
 ```
 
-Flags no texto do pedido: `--ate <estágio>`, `--sem-design`, `--economico`.
+Copiada à mão para `~/.claude/skills/` (sem plugin), o comando é só
+`/molbytes-scaffold`.
+
+### Exemplos
+
+Projeto novo, do grill-me ao gate:
+
+```
+/molbytes:molbytes-scaffold Agenda para clínicas: agendamento online, lembrete por WhatsApp, painel do médico
+```
+
+Alterar um sistema que já existe (abra o Claude Code na pasta dele):
+
+```
+/molbytes:molbytes-scaffold Alteração: aceitar PIX no checkout
+```
+
+Só até os tickets, para revisar o plano antes de gastar com implementação:
+
+```
+/molbytes:molbytes-scaffold Agenda para clínicas: agendamento online e lembretes --ate tickets
+```
+
+API sem interface, pulando o design e com o roteamento econômico:
+
+```
+/molbytes:molbytes-scaffold API de cotação de frete para lojas virtuais --sem-design --economico
+```
+
+Retomar em outro dia, numa sessão nova:
+
+```
+/molbytes:molbytes-scaffold continuar
+```
+
+### Flags
+
+| Flag | O que faz |
+|---|---|
+| `--ate <estágio>` | Para depois do estágio indicado, pelo número ou pelo nome (`--ate 5`, `--ate tickets`). |
+| `--sem-design` | Pula o estágio 4; tickets e testes usam a spec no lugar do design. |
+| `--economico` | Usa a coluna "econômico" do roteamento de modelos. |
+
+### Durante o pipeline
+
+Digite na conversa:
+
+| Comando | O que faz |
+|---|---|
+| `status` | Tabela dos subagentes rodando (ticket, modelo, tempo, orçamento) e o estágio ou a onda atual. |
+| `continuar` | Depois de `/compact`: relê o `state.md` e segue do próximo passo. |
+| `aprovado`, ou o que mudar | Resposta às pausas: spec (estágio 2), plano e custo (6) e code review (10). |
+
+Recomendados do Claude Code: `/model sonnet` na sessão principal (os
+estágios pesados já usam opus nos subagentes) e `/compact` nos pontos que a
+skill avisa (fim dos estágios 2, 5, 8 e 9 e de cada onda do 7).
 
 Outras formas de instalar e pré-requisitos (Docker): [INSTALL.md](INSTALL.md). Histórico: [CHANGELOG.md](CHANGELOG.md).
 
