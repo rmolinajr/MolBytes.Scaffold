@@ -2,6 +2,23 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.13
+
+Menos tokens na sessão principal:
+
+- Pontos de compactação sugerem `/clear` + `/molbytes:molbytes-scaffold
+  continuar` (sessão recomeça leve pelo `state.md`); `/compact` fica como
+  alternativa, porque relê a conversa inteira para resumi-la.
+- Todos os subagentes gravam o trabalho em arquivo e respondem em até 10
+  linhas. O reviewer grava o próprio `code-review-report.md` em vez de
+  devolvê-lo inteiro.
+- Regras do implementador gravadas uma vez em `.project/regras-implementacao.md`
+  (convenções e regras por área, inclusive de extensões); as regras de código
+  seguro passaram para o próprio agente. O prompt de cada implementador fica
+  só com o ticket, o arquivo de regras e o modelo.
+- `runs.log` registra os tokens de cada subagente no `END`, e o
+  `pipeline-report.md` mostra tokens por estágio.
+
 ## v0.12
 
 - Ticket de correção (`FIX-...`, `SECURITY-...`): todo implementador lançado

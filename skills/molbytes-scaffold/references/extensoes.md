@@ -34,7 +34,7 @@ nunca o substitui. Sem extensão, o pipeline funciona igual.
 
 | Onde | O que pode | Regra |
 |---|---|---|
-| Subagentes | Regras e trechos de referência no prompt | Subagentes não leem a pasta da extensão: você cola o trecho no prompt, como faz com as referências do pipeline. |
+| Subagentes | Regras e trechos de referência | Subagentes não leem a pasta da extensão. Regras de código por área vão para `.project/regras-implementacao.md` (gravado uma vez, ver estágio 7 em `stages.md`); trechos para os outros estágios, você cola no prompt. |
 | 1 grill-me | Mostrar opções antes de perguntar, pular perguntas que ela já responde, acrescentar perguntas | O limite de 8 perguntas vale para o total. Respostas extras vão em `qa.json`, na chave `extensao`. |
 | Pasta de documentos | Arquivos próprios (ex.: painel para o cliente, protótipo, briefing) | Nunca sobrescreve arquivo do pipeline nem escreve código de produção. Entra no commit do estágio. |
 | Pausas | Pausas novas (ex.: aprovação do cliente) | Registre a pausa em `state.md` ("Próximo passo"). |

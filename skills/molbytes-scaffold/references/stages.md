@@ -139,11 +139,14 @@ Para cada onda, em ordem:
   plano** (`run_in_background`), passando `model` = o valor do
   `agent-map.json` para aquele ticket. Em segundo plano, você recebe o aviso
   de cada um que termina e pode responder `status` enquanto a onda roda.
-- Cada implementador recebe no prompt: o caminho de `.project/tickets/<id>.md`
-  (o único documento do pipeline que ele lê), as convenções do topo do índice,
-  a regra de só mexer nos arquivos listados, e o **texto** das regras de código
-  seguro de `references/security.md` (parte B). Não mande ler a spec nem o
-  `tickets.yaml` inteiros.
+- Antes da onda 1, grave **uma vez** `.project/regras-implementacao.md`: as
+  convenções do topo do índice (seção "Todos") e, se houver extensão ou
+  convenção do projeto existente, uma seção por área (`backend`, `frontend`,
+  `banco`, `infra`, `interface`). Atualize o arquivo só se uma regra mudar.
+- O prompt do implementador é curto: o caminho de `.project/tickets/<id>.md`,
+  o de `.project/regras-implementacao.md` e o modelo. As regras de código
+  seguro já estão no próprio agente. Não cole regras no prompt nem mande ler a
+  spec ou o `tickets.yaml` inteiros.
 - Testes unitários rodados durante a onda não podem depender de banco real,
   porta fixa ou serviço externo (vários implementadores rodam ao mesmo tempo na
   mesma pasta). Testes que precisam disso ficam para o estágio 8.
@@ -201,8 +204,9 @@ verificado (`scaffold(9): fix SECURITY-00X`).
 
 ## 10. code-review → scaffold-reviewer (pausa)
 
-O reviewer é somente leitura. Gera `.project/code-review-report.md` com achados
-classificados como crítico/importante/sugestão, cada um com arquivo e linha.
+O reviewer não altera código; ele mesmo grava `.project/code-review-report.md`
+com achados classificados como crítico/importante/sugestão, cada um com
+arquivo e linha, e responde só com o resumo.
 Rode também os linters do projeto, se existirem. A segurança já foi auditada no
 estágio 9: o reviewer foca em corretude e manutenção, mas ainda registra
 qualquer problema de segurança que notar.
@@ -232,7 +236,8 @@ em opus.
      atualizado (os de `site` vão para o relatório como atualização manual).
    Se algo falhar, mostre o motivo e pergunte ao usuário: corrigir agora, ou
    encerrar como "concluído com pendências" (registrado no relatório).
-4. Gere `.project/pipeline-report.md`: estágios, modelos usados, escaladas,
+4. Gere `.project/pipeline-report.md`: estágios, modelos usados, tokens por
+   estágio (somados do `runs.log`), escaladas,
    resultado dos testes, resumo de segurança (achados por severidade:
    corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status)
    e a lista "Testes manuais a fazer", pendências. Commit final.

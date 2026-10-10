@@ -31,7 +31,11 @@ Ao lançar cada subagente, registre em `.project/runs.log` (use `date` no Bash):
 
 Ao receber o resultado:
 
-    <fim ISO> | END | <agente> | <ticket> | ok|parcial|travado|falhou | <min reais>
+    <fim ISO> | END | <agente> | <ticket> | ok|parcial|travado|falhou | <min reais> | <tokens> tokens
+
+`<tokens>` é o total que o Claude Code mostra no resultado do subagente (ou
+no aviso de término, em segundo plano); se não mostrar, use `?`. É o dado que
+permite calibrar o roteamento por custo, não só por tempo.
 
 Orçamento esperado (minutos):
 

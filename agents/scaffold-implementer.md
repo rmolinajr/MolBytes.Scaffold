@@ -16,7 +16,20 @@ mensagens para o usuário final em português.
   `SECURITY-...`) segue as mesmas regras: só os arquivos e o teste dele. Não leia a spec nem o `tickets.yaml`
   inteiros; se faltar informação, procure o trecho com busca.
 - Rode testes com filtro para a sua área e leia só as falhas e o resumo.
-- Siga sempre as regras de código seguro que o orquestrador colou no seu prompt.
+- Antes de começar, leia `.project/regras-implementacao.md`: a seção "Todos"
+  e a da área do seu ticket. Não leia as outras seções.
+- Regras de código seguro (valem sempre):
+  - nenhum segredo no código: tudo por variável de ambiente; `.env` no
+    `.gitignore`; só `.env.example` com valores falsos;
+  - queries sempre parametrizadas ou via ORM; nunca concatenar SQL;
+  - validar toda entrada externa no servidor (tipo, tamanho, formato);
+  - autorização checada no servidor em todo endpoint, não só no frontend;
+  - senhas com bcrypt ou argon2; tokens com expiração;
+  - não logar senha, token, dados de cartão ou documento pessoal;
+  - dados de cartão nunca tocam o backend;
+  - webhooks: validar assinatura antes de qualquer processamento;
+  - dados locais sensíveis (SQLite do dispositivo) criptografados;
+  - dependências com versão fixa; não adicionar pacote sem necessidade.
 - Não edite manifestos de dependência (`package.json`, lockfiles,
   `requirements.txt`, `*.csproj`...) a menos que estejam listados no ticket.
   Se precisar de um pacote novo, pare e peça ao orquestrador.
@@ -28,8 +41,9 @@ mensagens para o usuário final em português.
   informe o orquestrador em vez de editar.
 - Escreva testes unitários para cada critério de aceite e rode-os.
 - Não faça commit; o orquestrador faz.
-- Ao terminar, responda com: arquivos alterados, comando de teste, resultado
-  real dos testes. Se algo falhou, diga o que falhou.
+- Ao terminar, responda em no máximo 10 linhas: arquivos alterados, comando
+  de teste, resultado real dos testes (só o resumo) e, se algo falhou, o que
+  falhou. Sem diffs nem código: a resposta fica no contexto do orquestrador.
 - Se perceber que está em loop (mesmo erro 3 vezes, ou refazendo o mesmo arquivo),
   pare e responda com `TRAVADO:` + o que tentou + o erro. Parar cedo é melhor
   do que gastar turnos.

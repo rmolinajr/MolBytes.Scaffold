@@ -18,3 +18,8 @@ pode compartilhar arquivos em `arquivos`. Escreva apenas `.project/agent-map.jso
 
 - Se o orquestrador informar uma pasta de documentos, use-a onde estas
   instruções dizem `.project/`.
+
+- **Resposta ao orquestrador:** no máximo 10 linhas: o que você gravou
+  (caminhos), números reais e pendências ou dúvidas. Sem diffs, sem código e
+  sem copiar o que já está nos arquivos: tudo o que você responde fica no
+  contexto do orquestrador e é relido a cada passo dele.

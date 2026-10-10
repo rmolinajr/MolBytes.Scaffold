@@ -118,10 +118,12 @@ Isso compacta a conversa quando ela chega a ~200 mil tokens, como rede de
 segurança (contexto grande é relido a cada passo e encarece tudo). Fica salvo nas suas configurações para as próximas sessões. Para
 voltar ao padrão: `/autocompact auto`.
 
-Além disso, a skill avisa nos fins dos estágios 2, 5, 8 e 9 e a cada onda do 7 que é um bom momento
-para `/compact`. Rode, depois digite `continuar`: ela relê o `state.md` da pasta de documentos
-e segue de onde parou. Para retomar em outro dia, numa sessão nova, rode
-`/molbytes:molbytes-scaffold continuar` (cópia manual: `/molbytes-scaffold continuar`).
+Além disso, a skill avisa nos fins dos estágios 2, 5, 8 e 9 e a cada onda do 7 que é um bom
+momento para recomeçar a sessão. O mais barato é `/clear` seguido de
+`/molbytes:molbytes-scaffold continuar` (cópia manual: `/molbytes-scaffold continuar`): a sessão
+volta leve e a skill retoma pelo `state.md` da pasta de documentos. `/compact` seguido de
+`continuar` também funciona, mas relê a conversa inteira para resumi-la. O mesmo
+`/molbytes:molbytes-scaffold continuar` serve para retomar em outro dia.
 
 ## Backup (antes de formatar o PC)
 
@@ -132,7 +134,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.12, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
+v0.13, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
 ajustes a cada projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 

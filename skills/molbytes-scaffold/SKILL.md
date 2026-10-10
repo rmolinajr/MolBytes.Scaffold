@@ -53,7 +53,7 @@ Informe o modo a cada subagente.
 - **Subagentes não leem os arquivos desta skill.** A skill pode estar instalada no
   projeto ou em `~/.claude/skills/`, então caminhos como `references/...` não são
   confiáveis para eles. Ao delegar, cole no prompt o trecho de referência de que o
-  subagente precisa (ex.: parte B de `security.md` para o implementador, a seção
+  subagente precisa (ex.: a parte C de `security.md` para o auditor, a seção
   "Estágio 7: escolha por ticket" de `model-routing.md` para o router).
 - Mostre ao usuário uma linha de status por estágio: estágio, modelo usado, resultado.
 - Se um estágio falhar, pare e explique. Não invente resultados.
@@ -81,8 +81,11 @@ chamada. Por isso:
 - **Leia pouco.** Nunca leia arquivo grande inteiro (spec, tickets, logs,
   relatórios de ferramenta): use busca e trechos. Saída de teste e build sempre
   filtrada (só falhas e o resumo final).
-- **Compacte cedo** nos pontos de compactação abaixo, inclusive a cada onda do
-  estágio 7.
+- **Recomece limpo** nos pontos de compactação abaixo, inclusive a cada onda
+  do estágio 7: sessão limpa com `continuar` custa menos que `/compact`, que
+  relê a conversa inteira para resumi-la.
+- **Respostas curtas.** Os subagentes gravam o trabalho em arquivo e respondem
+  em até 10 linhas; não peça para devolverem relatório ou código na resposta.
 
 ## Nomes dos subagentes
 
@@ -138,9 +141,13 @@ pendências, não cópias dos artefatos.
 
 **Pontos de compactação:** ao terminar os estágios **2, 5, 8 e 9**, **cada onda
 do estágio 7** e a cada 10 itens corrigidos no estágio 8, depois do commit:
-1. Diga ao usuário: "Estágio N salvo e commitado. Bom momento para rodar
-   `/compact` antes de seguir. Quando terminar, digite `continuar`."
-2. Espere a resposta. Se ele disser para seguir sem compactar, siga.
+1. Confira que "Próximo passo" do `state.md` diz exatamente o que fazer, e
+   diga ao usuário: "Estágio N salvo e commitado. Para economizar, rode
+   `/clear` e depois `<o comando que iniciou o pipeline> continuar` (ex.:
+   `/molbytes:molbytes-scaffold continuar`): a sessão recomeça leve e retoma
+   pelo `state.md`. Se preferir manter a conversa, `/compact` e depois
+   `continuar`."
+2. Espere a resposta. Se ele disser para seguir sem limpar, siga.
 
 **Depois de qualquer compactação** (manual ou automática), ou ao ser chamado
 com "continuar": antes de qualquer outra ação, resolva a pasta de documentos,

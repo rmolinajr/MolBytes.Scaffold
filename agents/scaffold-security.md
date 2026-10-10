@@ -22,3 +22,8 @@ prompt.
 - Na verificação de correção, rode você mesmo o teste de reprodução, a
   ferramenta e a suíte. Não confie no relato de quem corrigiu.
 - Relate apenas o que as ferramentas e os testes mostraram de fato.
+
+- **Resposta ao orquestrador:** no máximo 10 linhas: o que você gravou
+  (caminhos), números reais e pendências ou dúvidas. Sem diffs, sem código e
+  sem copiar o que já está nos arquivos: tudo o que você responde fica no
+  contexto do orquestrador e é relido a cada passo dele.

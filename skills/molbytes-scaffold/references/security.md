@@ -36,6 +36,9 @@ security_requirements:
 
 ## B. Regras de código seguro (estágio 7, para todo implementador)
 
+Estas regras também estão no agente `scaffold-implementer` (não precisam ser
+coladas no prompt). Mudou aqui, mude lá.
+
 - Nenhum segredo no código: tudo por variável de ambiente; `.env` no
   `.gitignore`; só `.env.example` com valores falsos.
 - Queries sempre parametrizadas ou via ORM. Nunca concatenar SQL.

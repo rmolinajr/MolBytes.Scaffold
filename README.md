@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.12.0-blue)
+![versão](https://img.shields.io/badge/versão-0.13.0-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 
@@ -134,12 +134,14 @@ Digite na conversa:
 | Comando | O que faz |
 |---|---|
 | `status` | Tabela dos subagentes rodando (ticket, modelo, tempo, orçamento) e o estágio ou a onda atual. |
-| `continuar` | Depois de `/compact`: relê o `state.md` e segue do próximo passo. |
+| `continuar` | Depois de `/compact`: relê o `state.md` e segue do próximo passo. Depois de `/clear` (mais barato), use `/molbytes:molbytes-scaffold continuar`. |
 | `aprovado`, ou o que mudar | Resposta às pausas: spec (estágio 2), plano e custo (6) e code review (10). |
 
 Recomendados do Claude Code: `/model sonnet` na sessão principal (os
-estágios pesados já usam opus nos subagentes) e `/compact` nos pontos que a
-skill avisa (fim dos estágios 2, 5, 8 e 9 e de cada onda do 7).
+estágios pesados já usam opus nos subagentes) e, nos pontos que a skill avisa
+(fim dos estágios 2, 5, 8 e 9 e de cada onda do 7), `/clear` seguido de
+`/molbytes:molbytes-scaffold continuar`: a sessão recomeça leve, pelo
+`state.md`. `/compact` também serve, mas custa mais.
 
 Outras formas de instalar e pré-requisitos (Docker): [INSTALL.md](INSTALL.md). Histórico: [CHANGELOG.md](CHANGELOG.md).
 
@@ -167,7 +169,7 @@ agents/
 
 ## Status
 
-v0.12, em evolução: os ajustes da v0.10 vieram de uma execução real. Não substitui um pentest
+v0.13, em evolução: os ajustes da v0.10 vieram de uma execução real. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor

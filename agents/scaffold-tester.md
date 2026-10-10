@@ -20,3 +20,8 @@ não existir, use os fluxos da spec) e `.project/risks.yaml`.
 - Não altere código de produção. Se um teste revelar bug, marque `falhou`: a
   correção é de outro agente.
 - No relatório, copie apenas números que as ferramentas realmente mostraram.
+
+- **Resposta ao orquestrador:** no máximo 10 linhas: o que você gravou
+  (caminhos), números reais e pendências ou dúvidas. Sem diffs, sem código e
+  sem copiar o que já está nos arquivos: tudo o que você responde fica no
+  contexto do orquestrador e é relido a cada passo dele.
