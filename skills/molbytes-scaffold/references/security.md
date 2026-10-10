@@ -63,6 +63,19 @@ em `security/raw/` da pasta de documentos. Essa pasta **nunca vai para o git**
 segredos encontrados. O que vai para o git é o `findings.yaml`, sem valores de
 segredo. As varreduras pulam `.project/`: os relatórios não são código do
 projeto e não podem ser reanalisados.
+
+Regras para rodar ferramenta de terceiros sobre o código do cliente:
+
+- **Versão fixa** em toda imagem (nunca `latest` ou sem tag). Para subir de
+  versão, troque a tag aqui e rode uma vez num projeto de teste.
+- **Projeto somente leitura** (`:ro`): os scanners só leem; a saída vai para
+  `$OUT`, montado à parte.
+- **Nada sai da máquina além do necessário:** semgrep com `--metrics off` e
+  conjuntos de regras fixos (`--config auto` exige métricas ligadas); sem
+  checagem de versão nas ferramentas.
+- **Nada instalado na máquina do usuário:** ferramentas de linguagem rodam em
+  container descartável.
+
 Se algum comando mudar de sintaxe numa versão nova da ferramenta, rode com
 `--help`, ajuste, e anote o comando usado no relatório.
 
@@ -79,23 +92,27 @@ SRC="$(pwd -W 2>/dev/null || pwd)"
 OUT="$(cd "$RAW" && { pwd -W 2>/dev/null || pwd; })"
 
 # Segredos no código e no histórico do git
-docker run --rm -v "$SRC:/src" -v "$OUT:/out" zricethezav/gitleaks:latest detect --source /src --report-format json --report-path /out/gitleaks.json
+docker run --rm -v "$SRC:/src:ro" -v "$OUT:/out" zricethezav/gitleaks:v8.30.1 detect --source /src --report-format json --report-path /out/gitleaks.json
 
 # Padrões inseguros no código (OWASP, injeção, etc.)
-docker run --rm -v "$SRC:/src" -v "$OUT:/out" semgrep/semgrep semgrep scan --config auto --exclude .project --json -o /out/semgrep.json /src
+docker run --rm -v "$SRC:/src:ro" -v "$OUT:/out" semgrep/semgrep:1.178.0 semgrep scan --metrics off --disable-version-check --config p/default --config p/owasp-top-ten --config p/secrets --exclude .project --json -o /out/semgrep.json /src
 
 # Dependências vulneráveis, segredos e configuração (Dockerfile, compose)
-docker run --rm -v "$SRC:/src" -v "$OUT:/out" aquasec/trivy fs --scanners vuln,secret,misconfig --skip-dirs "**/.project" --format json -o /out/trivy.json /src
+docker run --rm -v "$SRC:/src:ro" -v "$OUT:/out" aquasec/trivy:0.74.0 fs --skip-version-check --scanners vuln,secret,misconfig --skip-dirs "**/.project" --format json -o /out/trivy.json /src
 ```
 
 Complementares, se o projeto tiver a stack correspondente (mesmo `$OUT`):
 
 ```bash
+# Node: o npm do projeto, sem instalar nada
 (cd frontend && npm audit --json > "$OUT/npm-audit.json")
-pip install pip-audit bandit
-pip-audit -r backend/requirements.txt -f json -o "$OUT/pip-audit.json"
-bandit -r backend -f json -o "$OUT/bandit.json"
+
+# Python: pip-audit e bandit num container descartável
+docker run --rm -v "$SRC:/src:ro" -v "$OUT:/out" python:3.12-slim sh -c "pip install -q --root-user-action=ignore --disable-pip-version-check pip-audit==2.10.1 bandit==1.9.4 && pip-audit -r /src/backend/requirements.txt -f json -o /out/pip-audit.json; bandit -q -r /src/backend -f json -o /out/bandit.json; true"
 ```
+
+Versões testadas em 2026-10-11 (projeto de teste com segredo, SQL
+concatenado e dependência vulnerável: todos acharam o esperado).
 
 Se o Docker não estiver rodando, avise o usuário em vez de pular as ferramentas.
 

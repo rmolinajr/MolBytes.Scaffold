@@ -2,6 +2,18 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.13.1
+
+Estágio 9 mais seguro para o código do cliente (comandos testados num projeto
+de teste com segredo, SQL concatenado e dependência vulnerável):
+
+- Imagens com versão fixa: gitleaks v8.30.1, semgrep 1.178.0, trivy 0.74.0.
+- Projeto montado somente leitura (`:ro`) em todos os scanners.
+- semgrep com `--metrics off` e regras fixas (`p/default`, `p/owasp-top-ten`,
+  `p/secrets`): `--config auto` exige enviar métricas. Sem checagem de versão.
+- pip-audit e bandit num container descartável com versões fixas, em vez de
+  `pip install` no Python da máquina.
+
 ## v0.13
 
 Menos tokens na sessão principal:

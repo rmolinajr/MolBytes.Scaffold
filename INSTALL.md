@@ -144,9 +144,13 @@ Histórico de versões: [CHANGELOG.md](CHANGELOG.md).
 
 Com o Docker Desktop aberto, baixe uma vez (PowerShell):
 
-    docker pull zricethezav/gitleaks:latest
-    docker pull semgrep/semgrep
-    docker pull aquasec/trivy
+    docker pull zricethezav/gitleaks:v8.30.1
+    docker pull semgrep/semgrep:1.178.0
+    docker pull aquasec/trivy:0.74.0
+    docker pull python:3.12-slim
+
+São as versões fixadas em `references/security.md` (parte C). O projeto é
+montado somente leitura nos containers, e o semgrep roda sem enviar métricas.
 
 Isso continua não substituindo um pentest profissional antes de processar
 pagamentos reais.
