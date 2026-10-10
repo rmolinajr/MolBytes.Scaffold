@@ -88,7 +88,13 @@ Só quando há `docs-sistema.yaml`:
 - Testes (estágios 8 e 11): falha que já existia no ponto de partida não é da
   alteração; falha nova é e bloqueia.
 - Segurança (estágio 9): achado em código que a alteração não tocou
-  (`git diff <base_commit>`) vira `tech_debt` com `preexistente: true` e não
-  bloqueia; aparece no relatório.
+  (`git diff <base_commit>`) fica com status `divida` e vai para `tech_debt`
+  com `preexistente: true`; não bloqueia e aparece no relatório.
 - Estágio 2: se `spec.md` já existir de um uso anterior da skill, atualize-a
   com a alteração em vez de reescrever.
+- Estágio 3 curto: só os riscos e requisitos de segurança que a alteração
+  introduz ou toca. Se não houver nenhum, `risks.yaml` sai com as listas
+  vazias e um `motivo:` dizendo por quê (o planner e o tester leem o arquivo).
+- Estágio 4: se a alteração não muda telas nem fluxos de usuário, proponha
+  pular o design ("A mudança não mexe em telas; pulo o design?"). Com o sim,
+  registre `--sem-design` em `Flags:` do `state.md`.

@@ -47,9 +47,11 @@ com o resultado real:
 
 Para cada item `falhou`, um por vez:
 
-1. Lance um `scaffold-implementer` com: o item, o teste, a mensagem de erro, o
-   trecho da spec e o ticket de origem. Modelo: o do ticket de origem em
-   `agent-map.json` na 1ª tentativa; opus na 2ª.
+1. Escreva o ticket de correção `FIX-TP-00X` (fim de `stages.md`) com o item,
+   o teste, a mensagem de erro e o trecho da spec, e lance um
+   `scaffold-implementer` com ele. Modelo na 1ª tentativa: o mais alto entre
+   os tickets de `origem` em `agent-map.json` (sem ticket na origem, só fluxo,
+   risco ou SR: sonnet); na 2ª, opus.
 2. A correção é **no código de produção**. O teste só pode mudar se estiver
    errado em relação à spec; nesse caso o implementador explica o motivo, que
    vai para o `detalhe`, e o reviewer confere no estágio 10.
@@ -71,7 +73,8 @@ mostrou.
 
 ## Estágio 11
 
-Rode o plano inteiro de novo (os estágios 9 e 10 mudam código). Atualize os
+O `scaffold-tester` roda o plano inteiro de novo (os estágios 9 e 10 mudam
+código). Atualize os
 status. Falha nova passa pelo mesmo ciclo do 8.3. O gate exige todo item
 automatizado `passou` ou `aceito`. Itens `manual` não bloqueiam: vão para o
 `pipeline-report.md` em "Testes manuais a fazer".

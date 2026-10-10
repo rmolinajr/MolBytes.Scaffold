@@ -54,7 +54,7 @@ checkout`). A skill procura a documentação do sistema; se não achar, pergunta
 se há em outro lugar. Se houver, ela é atualizada junto com o código; se não
 houver, só o sistema é alterado.
 
-**Rode a sessão principal em sonnet** (`/model sonnet`). É a decisão que mais
+**Rode a sessão principal em sonnet, com esforço médio** (`/model sonnet`). É a decisão que mais
 pesa no custo: a sessão principal relê todo o contexto a cada passo, e os
 estágios pesados já vão para opus pelos subagentes. Numa execução real com a
 sessão principal em opus, ela gastou mais que todos os subagentes juntos.
@@ -132,8 +132,8 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.10, ainda não testada numa execução real. Espere ajustes depois do primeiro
-projeto. Ajuste modelos em `references/model-routing.md` com base em
+v0.12, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
+ajustes a cada projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 
 Histórico de versões: [CHANGELOG.md](CHANGELOG.md).

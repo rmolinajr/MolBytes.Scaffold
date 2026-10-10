@@ -127,8 +127,9 @@ Regras:
 - Falso positivo só com justificativa concreta (ex.: "valor vem de constante,
   não de entrada do usuário"). Na dúvida, não é falso positivo.
 - Achados duplicados entre ferramentas viram um só.
-- Baixa e falso positivo → `risks.yaml` em `tech_debt`, status `divida` ou
-  `falso_positivo`, não bloqueiam.
+- Baixa e falso positivo → status `divida` ou `falso_positivo`, não bloqueiam.
+  O orquestrador os copia para `risks.yaml` em `tech_debt`
+  (`origem: SECURITY-00X`).
 
 ### 9.3 Correção (scaffold-implementer, sempre opus)
 

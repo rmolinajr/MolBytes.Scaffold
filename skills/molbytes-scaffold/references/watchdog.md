@@ -46,6 +46,8 @@ Orçamento esperado (minutos):
 | 9.3 fix por ticket | — | — | 20 |
 | 9.4 verify por ticket | — | — | 15 |
 | estágio 10 | — | 25 | 30 |
+| 11 testes | — | 20 | — |
+| 11 rescan | — | 15 | 20 |
 
 **Quando verificar** (nunca em loop, nunca com `sleep`):
 - quando qualquer subagente da onda termina;

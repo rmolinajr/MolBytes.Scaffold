@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.11.0-blue)
+![versão](https://img.shields.io/badge/versão-0.12.0-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 
@@ -29,7 +29,7 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 | 8 | plano de teste → executar → corrigir falhas | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes | se a correção falhar 2x |
 | 9 | segurança: audit → triage → fix → verify | `scaffold-security` + `scaffold-implementer` | `.project/security/` | achados médios |
 | 10 | code review | `scaffold-reviewer` | `.project/code-review-report.md` | **decidir correções** |
-| 11 | testes finais + rescan + gate | sessão principal | `.project/pipeline-report.md` | se bloquear |
+| 11 | testes finais + rescan + gate | `scaffold-tester` + `scaffold-security` | `.project/pipeline-report.md` | se bloquear |
 
 ## Destaques
 
@@ -41,7 +41,8 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
   `references/extensoes.md`.
 - **Alteração de sistema existente:** a skill procura a documentação do
   sistema (no projeto ou fora) e a atualiza junto com o código; sem
-  documentação, só altera o sistema.
+  documentação, só altera o sistema. Mudança pequena sai mais barata: riscos
+  só do que muda e design pulado quando não há tela nova.
 - **Documentos fora do projeto, se quiser:** spec, design e relatórios ficam em
   `.project/` ou numa pasta separada com git próprio, para não sujar o projeto
   do cliente. Ver [INSTALL.md](INSTALL.md#onde-ficam-os-documentos).
@@ -50,13 +51,18 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
   de tudo.
 - **Roteamento de modelo por ticket:** pagamentos, auth, sync offline e
   concorrência vão para opus; config e CRUD trivial para haiku; o resto sonnet.
-  Escala automaticamente quando os testes falham.
+  Quando os testes falham, tenta de novo no mesmo modelo e depois sobe um
+  nível.
 - **Segurança em duas pontas:** modelo de ameaças e requisitos testáveis antes
   do código; gitleaks, semgrep e trivy (via Docker) + revisão OWASP depois. Toda
   correção começa por um teste que reproduz a falha e é verificada por outro
   agente.
 - **Watchdog:** `maxTurns` por subagente, orçamento de tempo em
-  `.project/runs.log`, comando `status` a qualquer momento.
+  `.project/runs.log`, comando `status` a qualquer momento (os
+  implementadores rodam em segundo plano).
+- **Sessão principal leve:** ela só orquestra. Toda correção (teste,
+  segurança, review, merge) vai para um implementador com um ticket de
+  correção, e os testes e o rescan do estágio 11 rodam em subagentes.
 - **Plano de teste com correção:** cada requisito vira item de um plano de
   teste; o que falha é corrigido no código (sem afrouxar o teste) e testado de
   novo; testes manuais vão como lista no relatório.
@@ -161,7 +167,7 @@ agents/
 
 ## Status
 
-v0.10, ainda não validada numa execução completa. Não substitui um pentest
+v0.12, em evolução: os ajustes da v0.10 vieram de uma execução real. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor

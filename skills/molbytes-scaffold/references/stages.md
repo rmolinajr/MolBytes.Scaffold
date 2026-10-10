@@ -48,6 +48,8 @@ tech_debt:
   - id: TD-001
     titulo: ...
     motivo: ...
+    origem: risco          # risco | SECURITY-00X | code-review
+    preexistente: false    # modo alteração: código que a alteração não tocou
 ```
 Riscos de severidade alta com `quando: mvp` viram requisitos na etapa 5.
 
@@ -86,13 +88,14 @@ Cada ticket no índice:
   depende_de: []
   arquivos: [backend/app/auth.py]   # diretórios/arquivos que o ticket toca
   docs: [README.md]                 # modo alteração: documentos do sistema que o ticket atualiza
+  security_reqs: [SR-001]           # requisitos de segurança que o ticket cumpre
   criterios_aceite: [...]
   testes: [...]
 ```
 Tickets pequenos (meio dia de trabalho humano no máximo). Inclua os riscos altos
 do MVP como tickets ou critérios de aceite. Cada item de `security_requirements`
-deve aparecer como critério de aceite (com teste) em pelo menos um ticket;
-liste no ticket o campo `security_reqs: [SR-001, ...]`.
+deve aparecer como critério de aceite (com teste) em pelo menos um ticket, que
+o lista em `security_reqs`.
 
 **Ticket de bootstrap obrigatório:** o primeiro ticket é sempre `INFRA-000`, sem
 dependências, e todos os outros dependem dele. Ele cria a estrutura de pastas,
@@ -132,8 +135,10 @@ usuário pedir, rebaixe tickets ou aplique `--economico` e reenvie ao router.
 ## 7. implement → scaffold-implementer (paralelo por onda)
 
 Para cada onda, em ordem:
-- Lance um `scaffold-implementer` por ticket, **em paralelo**, passando
-  `model` = o valor do `agent-map.json` para aquele ticket.
+- Lance um `scaffold-implementer` por ticket, **em paralelo e em segundo
+  plano** (`run_in_background`), passando `model` = o valor do
+  `agent-map.json` para aquele ticket. Em segundo plano, você recebe o aviso
+  de cada um que termina e pode responder `status` enquanto a onda roda.
 - Cada implementador recebe no prompt: o caminho de `.project/tickets/<id>.md`
   (o único documento do pipeline que ele lê), as convenções do topo do índice,
   a regra de só mexer nos arquivos listados, e o **texto** das regras de código
@@ -146,7 +151,8 @@ Para cada onda, em ordem:
   termina, faça a verificação de `references/watchdog.md` nos que ainda rodam.
 - Ao terminar a onda, rode os testes unitários da área, com saída filtrada (só
   falhas e resumo). Aplique o escalonamento de `model-routing.md` se falharem.
-  Conflito de merge ou falha a investigar vai para um subagente, não para você.
+  Conflito de merge ou falha a investigar vai para um subagente com um
+  **ticket de correção** (fim deste arquivo), não para você.
 - Commit por onda: `scaffold(7): onda N`.
 - **Modo alteração:** passe ao implementador a lista `docs` do ticket; ele
   atualiza esses documentos junto com o código.
@@ -175,13 +181,15 @@ Siga `references/security.md`, parte C, na ordem:
 1. **9.1 audit** — rode as ferramentas e peça ao `scaffold-security` (opus) a
    revisão manual. Saída: `.project/security/findings.yaml`.
 2. **9.2 triage** — `scaffold-security` classifica cada achado. Baixo e falso
-   positivo justificado vão para `risks.yaml` (`tech_debt`) e não bloqueiam.
+   positivo justificado ficam com status `divida` ou `falso_positivo` e não
+   bloqueiam; você (não o agente, que só escreve em `security/`) os copia para
+   `risks.yaml` em `tech_debt`, com `origem: SECURITY-00X`.
 3. Se não sobrar crítico, alto ou médio: vá para o estágio 10.
 4. Se houver **médio**: pergunte ao usuário, para cada um, "corrigir" ou
    "aceitar o risco". Aceite vira registro em `.project/security/accepted.md`
    com a justificativa dele.
-5. **9.3 fix** — para cada SECURITY-00X a corrigir, lance um
-   `scaffold-implementer` com `model: opus`. Primeiro ele escreve o teste que
+5. **9.3 fix** — para cada SECURITY-00X a corrigir, escreva o ticket de
+   correção `SECURITY-00X` e lance um `scaffold-implementer` com `model: opus`. Primeiro ele escreve o teste que
    reproduz a falha (precisa falhar), depois corrige.
 6. **9.4 verify** — `scaffold-security` (não o implementador) confere os três
    critérios da parte C. Se reprovar, volta ao 9.3 com o motivo. **Máximo de
@@ -203,15 +211,18 @@ qualquer problema de segurança que notar.
 documento da "Documentação afetada" bate com o código.
 
 Apresente o resumo ao usuário e **pergunte** se quer que os críticos sejam
-corrigidos (em opus) antes de seguir.
+corrigidos antes de seguir: um ticket de correção `FIX-REVIEW-<n>` por crítico,
+em opus.
 
 ## 11. final → testes + rescan + gate
 
-1. Rode a suíte completa de testes (unitários + integração) e atualize o
-   `plano-de-teste.yaml`; falha nova passa pela correção do 8.3.
-2. Rode o **rescan rápido** de `references/security.md`, parte D (só
-   ferramentas, sem o agente de segurança, exceto se aparecer achado novo).
-3. **Gate:** o pipeline só termina como "concluído" se:
+1. **Testes** → `scaffold-tester` (sonnet): roda a suíte completa (unitários +
+   integração), atualiza o `plano-de-teste.yaml` e devolve só totais e falhas.
+   Falha nova passa pela correção do 8.3.
+2. **Rescan** → `scaffold-security` (sonnet): roda o rescan rápido de
+   `references/security.md`, parte D, e devolve "nada novo" ou a lista de
+   achados novos. Achado novo: triagem em outra chamada, em opus.
+3. **Gate** (você, lendo os resumos): o pipeline só termina como "concluído" se:
    - todos os testes passam e todo item automatizado do plano está `passou`
      ou `aceito` (itens `manual` não bloqueiam);
    - não há achado crítico ou alto aberto;
@@ -225,3 +236,24 @@ corrigidos (em opus) antes de seguir.
    resultado dos testes, resumo de segurança (achados por severidade:
    corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status)
    e a lista "Testes manuais a fazer", pendências. Commit final.
+
+## Ticket de correção (implementador fora da onda)
+
+Sempre que um `scaffold-implementer` for lançado fora de um ticket do estágio 5
+(falha de testes ao fim da onda, conflito de merge, item do plano de teste,
+achado de segurança, crítico do code review, falha nova no estágio 11),
+escreva antes `.project/tickets/<id>.md`, com até ~2 mil caracteres:
+
+- **id:** `FIX-<origem>` (ex.: `FIX-TP-007`, `FIX-REVIEW-3`, `FIX-MERGE-2`) ou
+  o próprio `SECURITY-00X`;
+- **origem:** o item, achado, ticket ou onda que gerou a correção;
+- **problema:** a falha resumida (erro, arquivo:linha, saída filtrada);
+- **arquivos:** os que ele pode mexer (os do ticket de origem e os apontados
+  pela falha);
+- **teste:** o que precisa passar no fim (o do item, o de reprodução ou a
+  suíte da área);
+- **critério:** quando está corrigido.
+
+O ticket de correção não entra no `tickets.yaml`. O implementador o trata
+como qualquer ticket: lê só esse arquivo e mexe só nos arquivos listados.
+Registre o START no `runs.log` com esse id.

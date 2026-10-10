@@ -12,7 +12,8 @@ mensagens para o usuário final em português.
 - Se o orquestrador informar uma pasta de documentos, use-a onde estas
   instruções dizem `.project/`.
 - Leia só o seu ticket em `.project/tickets/<id>.md` (ele traz os trechos da
-  spec e do design de que você precisa). Não leia a spec nem o `tickets.yaml`
+  spec e do design de que você precisa). Ticket de correção (`FIX-...` ou
+  `SECURITY-...`) segue as mesmas regras: só os arquivos e o teste dele. Não leia a spec nem o `tickets.yaml`
   inteiros; se faltar informação, procure o trecho com busca.
 - Rode testes com filtro para a sua área e leia só as falhas e o resumo.
 - Siga sempre as regras de código seguro que o orquestrador colou no seu prompt.

@@ -25,7 +25,9 @@ e deixa o item 2 como padrão seguro para o resto.
 | 9 security: audit, triage, verify | opus | opus | auditor precisa ser o mais forte |
 | 9 security: fix | opus | opus | correção de segurança não pode ser superficial |
 | 10 code-review | opus | sonnet | segurança já foi auditada no 9 |
-| 11 final | sessão principal | sessão principal | só roda ferramentas e testes |
+| 11 final: testes | sonnet | sonnet | `scaffold-tester` roda a suíte e o plano |
+| 11 final: rescan | sonnet; opus para triar achado novo | igual | só ferramentas; triagem exige o auditor forte |
+| 11 final: gate e relatório | sessão principal | sessão principal | lê só resumos |
 
 O estágio 9 continua em opus mesmo no modo econômico: é o filtro de segurança.
 
@@ -52,7 +54,7 @@ projeto) não é motivo para opus: é sonnet.
 - ajustes de estilo/CSS sem lógica
 
 **sonnet** para todo o resto (padrão). Na dúvida, sonnet: o escalonamento
-automático sobe para opus se os testes falharem.
+automático sobe de nível se os testes falharem.
 
 **Limite:** opus em mais de 25% dos tickets indica classificação frouxa. Nesse
 caso, o router lista os tickets em opus com o motivo, e o orquestrador mostra a
@@ -60,10 +62,17 @@ lista ao usuário no estágio 6.
 
 ## Escalonamento automático
 
-- Se um implementador em sonnet ou haiku entregar um ticket cujos testes falham
-  duas vezes seguidas, reexecute o ticket com `model: opus`.
-- Se o reviewer (estágio 10) apontar problema crítico num arquivo, a correção é
-  feita em opus.
+Quem relança é você (orquestrador): o implementador anterior já encerrou.
+
+- **Testes do ticket falharam:** relance uma vez no mesmo modelo, com a saída
+  filtrada das falhas no prompt. Falhou de novo: suba um nível
+  (haiku→sonnet→opus).
+- **`TRAVADO:` ou parado pelo usuário:** suba um nível direto, com o erro no
+  prompt (ver `watchdog.md`).
+- **Falhou em opus:** o ticket vira pendência (ver `watchdog.md`).
+- **Correção de item do plano de teste (estágio 8):** regra própria em
+  `plano-de-teste.md` (2ª tentativa em opus).
+- **Crítico do code review (estágio 10):** correção em opus.
 - Registre toda escalada em `.project/model-log.md` (ticket, modelo inicial,
   modelo final, motivo). Isso serve para ajustar esta tabela com dados reais.
 

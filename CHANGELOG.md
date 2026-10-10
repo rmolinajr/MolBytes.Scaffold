@@ -2,6 +2,28 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.12
+
+- Ticket de correção (`FIX-...`, `SECURITY-...`): todo implementador lançado
+  fora do estágio 7 (plano de teste, segurança, review, merge, estágio 11)
+  recebe um ticket com arquivos permitidos, teste e critério.
+- Estágio 11: testes no `scaffold-tester` e rescan no `scaffold-security`; a
+  sessão principal só faz o gate e o relatório. Orçamentos no watchdog.
+- Escalonamento único: falha de teste repete no mesmo modelo e depois sobe um
+  nível; `TRAVADO:` sobe direto. Correção do plano usa o modelo mais alto dos
+  tickets de origem.
+- Implementadores do estágio 7 em segundo plano, para o `status` responder
+  durante a onda.
+- Triagem de segurança: baixa e falso positivo ficam em `findings.yaml`; o
+  orquestrador os copia para `tech_debt` (agora com `origem` e
+  `preexistente`).
+- Índice de tickets com `security_reqs`, `criterios_aceite` e `testes` iguais
+  no planner e em `stages.md`.
+- Modo alteração: estágio 3 só com o que a mudança traz; propõe pular o design
+  quando não há tela nova.
+- Capa sem número de versão; README e INSTALL com o estado atual e esforço
+  médio na sessão principal.
+
 ## v0.11
 
 - Contrato das extensões (`references/extensoes.md`, contrato 1): quando e

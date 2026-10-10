@@ -76,7 +76,8 @@ chamada. Por isso:
   desligá-lo neste projeto (ver INSTALL.md, "Custo").
 - **Você só orquestra.** Não faça trabalho pesado na sessão principal: merge com
   conflito, correção de teste, depuração, investigação de falha e refatoração
-  vão para um subagente (`scaffold-implementer`) com o problema descrito.
+  vão para um subagente (`scaffold-implementer`) com um ticket de correção
+  (fim de `references/stages.md`).
 - **Leia pouco.** Nunca leia arquivo grande inteiro (spec, tickets, logs,
   relatórios de ferramenta): use busca e trechos. Saída de teste e build sempre
   filtrada (só falhas e o resumo final).
@@ -120,7 +121,7 @@ pipeline funciona igual.
 | 8 | tests (plano → executar → corrigir) | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes + relatório | só se a correção falhar 2x |
 | 9 | security (audit → triage → fix → verify) | `scaffold-security` + `scaffold-implementer` | `.project/security/` | só se houver decisão |
 | 10 | code-review | `scaffold-reviewer` | `.project/code-review-report.md` | **SIM** |
-| 11 | final (testes + rescan + gate) | você + ferramentas | `.project/pipeline-report.md` | só se bloquear |
+| 11 | final (testes + rescan + gate) | `scaffold-tester` + `scaffold-security`; gate: você | `.project/pipeline-report.md` | só se bloquear |
 
 Instruções detalhadas de cada estágio: `references/stages.md`. Leia a seção do
 estágio antes de executá-lo. Para os estágios 2, 3, 7, 9 e 11, leia também
