@@ -22,11 +22,7 @@ do seu usuário (`%USERPROFILE%\.claude\` no Windows, `~/.claude/` no macOS/Linu
 Resultado esperado:
 
     ~/.claude/skills/molbytes-scaffold/SKILL.md
-    ~/.claude/skills/molbytes-scaffold/references/model-routing.md
-    ~/.claude/skills/molbytes-scaffold/references/security.md
-    ~/.claude/skills/molbytes-scaffold/references/stages.md
-    ~/.claude/skills/molbytes-scaffold/references/state-template.md
-    ~/.claude/skills/molbytes-scaffold/references/watchdog.md
+    ~/.claude/skills/molbytes-scaffold/references/   (9 arquivos .md)
     ~/.claude/agents/scaffold-*.md   (8 arquivos)
 
 Se já existir `~/.claude/agents/`, só acrescente os arquivos.

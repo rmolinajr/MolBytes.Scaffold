@@ -108,7 +108,8 @@ adiciona entre ondas.
 ## 6. assign-to-agents → scaffold-router (haiku)
 
 O router lê só o índice `tickets.yaml` e as regras de `references/model-routing.md`
-(coladas no prompt) e gera
+(coladas no prompt; com extensão que traz roteamento calibrado, cole também a
+tabela dela, conforme `references/extensoes.md`) e gera
 `.project/agent-map.json`:
 ```json
 { "ondas": [

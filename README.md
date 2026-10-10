@@ -4,7 +4,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.10.2-blue)
+![versão](https://img.shields.io/badge/versão-0.11.0-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
 
@@ -36,6 +36,9 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 - **Retomável:** `state.md` + git são a fonte da verdade. Depois de
   `/compact`, digite `continuar`; numa sessão nova,
   `/molbytes:molbytes-scaffold continuar`.
+- **Extensível:** uma skill de extensão acrescenta regras por stack, domínio
+  ou compliance sem mudar o pipeline; o contrato está em
+  `references/extensoes.md`.
 - **Alteração de sistema existente:** a skill procura a documentação do
   sistema (no projeto ou fora) e a atualiza junto com o código; sem
   documentação, só altera o sistema.
@@ -151,6 +154,7 @@ skills/molbytes-scaffold/
     documentos.md               # pasta de documentos: interna ou externa
     alteracao.md                # alteração de sistema existente e sua documentação
     plano-de-teste.md           # plano de teste, execução, correção automática
+    extensoes.md                # contrato das skills de extensão
 agents/
   scaffold-*.md                 # 8 subagentes
 ```

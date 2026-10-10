@@ -93,15 +93,17 @@ abaixo os nomes aparecem sem prefixo.
 
 ## Extensões
 
-Antes do estágio 1, e sempre que retomar, veja na lista de skills disponíveis
-se existe uma chamada `molbytes-extension` (com ou sem prefixo de plugin) ou
-cuja descrição comece com "Extensão" do molbytes.scaffold. Se existir,
-invoque-a e siga a tabela dela sobre em que estágio entra cada referência.
-Diga ao usuário em uma linha qual extensão foi carregada e registre o nome em
-`state.md` (`Extensão:`); a compactação apaga o conteúdo dela da conversa.
+Depois da pasta de documentos e do modo, antes do estágio 1, e sempre que
+retomar, veja na lista de skills disponíveis se existe uma chamada
+`molbytes-extension` (com ou sem prefixo de plugin) ou cuja descrição comece
+com "Extensão" do molbytes.scaffold. Se existir, leia
+`references/extensoes.md` (o contrato: como carregar, o que a extensão pode
+acrescentar e o que não pode mudar), invoque-a e siga a tabela dela sobre em
+que estágio entra cada referência. Registre o nome em `state.md`
+(`Extensão:`); a compactação apaga o conteúdo dela da conversa.
 
-Extensões complementam o pipeline; não removem as pausas de aprovação, o
-roteamento explícito de modelo nem o gate do estágio 11. Sem extensão, o
+Extensões complementam o pipeline; não removem estágios, pausas de aprovação,
+o roteamento explícito de modelo nem o gate do estágio 11. Sem extensão, o
 pipeline funciona igual.
 
 ## Pipeline

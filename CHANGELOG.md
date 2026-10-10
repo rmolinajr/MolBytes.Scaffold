@@ -2,6 +2,16 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.11
+
+- Contrato das extensões (`references/extensoes.md`, contrato 1): quando e
+  como carregar (depois da pasta de documentos e do modo; várias em ordem
+  alfabética), a linha `Contrato: extensões 1` que a extensão declara, o que
+  ela pode acrescentar (perguntas no grill-me dentro do limite, arquivos na
+  pasta de documentos, pausas, roteamento calibrado com motivo explícito,
+  condições no gate) e o que não pode mudar (estágios, pausas, gate,
+  formatos de arquivo, flags). Conflito: o pipeline prevalece.
+
 ## v0.10.2
 
 - Retomada numa sessão nova: `/molbytes:molbytes-scaffold continuar` (só
