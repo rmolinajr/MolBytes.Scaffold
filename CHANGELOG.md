@@ -2,6 +2,18 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.13.3
+
+Worktree e branch do pipeline não ficam para trás (numa execução real
+sobraram worktrees `worktree-agent-*` depois do merge):
+
+- Estágio 7: com implementadores em worktree isolada, cada ticket mergeado tem
+  a worktree e a branch removidas na hora; tentativa relançada ou descartada
+  também. Sem `--force`; antes do commit da onda, `git worktree list` só com a
+  pasta do projeto.
+- Estágio 11: passo de limpeza antes do relatório; o que não está mergeado vai
+  para as pendências e é mostrado ao usuário.
+
 ## v0.13.2
 
 Coerência depois das mudanças da v0.10.2 à v0.13.1 (revisão de todos os

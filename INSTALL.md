@@ -135,7 +135,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.13.2, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
+v0.13.3, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
 ajustes a cada projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 

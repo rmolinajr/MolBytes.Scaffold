@@ -163,6 +163,14 @@ Para cada onda, em ordem:
   o escalonamento de `model-routing.md`. Conflito de merge ou falha que não é
   de um ticket só vai para um subagente com um **ticket de correção** (fim
   deste arquivo), não para você.
+- **Worktree não fica para trás.** Se os implementadores rodarem em worktree
+  isolada (`isolation: "worktree"`), cada ticket mergeado sai na hora:
+  `git worktree remove <caminho>` e `git branch -d <branch>` (ex.:
+  `worktree-agent-…`). Ticket relançado ou descartado também: a worktree e a
+  branch da tentativa que não vai ser mergeada saem (`-D` só para essas).
+  Nunca `--force`: worktree com alteração não commitada é mostrada ao usuário.
+  Antes do commit da onda, rode `git worktree prune`; `git worktree list` deve
+  mostrar só a pasta do projeto.
 - Commit por onda: `scaffold(7): onda N`.
 - **Modo alteração:** o ticket traz a lista `docs`; o implementador atualiza
   esses documentos junto com o código.
@@ -243,7 +251,12 @@ em opus.
      atualizado (os de `site` vão para o relatório como atualização manual).
    Se algo falhar, mostre o motivo e pergunte ao usuário: corrigir agora, ou
    encerrar como "concluído com pendências" (registrado no relatório).
-4. Gere `.project/pipeline-report.md`: estágios, modelos usados, tokens por
+4. **Limpeza:** não pode sobrar worktree nem branch criada pelo pipeline
+   (estágio 7 e tickets de correção dos estágios 8 a 11). Confira
+   `git worktree list` e `git branch --list "worktree-agent-*"`: o que está
+   mergeado sai como no estágio 7; o que não está vai para as pendências do
+   relatório e é mostrado ao usuário.
+5. Gere `.project/pipeline-report.md`: estágios, modelos usados, tokens por
    estágio (somados do `runs.log`), escaladas,
    resultado dos testes, resumo de segurança (achados por severidade:
    corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status)
