@@ -26,7 +26,7 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 | 3 | riscos, dívida técnica, requisitos de segurança | `scaffold-architect` | `.project/risks.yaml` | — |
 | 4 | design | `scaffold-designer` | `.project/design/` | — |
 | 5 | tickets | `scaffold-planner` | `.project/tickets.yaml` | — |
-| 6 | roteamento de modelos e ondas | `scaffold-router` | `.project/agent-map.json` | **aprovar plano e custo** |
+| 6 | roteamento de modelos e ondas | `scaffold-router` + `scripts/ondas.py` | `.project/agent-map.json` | **aprovar plano e custo** |
 | 7 | implementação paralela por ondas | `scaffold-implementer` | código | — |
 | 8 | plano de teste → executar → corrigir falhas | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes | se a correção falhar 2x |
 | 9 | segurança: audit → triage → fix → verify | `scaffold-security` + `scaffold-implementer` | `.project/security/` | achados médios |
@@ -50,7 +50,8 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
   do cliente. Ver [INSTALL.md](INSTALL.md#onde-ficam-os-documentos).
 - **Paralelismo sem conflito:** tickets da mesma onda nunca tocam os mesmos
   arquivos; um ticket `INFRA-000` prepara estrutura, testes e dependências antes
-  de tudo.
+  de tudo. As ondas saem de um script (`scripts/ondas.py`), não do modelo: ele
+  confere dependências, conflitos de arquivo e tickets faltando ou inventados.
 - **Roteamento de modelo por ticket:** pagamentos, auth, sync offline e
   concorrência vão para o nível forte; config e CRUD trivial para o leve; o
   resto para o médio. Cada plataforma traduz o nível para um modelo dela.

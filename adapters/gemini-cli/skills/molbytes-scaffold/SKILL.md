@@ -139,7 +139,7 @@ pipeline funciona igual.
 | 3 | risks-tech-debt (+ requisitos de segurança) | `scaffold-architect` | `.project/risks.yaml` | não |
 | 4 | to-design | `scaffold-designer` | `.project/design/` | não |
 | 5 | to-tickets | `scaffold-planner` | `.project/tickets.yaml` | não |
-| 6 | assign-to-agents | `scaffold-router` | `.project/agent-map.json` | **SIM** (custo do estágio 7) |
+| 6 | assign-to-agents | `scaffold-router` (níveis) + `scripts/ondas.py` (ondas) | `.project/classificacao.json` + `.project/agent-map.json` | **SIM** (custo do estágio 7) |
 | 7 | implement | `scaffold-implementer` (N em paralelo) | código na raiz | não |
 | 8 | tests (plano → executar → corrigir) | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes + relatório | só se a correção falhar 2x |
 | 9 | security (audit → triage → fix → verify) | `scaffold-security` + `scaffold-implementer` | `.project/security/` | só se houver decisão |

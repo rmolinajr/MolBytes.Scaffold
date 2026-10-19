@@ -97,7 +97,7 @@ def build(out):
           "prompt = '''\nAtive a skill `molbytes-scaffold` e siga as instruções dela como orquestrador.\n"
           "Descrição do projeto: {{args}}\n'''\n")
     for src in sorted(SKILL.rglob("*")):
-        if src.is_file():
+        if src.is_file() and "__pycache__" not in src.parts:
             rel = src.relative_to(SKILL).as_posix()
             write(out, f"gemini-cli/skills/molbytes-scaffold/{rel}",
                   src.read_text(encoding="utf-8").replace("\r\n", "\n"))

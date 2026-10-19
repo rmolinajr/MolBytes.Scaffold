@@ -59,8 +59,8 @@ projeto) não é motivo para forte: é medio.
 automático sobe de nível se os testes falharem.
 
 **Limite:** forte em mais de 25% dos tickets indica classificação frouxa. Nesse
-caso, o router lista os tickets em forte com o motivo, e o orquestrador mostra a
-lista ao usuário no estágio 6.
+caso, o resumo de `scripts/ondas.py` lista os tickets em forte com o motivo, e
+o orquestrador mostra a lista ao usuário no estágio 6.
 
 ## Escalonamento automático
 
@@ -75,8 +75,44 @@ Quem relança é você (orquestrador): o implementador anterior já encerrou.
 - **Correção de item do plano de teste (estágio 8):** regra própria em
   `plano-de-teste.md` (2ª tentativa em forte).
 - **Crítico do code review (estágio 10):** correção em forte.
-- Registre toda escalada em `.project/model-log.md` (ticket, nível e modelo
-  iniciais, nível e modelo finais, motivo). Isso serve para ajustar esta tabela com dados reais.
+- Registre toda escalada em `.project/model-log.md` (formato abaixo). Isso
+  serve para ajustar esta tabela com dados reais.
+
+## `model-log.md`
+
+Formato fixo: ferramentas leem estas tabelas para calibrar o roteamento.
+Crie o arquivo no estágio 6 com as três seções, mesmo vazias; acrescente
+linhas, nunca mude os cabeçalhos. Níveis como `leve`, `medio` e `forte`; um
+ticket por linha.
+
+```markdown
+# Model log
+
+## Estágio 6: correções do orquestrador
+
+| Ticket | Router | Final | Motivo |
+|---|---|---|---|
+
+## Escaladas
+
+| Ticket | Inicial | Final | Motivo |
+|---|---|---|---|
+
+## Reexecuções
+
+| Ticket | Nível | Motivo |
+|---|---|---|
+```
+
+- **Estágio 6:** todo nível que você ou o usuário mudarem depois do router
+  (ex.: "rebaixe" na pausa do plano, com motivo `pedido do usuário`).
+- **Escaladas:** toda subida de nível do estágio 7 em diante (testes falharam
+  duas vezes, `TRAVADO:`, 2ª tentativa em forte); `Final` é o nível com que o
+  ticket terminou.
+- **Reexecuções:** relançamento no mesmo nível (`watchdog.md`).
+
+Observações livres (pendências, ocorrências) vão depois das tabelas, em
+seções próprias.
 
 ## Ajuste
 

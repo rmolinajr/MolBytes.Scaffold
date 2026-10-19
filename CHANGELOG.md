@@ -2,6 +2,29 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.15.0
+
+Ondas por script, não pelo modelo (numa execução real, as ondas do router
+vieram com 60 dependências fora de ordem e 48 conflitos de arquivo num ciclo,
+e com tickets inventados e duplicados em outro):
+
+- Estágio 6 em dois passos: o `scaffold-router` só classifica (nível e motivo
+  em `.project/classificacao.json`) e `scripts/ondas.py` monta o
+  `agent-map.json`, no mesmo formato de antes. O script recusa id duplicado,
+  dependência que não existe, ciclo, ticket sem classificação, inventado ou
+  repetido, nível inválido e forte sem motivo, e não grava nada com erro.
+  Ondas: `INFRA-000` sozinho na 1; cada ticket na primeira onda depois das
+  dependências sem conflito de arquivo (diretório conflita com o que está
+  dentro). Mesma entrada, mesmas ondas.
+- O script roda com `python3`, `python`, `py -3` ou na imagem
+  `python:3.12-slim` do estágio 9; sem nenhum, o orquestrador monta as ondas e
+  confere por uma lista de verificação em `stages.md`, e avisa no plano.
+- `model-log.md` com formato fixo (`model-routing.md`): tabelas "Estágio 6:
+  correções do orquestrador", "Escaladas" e "Reexecuções", com níveis. Mudança
+  de nível depois do router (inclusive pedido do usuário) passa a ser
+  registrada.
+- `tests/test_ondas.py` (`python -m unittest discover tests`).
+
 ## v0.14.0
 
 Codex, Gemini CLI e Cursor, além do Claude Code (adaptadores novos, ainda sem

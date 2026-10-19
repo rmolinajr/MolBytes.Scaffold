@@ -1,6 +1,6 @@
 {
   "name": "molbytes",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Pipeline de 11 estágios que leva um projeto de software da ideia ao código testado, auditado e revisado, com roteamento de modelo por ticket.",
   "author": {
     "name": "Roberto Molina — MolBytes",

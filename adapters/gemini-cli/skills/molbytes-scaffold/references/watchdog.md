@@ -96,7 +96,8 @@ novos, então use os dois:
 
 Confira antes com `git status -- <arquivos>` que só há arquivos do ticket.
 
-Registre toda reexecução em `.project/model-log.md`.
+Registre toda reexecução em `.project/model-log.md` (tabela "Reexecuções" e,
+se o nível subiu, "Escaladas"; formato em `model-routing.md`).
 
 ## Comando `status`
 

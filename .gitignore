@@ -1,3 +1,4 @@
 .vs/
 .env
 .project/security/raw/
+__pycache__/

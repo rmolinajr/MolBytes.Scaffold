@@ -115,27 +115,68 @@ adiciona entre ondas.
 
 ## 6. assign-to-agents → scaffold-router (leve)
 
-O router lê só o índice `tickets.yaml` e as regras de `references/model-routing.md`
-(coladas no prompt; com extensão que traz roteamento calibrado, cole também a
-tabela dela, conforme `references/extensoes.md`) e gera
-`.project/agent-map.json`:
-```json
-{ "ondas": [
-    { "onda": 1, "tickets": [
-      {"id": "BE-001", "area": "backend", "complexity": "alta",
-       "model": "forte", "motivo": "autenticação"} ] } ] }
-```
-Ondas respeitam `depende_de`. Dentro de uma onda, dois tickets **não podem**
-tocar os mesmos arquivos (evita conflito na execução paralela).
+Dois passos: o router classifica, um script monta as ondas. O router não monta
+ondas porque, numa execução real, ondas feitas por ele vieram com dependências
+fora de ordem, arquivos repetidos na mesma onda e tickets inventados.
 
-**Limite do nível forte:** se mais de 25% dos tickets ficarem em `forte`, o router lista
-cada um com o motivo da lista fechada de `model-routing.md`; mostre essa lista
-ao usuário junto com o plano.
+**1. Classificação.** O router lê só o índice `tickets.yaml` e as regras de
+`references/model-routing.md` (coladas no prompt; com extensão que traz
+roteamento calibrado, cole também a tabela dela, conforme
+`references/extensoes.md`) e grava `.project/classificacao.json`:
+```json
+[{"id": "BE-001", "area": "backend", "complexity": "alta",
+  "model": "forte", "motivo": "auth"}]
+```
+
+**2. Ondas.** Rode `scripts/ondas.py` (na pasta desta skill, ao lado de
+`references/`) com a pasta de documentos. Use o primeiro que funcionar:
+
+    python3 <skill>/scripts/ondas.py <documentos>
+    python <skill>/scripts/ondas.py <documentos>
+    py -3 <skill>/scripts/ondas.py <documentos>
+    docker run --rm -v "<documentos>:/docs" -v "<skill>/scripts:/s:ro" python:3.12-slim python /s/ondas.py /docs
+
+O script confere o índice (id duplicado, dependência que não existe, ciclo) e
+a classificação (ticket faltando, inventado ou repetido, nível inválido, forte
+sem motivo) e só então grava `.project/agent-map.json`:
+```json
+{ "fonte": "scripts/ondas.py", "ondas": [
+    { "onda": 1, "tickets": [
+      {"id": "INFRA-000", "area": "infra", "complexity": "baixa",
+       "model": "leve", "motivo": ""} ] } ] }
+```
+`INFRA-000` fica sozinho na onda 1; cada ticket entra na primeira onda depois
+das dependências em que nenhum outro toca os mesmos arquivos (um diretório
+conflita com o que está dentro dele). A saída é um resumo curto: use-o no
+plano, sem abrir o `agent-map.json`.
+
+Com erro, o script não grava nada e sai com código 1. Erro de classificação:
+reenvie ao router com as linhas de erro. Erro do índice (dependência que não
+existe, ciclo, id duplicado): é do estágio 5; mande o planner corrigir o
+`tickets.yaml` e rode o 6 de novo. Não edite o `agent-map.json` à mão; para
+mudar um nível, mude a `classificacao.json` e rode o script de novo.
+
+**Sem Python nem Docker:** monte as ondas você mesmo pela regra acima, grave
+`"fonte": "orquestrador"` no `agent-map.json` e confira, ticket a ticket,
+antes do plano:
+- todo id do `tickets.yaml` aparece uma vez, e nenhum id fora dele;
+- `INFRA-000` está sozinho na onda 1;
+- toda dependência está numa onda **anterior** à do ticket;
+- na mesma onda, nenhum arquivo (nem um diretório e algo dentro dele) aparece
+  em dois tickets;
+- forte só com motivo.
+No plano, diga ao usuário que as ondas foram montadas sem o script.
+
+**Limite do nível forte:** se mais de 25% dos tickets ficarem em `forte`, o
+resumo do script lista cada um com o motivo da lista fechada de
+`model-routing.md`; mostre essa lista ao usuário junto com o plano.
 
 Mostre ao usuário: total de tickets, quantos em cada nível (forte/medio/leve), número de
 ondas e tempo estimado (soma dos orçamentos de `watchdog.md` pela onda mais
 lenta). **Espere aprovação explícita** antes do estágio 7, o mais caro. Se o
-usuário pedir, rebaixe tickets ou aplique `--economico` e reenvie ao router.
+usuário pedir, rebaixe tickets (na `classificacao.json`, registrando em
+`model-log.md`, ver `model-routing.md`) ou aplique `--economico` e reenvie ao
+router; depois rode o script de novo.
 
 ## 7. implement → scaffold-implementer (paralelo por onda)
 

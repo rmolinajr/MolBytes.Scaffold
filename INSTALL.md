@@ -237,6 +237,11 @@ Com o Docker Desktop aberto, baixe uma vez (PowerShell):
 São as versões fixadas em `references/security.md` (parte C). O projeto é
 montado somente leitura nos containers, e o semgrep roda sem enviar métricas.
 
+As ondas do estágio 6 saem de `scripts/ondas.py` (Python 3.8+, só biblioteca
+padrão). Sem Python instalado, a skill roda o script na imagem
+`python:3.12-slim` acima; sem nenhum dos dois, o orquestrador monta as ondas e
+as confere por uma lista de verificação.
+
 Isso continua não substituindo um pentest profissional antes de processar
 pagamentos reais.
 
