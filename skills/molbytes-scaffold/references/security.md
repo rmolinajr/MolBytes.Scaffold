@@ -57,7 +57,8 @@ coladas no prompt). Mudou aqui, mude lá.
 
 ### 9.1 Ferramentas (via Docker, sem instalar nada no Windows)
 
-Rode da raiz do projeto, na ferramenta Bash (no Windows é o Git Bash). Saídas
+Rode da raiz do projeto, num shell bash (no Windows, o Git Bash; se a
+plataforma usa PowerShell, chame `bash -c` ou `bash script.sh`). Saídas
 em `security/raw/` da pasta de documentos. Essa pasta **nunca vai para o git**
 (precisa estar no `.gitignore`): o relatório do gitleaks contém os próprios
 segredos encontrados. O que vai para o git é o `findings.yaml`, sem valores de
@@ -116,7 +117,7 @@ concatenado e dependência vulnerável: todos acharam o esperado).
 
 Se o Docker não estiver rodando, avise o usuário em vez de pular as ferramentas.
 
-### 9.1b Revisão manual (scaffold-security, opus)
+### 9.1b Revisão manual (scaffold-security, forte)
 
 Depois das ferramentas, revisar o código contra:
 - OWASP Top 10 (controle de acesso, injeção, autenticação, configuração...);
@@ -151,7 +152,7 @@ Regras:
   O orquestrador os copia para `risks.yaml` em `tech_debt`
   (`origem: SECURITY-00X`).
 
-### 9.3 Correção (scaffold-implementer, sempre opus)
+### 9.3 Correção (scaffold-implementer, sempre forte)
 
 Ordem obrigatória:
 1. Escrever o teste que reproduz a falha e rodar: **tem que falhar**.

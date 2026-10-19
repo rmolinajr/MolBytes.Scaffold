@@ -61,10 +61,9 @@ for externa, troque `.project/` pelo caminho real.
    - a pasta precisa ficar em git para não haver perdas; sem um remoto
      (repositório privado), o git não protege contra perda do disco: sugira
      configurar um;
-   - para o Claude Code não pedir permissão a cada arquivo, adicione a
-     pasta-mãe em `permissions.additionalDirectories` do
-     `~/.claude/settings.json` (vale para todos os projetos), ou use `/add-dir`
-     na sessão. Você não altera configurações do usuário.
+   - para a plataforma não pedir permissão a cada arquivo, autorize a
+     pasta-mãe uma vez (como, em cada plataforma: "Pasta fora do projeto" em
+     `references/plataformas.md`). Você não altera configurações do usuário.
 
 Nada é criado no projeto do cliente no modo externo: nem ponteiro, nem link,
 nem entrada no `.gitignore`.

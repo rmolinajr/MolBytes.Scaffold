@@ -2,6 +2,27 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.14.0
+
+Codex, Gemini CLI e Cursor, além do Claude Code (adaptadores novos, ainda sem
+execução real nessas plataformas):
+
+- Roteamento por nível: `leve`, `medio` e `forte` no lugar de haiku, sonnet e
+  opus. `agent-map.json`, `runs.log` e `state.md` gravam o nível; nomes do
+  Claude em extensões e arquivos antigos valem como nível.
+- `references/plataformas.md`: por plataforma, o modelo de cada nível, como
+  lançar subagente com modelo explícito, paralelismo, limite de turnos,
+  comandos de sessão e pasta fora do projeto. `SKILL.md` e as referências não
+  citam mais comandos do Claude Code fora dessa tabela; `state.md` ganha
+  `Plataforma:` e, se o usuário trocar, `Modelos:`.
+- `adapters/build.py` gera, a partir de `skills/` e `agents/`: subagentes do
+  Codex em TOML, extensão do Gemini CLI (um subagente por nível, porque ele
+  não escolhe modelo por chamada) e subagentes do Cursor (`model: inherit`),
+  além de `.codex-plugin/` e `.cursor-plugin/`. `--check` acusa adaptador
+  desatualizado.
+- Sem nenhum `scaffold-*` disponível, o pipeline para antes do estágio 2 e
+  pede a instalação dos agentes.
+
 ## v0.13.3
 
 Worktree e branch do pipeline não ficam para trás (numa execução real

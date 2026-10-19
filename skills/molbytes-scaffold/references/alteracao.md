@@ -61,9 +61,8 @@ documentos:
     gerado_por: <comando que gera>   # se for gerado: atualizar pela fonte
 ```
 
-Para documentação em pasta fora do projeto, avise uma vez que o Claude Code
-precisa de permissão para ela (`additionalDirectories` ou `/add-dir`, como em
-`documentos.md`).
+Para documentação em pasta fora do projeto, avise uma vez que a plataforma
+precisa de permissão para ela (como em `documentos.md`).
 
 ## Regras de documentação nos estágios
 

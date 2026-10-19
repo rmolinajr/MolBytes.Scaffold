@@ -3,14 +3,16 @@
 Objetivo: detectar subagente que já deveria ter terminado e continua rodando,
 sem gastar tokens vigiando.
 
-## Camada 1 — limite duro (Claude Code aplica)
+## Camada 1 — limite duro (a plataforma aplica, quando tem)
 
-Cada subagente tem `maxTurns` no frontmatter. Ao atingir o limite, o Claude
-Code encerra o subagente. Trate como **parcial** qualquer retorno que não
+Onde a plataforma permite, cada subagente tem um limite de turnos na
+definição dele (`maxTurns` no Claude Code; equivalentes em
+`references/plataformas.md`). Ao atingir o limite, a plataforma encerra o
+subagente. Sem esse limite na plataforma, a camada 2 é a única proteção. Trate como **parcial** qualquer retorno que não
 traga o resumo final pedido (arquivos alterados, comando e resultado dos
 testes), mesmo que não venha marcado como tal.
 
-| Subagente | maxTurns |
+| Subagente | limite de turnos |
 |---|---|
 | scaffold-router | 10 |
 | scaffold-planner | 30 |
@@ -25,21 +27,21 @@ Valores iniciais. Ajuste com base em `.project/runs.log`.
 
 ## Camada 2 — orçamento de tempo (o orquestrador verifica)
 
-Ao lançar cada subagente, registre em `.project/runs.log` (use `date` no Bash):
+Ao lançar cada subagente, registre em `.project/runs.log` (use `date` no shell):
 
-    <inicio ISO> | START | <agente> | <ticket ou estágio> | <modelo> | orçamento <min>
+    <inicio ISO> | START | <agente> | <ticket ou estágio> | <nível>/<modelo> | orçamento <min>
 
 Ao receber o resultado:
 
     <fim ISO> | END | <agente> | <ticket ou estágio> | ok|parcial|travado|falhou | <min reais> | <tokens> tokens
 
-`<tokens>` é o total que o Claude Code mostra no resultado do subagente (ou
+`<tokens>` é o total que a plataforma mostra no resultado do subagente (ou
 no aviso de término, em segundo plano); se não mostrar, use `?`. É o dado que
 permite calibrar o roteamento por custo, não só por tempo.
 
 Orçamento esperado (minutos):
 
-| Tipo | haiku | sonnet | opus |
+| Tipo | leve | medio | forte |
 |---|---|---|---|
 | ticket complexidade baixa | 5 | 8 | 10 |
 | ticket complexidade média | — | 15 | 20 |
@@ -60,28 +62,30 @@ Orçamento esperado (minutos):
 - quando o usuário digitar `status`.
 
 Não fique perguntando repetidamente se os subagentes terminaram: cada checagem
-reenvia a conversa inteira e custa tokens. O Claude Code avisa quando um
-subagente em segundo plano termina.
+reenvia a conversa inteira e custa tokens. A plataforma avisa quando um
+subagente em segundo plano termina (ou devolve o resultado, quando roda em
+primeiro plano).
 
 Em cada verificação, para cada START sem END, calcule o tempo decorrido:
 - acima de **1,5x** o orçamento: marque como "lento" no `status`;
 - acima de **2x**: avise o usuário:
 
-  > ⚠️ `BE-004` (scaffold-implementer, sonnet) está rodando há 34 min;
-  > o esperado era 15. Veja em `/tasks`.
+  > ⚠️ `BE-004` (scaffold-implementer, medio) está rodando há 34 min;
+  > o esperado era 15. Veja no painel de tarefas (`/tasks` no Claude Code;
+  > nas outras plataformas, ver `plataformas.md`).
   > Se estiver repetindo a mesma coisa, pare ele por lá e me diga `parei BE-004`.
 
 O orquestrador não força a parada de um subagente: quem para é o usuário, pelo
-`/tasks`. Os outros subagentes da onda continuam.
+painel de tarefas da plataforma. Os outros subagentes da onda continuam.
 
 ## Tratamento do resultado
 
 | Resultado | Ação |
 |---|---|
 | ok | segue normal |
-| parcial (bateu maxTurns) | ver `git diff` dos arquivos do ticket; se avançou, continuar **uma vez** de onde parou; se não avançou, tratar como travado |
-| `TRAVADO:` (o próprio agente desistiu) ou parado pelo usuário | reexecutar uma vez com o modelo um nível acima (haiku→sonnet→opus), com o erro relatado no prompt |
-| falhou de novo em opus | parar o ticket, marcar em `state.md` > Pendências, seguir com os tickets que não dependem dele, e avisar o usuário |
+| parcial (bateu o limite de turnos) | ver `git diff` dos arquivos do ticket; se avançou, continuar **uma vez** de onde parou; se não avançou, tratar como travado |
+| `TRAVADO:` (o próprio agente desistiu) ou parado pelo usuário | reexecutar uma vez com o modelo um nível acima (leve→medio→forte), com o erro relatado no prompt |
+| falhou de novo em forte | parar o ticket, marcar em `state.md` > Pendências, seguir com os tickets que não dependem dele, e avisar o usuário |
 
 Antes de reexecutar um ticket, descarte alterações parciais dos arquivos dele
 para não misturar duas tentativas. `git checkout` sozinho não apaga arquivos
@@ -98,7 +102,7 @@ Registre toda reexecução em `.project/model-log.md`.
 
 Quando o usuário digitar `status`, responda com uma tabela curta:
 
-| Ticket | Agente | Modelo | Rodando há | Orçamento | Situação |
+| Ticket | Agente | Nível/modelo | Rodando há | Orçamento | Situação |
 |---|---|---|---|---|---|
 
 seguida do estágio/onda atual. Dados de `.project/runs.log` + `date`.

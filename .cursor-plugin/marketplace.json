@@ -1,0 +1,15 @@
+{
+  "name": "molbytes",
+  "owner": {
+    "name": "MolBytes",
+    "url": "https://www.molbytes.io"
+  },
+  "plugins": [
+    {
+      "name": "molbytes",
+      "source": "./",
+      "description": "Pipeline de 11 estágios que leva um projeto de software da ideia ao código testado, auditado e revisado, com roteamento de modelo por ticket.",
+      "version": "0.14.0"
+    }
+  ]
+}

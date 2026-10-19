@@ -51,7 +51,7 @@ Para cada item `falhou`, um por vez:
    o teste, a mensagem de erro e o trecho da spec, e lance um
    `scaffold-implementer` com ele. Modelo na 1ª tentativa: o mais alto entre
    os tickets de `origem` em `agent-map.json` (sem ticket na origem, só fluxo,
-   risco ou SR: sonnet); na 2ª, opus.
+   risco ou SR: medio); na 2ª, forte.
 2. A correção é **no código de produção**. O teste só pode mudar se estiver
    errado em relação à spec; nesse caso o implementador explica o motivo, que
    vai para o `detalhe`, e o reviewer confere no estágio 10.

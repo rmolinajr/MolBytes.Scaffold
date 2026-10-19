@@ -113,7 +113,7 @@ o runner de testes unitários (com um teste trivial passando), o linter, o
 implementador precisar de um pacote novo, ele pede ao orquestrador, que o
 adiciona entre ondas.
 
-## 6. assign-to-agents → scaffold-router (haiku)
+## 6. assign-to-agents → scaffold-router (leve)
 
 O router lê só o índice `tickets.yaml` e as regras de `references/model-routing.md`
 (coladas no prompt; com extensão que traz roteamento calibrado, cole também a
@@ -123,16 +123,16 @@ tabela dela, conforme `references/extensoes.md`) e gera
 { "ondas": [
     { "onda": 1, "tickets": [
       {"id": "BE-001", "area": "backend", "complexity": "alta",
-       "model": "opus", "motivo": "autenticação"} ] } ] }
+       "model": "forte", "motivo": "autenticação"} ] } ] }
 ```
 Ondas respeitam `depende_de`. Dentro de uma onda, dois tickets **não podem**
 tocar os mesmos arquivos (evita conflito na execução paralela).
 
-**Limite de opus:** se mais de 25% dos tickets ficarem em opus, o router lista
+**Limite do nível forte:** se mais de 25% dos tickets ficarem em `forte`, o router lista
 cada um com o motivo da lista fechada de `model-routing.md`; mostre essa lista
 ao usuário junto com o plano.
 
-Mostre ao usuário: total de tickets, quantos em opus/sonnet/haiku, número de
+Mostre ao usuário: total de tickets, quantos em cada nível (forte/medio/leve), número de
 ondas e tempo estimado (soma dos orçamentos de `watchdog.md` pela onda mais
 lenta). **Espere aprovação explícita** antes do estágio 7, o mais caro. Se o
 usuário pedir, rebaixe tickets ou aplique `--economico` e reenvie ao router.
@@ -141,9 +141,11 @@ usuário pedir, rebaixe tickets ou aplique `--economico` e reenvie ao router.
 
 Para cada onda, em ordem:
 - Lance um `scaffold-implementer` por ticket, **em paralelo e em segundo
-  plano** (`run_in_background`), passando `model` = o valor do
-  `agent-map.json` para aquele ticket. Em segundo plano, você recebe o aviso
-  de cada um que termina e pode responder `status` enquanto a onda roda.
+  plano** quando a plataforma permitir, com o modelo do nível que o
+  `agent-map.json` dá para aquele ticket (como lançar e o que fazer se a
+  plataforma não roda em paralelo ou não escolhe modelo por chamada:
+  `references/plataformas.md`). Em segundo plano, você recebe o aviso de cada
+  um que termina e pode responder `status` enquanto a onda roda.
 - Antes da onda 1, grave **uma vez** `.project/regras-implementacao.md`: as
   convenções do topo do índice (seção "Todos") e, se houver extensão ou
   convenção do projeto existente, uma seção por camada (`backend`, `frontend`,
@@ -164,9 +166,9 @@ Para cada onda, em ordem:
   de um ticket só vai para um subagente com um **ticket de correção** (fim
   deste arquivo), não para você.
 - **Worktree não fica para trás.** Se os implementadores rodarem em worktree
-  isolada (`isolation: "worktree"`), cada ticket mergeado sai na hora:
-  `git worktree remove <caminho>` e `git branch -d <branch>` (ex.:
-  `worktree-agent-…`). Ticket relançado ou descartado também: a worktree e a
+  isolada (ex.: `isolation: "worktree"` no Claude Code), cada ticket
+  mergeado sai na hora: `git worktree remove <caminho>` e
+  `git branch -d <branch>` (ex.: `worktree-agent-…` no Claude Code). Ticket relançado ou descartado também: a worktree e a
   branch da tentativa que não vai ser mergeada saem (`-D` só para essas).
   Nunca `--force`: worktree com alteração não commitada é mostrada ao usuário.
   Antes do commit da onda, rode `git worktree prune`; `git worktree list` deve
@@ -196,7 +198,7 @@ Siga `references/plano-de-teste.md`:
 
 Siga `references/security.md`, parte C, na ordem:
 
-1. **9.1 audit** — rode as ferramentas e peça ao `scaffold-security` (opus) a
+1. **9.1 audit** — rode as ferramentas e peça ao `scaffold-security` (forte) a
    revisão manual. Saída: `.project/security/findings.yaml`.
 2. **9.2 triage** — `scaffold-security` classifica cada achado. Baixo e falso
    positivo justificado ficam com status `divida` ou `falso_positivo` e não
@@ -207,7 +209,7 @@ Siga `references/security.md`, parte C, na ordem:
    "aceitar o risco". Aceite vira registro em `.project/security/accepted.md`
    com a justificativa dele.
 5. **9.3 fix** — para cada SECURITY-00X a corrigir, escreva o ticket de
-   correção `SECURITY-00X` e lance um `scaffold-implementer` com `model: opus`. Primeiro ele escreve o teste que
+   correção `SECURITY-00X` e lance um `scaffold-implementer` no nível forte. Primeiro ele escreve o teste que
    reproduz a falha (precisa falhar), depois corrige.
 6. **9.4 verify** — `scaffold-security` (não o implementador) confere os três
    critérios da parte C. Se reprovar, volta ao 9.3 com o motivo. **Máximo de
@@ -231,16 +233,16 @@ documento da "Documentação afetada" bate com o código.
 
 Apresente o resumo ao usuário e **pergunte** se quer que os críticos sejam
 corrigidos antes de seguir: um ticket de correção `FIX-REVIEW-<n>` por crítico,
-em opus.
+no nível forte.
 
 ## 11. final → testes + rescan + gate
 
-1. **Testes** → `scaffold-tester` (sonnet): roda a suíte completa (unitários +
+1. **Testes** → `scaffold-tester` (medio): roda a suíte completa (unitários +
    integração), atualiza o `plano-de-teste.yaml` e devolve só totais e falhas.
    Falha nova passa pela correção do 8.3.
-2. **Rescan** → `scaffold-security` (sonnet): roda o rescan rápido de
+2. **Rescan** → `scaffold-security` (medio): roda o rescan rápido de
    `references/security.md`, parte D, e devolve "nada novo" ou a lista de
-   achados novos. Achado novo: triagem em outra chamada, em opus.
+   achados novos. Achado novo: triagem em outra chamada, no nível forte.
 3. **Gate** (você, lendo os resumos): o pipeline só termina como "concluído" se:
    - todos os testes passam e todo item automatizado do plano está `passou`
      ou `aceito` (itens `manual` não bloqueiam);
@@ -253,7 +255,8 @@ em opus.
    encerrar como "concluído com pendências" (registrado no relatório).
 4. **Limpeza:** não pode sobrar worktree nem branch criada pelo pipeline
    (estágio 7 e tickets de correção dos estágios 8 a 11). Confira
-   `git worktree list` e `git branch --list "worktree-agent-*"`: o que está
+   `git worktree list` e as branches das worktrees do pipeline (no Claude
+   Code, `git branch --list "worktree-agent-*"`): o que está
    mergeado sai como no estágio 7; o que não está vai para as pendências do
    relatório e é mostrado ao usuário.
 5. Gere `.project/pipeline-report.md`: estágios, modelos usados, tokens por
@@ -283,5 +286,5 @@ escreva antes `.project/tickets/<id>.md`, com até ~2 mil caracteres:
 O ticket de correção não entra no `tickets.yaml`. O implementador o trata
 como qualquer ticket: no prompt, o caminho dele, o de `regras-implementacao.md`
 e o modelo; mexe só nos arquivos listados. Modelo: o da regra do estágio de
-origem (8.3, 9.3, 10); sem regra (merge, falha da onda), sonnet e, na 2ª
-tentativa, opus. Registre o START no `runs.log` com esse id.
+origem (8.3, 9.3, 10); sem regra (merge, falha da onda), medio e, na 2ª
+tentativa, forte. Registre o START no `runs.log` com esse id.

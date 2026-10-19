@@ -1,6 +1,6 @@
 ---
 name: molbytes-scaffold
-description: Pipeline de 11 estágios da molbytes para levar um projeto de software da ideia ao código testado e revisado, com roteamento automático de modelo (haiku/sonnet/opus) por estágio e por ticket. Use quando o usuário pedir /molbytes-scaffold, "scaffold", "iniciar projeto novo", ou quiser gerar spec, riscos, design, tickets, implementação, testes, auditoria de segurança e code review de um sistema.
+description: Pipeline de 11 estágios da molbytes para levar um projeto de software da ideia ao código testado e revisado, com roteamento automático de nível de modelo (leve/médio/forte) por estágio e por ticket. Funciona no Claude Code, Codex, Gemini CLI e Cursor. Use quando o usuário pedir /molbytes-scaffold, "scaffold", "iniciar projeto novo", ou quiser gerar spec, riscos, design, tickets, implementação, testes, auditoria de segurança e code review de um sistema.
 disable-model-invocation: true
 ---
 
@@ -12,14 +12,28 @@ Você mesmo não escreve código de produção.
 
 Descrição do projeto: $ARGUMENTS
 
+Se a linha acima mostrar `$ARGUMENTS` literalmente, a plataforma não substitui
+argumentos: a descrição é o texto que o usuário escreveu junto com a chamada
+da skill.
+
 Se a descrição for só `continuar`, é a retomada de um pipeline numa sessão
 nova: não é um projeto novo. Siga "Depois de qualquer compactação" (em
 "Estado e compactação") sem perguntar se continua.
 
+## Plataforma
+
+Antes de tudo, identifique em que plataforma você está rodando (Claude Code,
+Codex, Gemini CLI ou Cursor; pelas suas próprias ferramentas) e leia a seção
+dela em `references/plataformas.md`: como lançar subagente com modelo
+explícito, paralelismo, limite de turnos, como recomeçar a sessão e a tabela
+que traduz cada nível (leve, medio, forte) para um modelo. Registre em
+`state.md` (`Plataforma:`). Neste arquivo e nas referências, "modelo" num
+roteamento quer dizer o nível; o nome real vem dessa tabela.
+
 ## Pasta de documentos
 
-Antes de tudo (antes das extensões e do estágio 1) e sempre que retomar,
-resolva onde ficam os documentos seguindo `references/documentos.md`: dentro
+Logo depois da plataforma (antes das extensões e do estágio 1) e sempre que
+retomar, resolva onde ficam os documentos seguindo `references/documentos.md`: dentro
 do projeto (`.project/`, padrão) ou numa pasta separada escolhida pelo usuário,
 com git próprio. Neste arquivo e nas referências, **`.project/` significa a
 pasta de documentos**; no modo externo, use o caminho real e informe-o a cada
@@ -39,8 +53,10 @@ Informe o modo a cada subagente.
 
 - Artefatos de planejamento vão em `.project/`. Código de produção vai na raiz do
   repositório (`backend/`, `frontend/`, `infra/`), nunca dentro de `.project/`.
-- Antes de cada delegação, consulte `references/model-routing.md` e passe o
-  modelo explicitamente. Nunca deixe um subagente herdar o modelo da sessão por acaso.
+- Antes de cada delegação, escolha o nível em `references/model-routing.md` e
+  passe o modelo correspondente de forma explícita, como manda
+  `references/plataformas.md`. Nunca deixe um subagente herdar o modelo da
+  sessão por acaso.
 - Ao fim de cada estágio: confira que o arquivo esperado existe e não está vazio,
   atualize `.project/state.md` (ver "Estado e compactação"), depois faça
   `git add` + `git commit -m "scaffold(N): <estágio>"` (no modo externo, nos
@@ -51,8 +67,8 @@ Informe o modo a cada subagente.
   no modo externo, `security/raw/` vai no `.gitignore` da pasta de documentos) e
   as pastas de build/dependências da stack (`node_modules/`, `.venv/`, `bin/`, `obj/`, `.vs/`).
 - **Subagentes não leem os arquivos desta skill.** A skill pode estar instalada no
-  projeto ou em `~/.claude/skills/`, então caminhos como `references/...` não são
-  confiáveis para eles. Ao delegar, cole no prompt o trecho de referência de que o
+  projeto ou na pasta do usuário, em lugares diferentes em cada plataforma, então
+  caminhos como `references/...` não são confiáveis para eles. Ao delegar, cole no prompt o trecho de referência de que o
   subagente precisa (ex.: a parte C de `security.md` para o auditor, a seção
   "Estágio 7: escolha por ticket" de `model-routing.md` para o router). O
   implementador é a exceção: as regras dele ficam no próprio agente e em
@@ -68,10 +84,11 @@ Informe o modo a cada subagente.
 A sessão principal é o maior gasto do pipeline: ela relê todo o contexto a cada
 chamada. Por isso:
 
-- **Modelo e esforço:** se a sessão estiver em opus ou com esforço alto, diga
-  uma vez, no início: "Sugiro `/model sonnet` e esforço médio para a sessão
-  principal: os estágios pesados já usam opus nos subagentes." Siga mesmo que o
-  usuário não troque.
+- **Modelo e esforço:** se a sessão principal estiver num modelo do nível forte
+  ou com esforço alto, diga uma vez, no início: "Sugiro o modelo médio
+  (`<comando da plataforma>`) e esforço médio para a sessão principal: os
+  estágios pesados já usam o nível forte nos subagentes." O comando está em
+  `plataformas.md`. Siga mesmo que o usuário não troque.
 - **Um processo só.** Não invoque skills de processo de outros plugins
   (brainstorming, planos, desenvolvimento por subagentes) durante o pipeline: o
   processo é este. Se um plugin desses estiver ativo, sugira uma vez
@@ -84,18 +101,19 @@ chamada. Por isso:
   relatórios de ferramenta): use busca e trechos. Saída de teste e build sempre
   filtrada (só falhas e o resumo final).
 - **Recomece limpo** nos pontos de compactação abaixo, inclusive a cada onda
-  do estágio 7: sessão limpa com `continuar` custa menos que `/compact`, que
+  do estágio 7: sessão limpa com `continuar` custa menos que compactar, que
   relê a conversa inteira para resumi-la.
 - **Respostas curtas.** Os subagentes gravam o trabalho em arquivo e respondem
   em até 10 linhas; não peça para devolverem relatório ou código na resposta.
 
 ## Nomes dos subagentes
 
-Instalada como plugin, a skill tem subagentes com prefixo: `molbytes:scaffold-architect`,
-`molbytes:scaffold-implementer` etc. Copiada manualmente para `.claude/`, eles não têm
-prefixo: `scaffold-architect`. Antes do primeiro delegamento, veja qual das duas
-formas existe na lista de agentes disponíveis e use sempre essa. Nas tabelas
-abaixo os nomes aparecem sem prefixo.
+Conforme a plataforma e a forma de instalação, os subagentes podem ter prefixo
+de plugin (no Claude Code como plugin: `molbytes:scaffold-architect`) ou não
+(`scaffold-architect`). Antes do primeiro delegamento, veja qual forma existe
+na lista de agentes disponíveis e use sempre essa. Nas tabelas abaixo os nomes
+aparecem sem prefixo. Se a plataforma não tiver nenhum `scaffold-*`, siga
+"Sem subagentes" em `plataformas.md`.
 
 ## Extensões
 
@@ -144,15 +162,17 @@ pendências, não cópias dos artefatos.
 **Pontos de compactação:** ao terminar os estágios **2, 5, 8 e 9**, **cada onda
 do estágio 7** e a cada 10 itens corrigidos no estágio 8, depois do commit:
 1. Confira que "Próximo passo" do `state.md` diz exatamente o que fazer, e
-   diga ao usuário: "Estágio N salvo e commitado. Para economizar, rode
-   `/clear` e depois `<o comando que iniciou o pipeline> continuar` (ex.:
-   `/molbytes:molbytes-scaffold continuar`): a sessão recomeça leve e retoma
-   pelo `state.md`. Se preferir manter a conversa, `/compact` e depois
-   `continuar`."
+   diga ao usuário: "Estágio N salvo e commitado. Para economizar, abra uma
+   sessão limpa (`<comando da plataforma>`) e rode `<o comando que iniciou o
+   pipeline> continuar`: a sessão recomeça leve e retoma pelo `state.md`. Se
+   preferir manter a conversa, `<comando de compactar>` e depois `continuar`."
+   Os comandos de cada plataforma estão em `plataformas.md` (no Claude Code:
+   `/clear`, `/molbytes:molbytes-scaffold continuar` e `/compact`).
 2. Espere a resposta. Se ele disser para seguir sem limpar, siga.
 
 **Depois de qualquer compactação** (manual ou automática), ou ao ser chamado
-com "continuar": antes de qualquer outra ação, resolva a pasta de documentos,
+com "continuar": antes de qualquer outra ação, releia a seção da sua
+plataforma em `plataformas.md`, resolva a pasta de documentos,
 leia `.project/state.md` e `git log --oneline -15` (no modo externo, dos dois
 repositórios), invoque de novo a extensão de `Extensão:` (se houver),
 reaplique as flags de `Flags:`, confirme em uma linha onde está, e retome do

@@ -1,8 +1,15 @@
-# Instalar molbytes.scaffold (Claude Code)
+# Instalar molbytes.scaffold
 
-A skill são arquivos Markdown que o Claude Code lê. Há três formas de instalar.
+A skill são arquivos Markdown que o agente lê. Funciona no
+[Claude Code](#claude-code), no [Codex](#codex), no [Gemini CLI](#gemini-cli)
+e no [Cursor](#cursor). O pipeline é o mesmo; muda a instalação e os comandos
+de cada plataforma (tabela em `references/plataformas.md`).
 
-## Opção 1 — plugin (recomendado)
+## Claude Code
+
+Há três formas de instalar.
+
+### Opção 1 — plugin (recomendado)
 
 No Claude Code:
 
@@ -14,7 +21,7 @@ Para atualizar depois: `/plugin marketplace update molbytes`.
 Como plugin, o comando fica `/molbytes:molbytes-scaffold` e os subagentes
 aparecem como `molbytes:scaffold-*` (confira em `/plugin` → Installed → molbytes).
 
-## Opção 2 — cópia manual em todos os projetos
+### Opção 2 — cópia manual em todos os projetos
 
 Copie as pastas `skills/` e `agents/` deste repositório para a pasta `.claude`
 do seu usuário (`%USERPROFILE%\.claude\` no Windows, `~/.claude/` no macOS/Linux).
@@ -22,7 +29,7 @@ do seu usuário (`%USERPROFILE%\.claude\` no Windows, `~/.claude/` no macOS/Linu
 Resultado esperado:
 
     ~/.claude/skills/molbytes-scaffold/SKILL.md
-    ~/.claude/skills/molbytes-scaffold/references/   (9 arquivos .md)
+    ~/.claude/skills/molbytes-scaffold/references/   (10 arquivos .md)
     ~/.claude/agents/scaffold-*.md   (8 arquivos)
 
 Se já existir `~/.claude/agents/`, só acrescente os arquivos.
@@ -31,13 +38,13 @@ Os subagentes não dependem de onde a skill está instalada: o orquestrador cola
 no prompt de cada um as regras de que ele precisa (o implementador lê as dele
 de `.project/regras-implementacao.md`, gravado uma vez).
 
-## Opção 3 — só num projeto
+### Opção 3 — só num projeto
 
 Copie as pastas `skills/` e `agents/` para dentro de `.claude/` na raiz do
 projeto (ex.: `<pasta-do-projeto>/.claude/skills/` e `.claude/agents/`).
 Vantagem: a skill vai junto no git do projeto.
 
-## Usar
+### Usar
 
 1. Abra o Claude Code na pasta do projeto.
 2. Confira que os subagentes foram carregados: em `/plugin` → Installed, ou
@@ -59,6 +66,78 @@ houver, só o sistema é alterado.
 pesa no custo: a sessão principal relê todo o contexto a cada passo, e os
 estágios pesados já vão para opus pelos subagentes. Numa execução real com a
 sessão principal em opus, ela gastou mais que todos os subagentes juntos.
+Vale para todas as plataformas: sessão principal no modelo médio.
+
+## Codex
+
+Adaptador novo na v0.14.0, ainda sem execução real no Codex. Copie a skill
+e os subagentes (bash; no Windows, Git Bash):
+
+    git clone https://github.com/rmolinajr/MolBytes.Scaffold.git
+    mkdir -p ~/.agents/skills ~/.codex/agents
+    cp -r MolBytes.Scaffold/skills/molbytes-scaffold ~/.agents/skills/
+    cp MolBytes.Scaffold/adapters/codex/agents/*.toml ~/.codex/agents/
+
+Para um projeto só, use `.agents/skills/` e `.codex/agents/` na raiz dele.
+Alternativa para a skill: `codex plugin marketplace add rmolinajr/MolBytes.Scaffold`
+(os subagentes continuam por cópia: plugins do Codex não trazem agentes).
+
+Usar: abra o Codex na pasta do projeto e rode
+
+    $molbytes-scaffold Sistema PDV para restaurante: terminal, cozinha, admin, offline-first, Stripe e PIX
+
+Os subagentes não fixam modelo: o orquestrador passa o de cada nível
+(`gpt-6-luna`, `gpt-6.1-sol`, `gpt-6-astra`). Se quiser outros, diga no
+início; a skill grava a escolha em `state.md`. Para gravar documentos fora
+do projeto, abra o Codex com `--add-dir <pasta>`. No estágio 9 o Codex pede
+aprovação para rodar o Docker fora do sandbox.
+
+## Gemini CLI
+
+Adaptador novo na v0.14.0, ainda sem execução real no Gemini CLI. Desde junho
+de 2026 o Gemini CLI só atende chave de API paga e Code Assist
+Standard/Enterprise; o Google o está trocando pelo Antigravity CLI, que importa
+a extensão com `agy plugin import gemini`.
+
+A extensão fica em `adapters/gemini-cli/` (skill, comando e subagentes):
+
+    git clone https://github.com/rmolinajr/MolBytes.Scaffold.git
+    gemini extensions install ./MolBytes.Scaffold/adapters/gemini-cli
+
+Para atualizar: `git pull` no clone e instale de novo.
+
+Usar: abra o Gemini CLI na pasta do projeto e rode
+
+    /molbytes-scaffold Sistema PDV para restaurante: terminal, cozinha, admin, offline-first, Stripe e PIX
+
+O Gemini CLI não escolhe modelo por chamada, então há um subagente por nível
+(`scaffold-implementer-leve`, `-medio`, `-forte` etc., em `flash-lite`,
+`flash` e `pro`). Confira com `/agents list`. Para gravar documentos fora do
+projeto: `/directory add <pasta>`.
+
+## Cursor
+
+Adaptador novo na v0.14.0, ainda sem execução real no Cursor.
+
+- **Plugin:** no editor, `/add-plugin` (ou o painel Marketplace) com a URL
+  `https://github.com/rmolinajr/MolBytes.Scaffold`. No CLI:
+  `agent plugin marketplace add https://github.com/rmolinajr/MolBytes.Scaffold`
+  e depois `/plugin`.
+- **Cópia manual:**
+
+      git clone https://github.com/rmolinajr/MolBytes.Scaffold.git
+      mkdir -p ~/.cursor/skills ~/.cursor/agents
+      cp -r MolBytes.Scaffold/skills/molbytes-scaffold ~/.cursor/skills/
+      cp MolBytes.Scaffold/adapters/cursor/agents/*.md ~/.cursor/agents/
+
+O Cursor também lê `~/.claude/skills/` e `~/.claude/agents/` (Settings →
+Agents → Third-Party Imports). Se você já tem a cópia manual do Claude Code,
+a skill aparece no Cursor; os agentes de `~/.cursor/agents/` têm prioridade
+sobre os de `~/.claude/agents/`.
+
+Usar: `/molbytes-scaffold <descrição>` no chat do agente. Os subagentes usam
+`model: inherit`; o orquestrador informa o modelo de cada nível ao lançar.
+Para gravar documentos fora do projeto, acrescente a pasta ao workspace.
 
 ## Onde ficam os documentos
 
@@ -76,7 +155,8 @@ protege contra perda do disco: configure um remoto privado para ela
 (ex.: um repositório privado no GitHub) e faça push.
 
 Para o Claude Code não pedir permissão a cada arquivo gravado fora do projeto,
-autorize a pasta-mãe uma vez em `~/.claude/settings.json`:
+autorize a pasta-mãe uma vez em `~/.claude/settings.json` (nas outras
+plataformas, veja a seção delas acima):
 
 ```json
 {
@@ -94,7 +174,8 @@ procurou e pergunta onde estão os documentos.
 
 ## Custo
 
-- Sessão principal em **sonnet com esforço médio**: orquestrar não precisa de
+- Sessão principal em **sonnet com esforço médio** (nas outras plataformas, o
+  modelo médio): orquestrar não precisa de
   mais, e o raciocínio da sessão principal conta como saída, o token mais caro.
 - **Uma sessão por ciclo** (projeto novo ou cada alteração): o `state.md`
   permite retomar numa sessão nova sem perder nada; conversa de dias fica cara.
@@ -109,7 +190,7 @@ procurou e pergunta onde estão os documentos.
 - Plugins e skills que você não usa entram no contexto de toda sessão:
   desligue-os.
 
-## Compactação de contexto (uma vez só)
+## Compactação de contexto (Claude Code, uma vez só)
 
 Rode no Claude Code:
 
@@ -126,6 +207,9 @@ volta leve e a skill retoma pelo `state.md` da pasta de documentos. `/compact` s
 `continuar` também funciona, mas relê a conversa inteira para resumi-la. O mesmo
 `/molbytes:molbytes-scaffold continuar` serve para retomar em outro dia.
 
+Nas outras plataformas, os comandos equivalentes estão em
+`references/plataformas.md`.
+
 ## Backup (antes de formatar o PC)
 
 Como plugin, basta reinstalar pelo marketplace. Na cópia manual, faça backup
@@ -135,7 +219,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.13.3, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
+v0.14.0, em evolução: os ajustes da v0.10 vieram de uma execução real. Espere
 ajustes a cada projeto. Ajuste modelos em `references/model-routing.md` com base em
 `.project/model-log.md`.
 

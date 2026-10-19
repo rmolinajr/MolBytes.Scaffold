@@ -1,0 +1,5 @@
+description = "molbytes.scaffold: da ideia ao código testado, auditado e revisado"
+prompt = '''
+Ative a skill `molbytes-scaffold` e siga as instruções dela como orquestrador.
+Descrição do projeto: {{args}}
+'''

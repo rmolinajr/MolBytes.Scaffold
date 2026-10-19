@@ -7,6 +7,8 @@ Reescreva o arquivo inteiro ao fim de cada estágio. Não acumule histórico aqu
 # Estado do scaffold
 
 Projeto: <uma linha>
+Plataforma: claude-code | codex | gemini-cli | cursor
+Modelos: <só se diferente da tabela de plataformas.md: leve=..., medio=..., forte=...>
 Documentos: <caminho da pasta de documentos (.project/ ou externa)>
 Modo: novo | alteração (base_commit <sha>)
 Flags: <ex.: --sem-design --ate tickets> | nenhuma
@@ -31,8 +33,8 @@ Atualizado: <data/hora> — fim do estágio <N> (<nome>)
 
 ## Estágio 7 (se em andamento)
 - Onda atual: 2 de 4
-- Concluídos: BE-001 (opus), BE-002 (sonnet), ...
-- Falharam/escalados: FE-003 sonnet→opus (testes falharam 2x)
+- Concluídos: BE-001 (forte), BE-002 (medio), ...
+- Falharam/escalados: FE-003 medio→forte (testes falharam 2x)
 
 ## Plano de teste (a partir do estágio 8)
 - Itens: passou X, falhou X, bloqueado X, manual X, aceito X

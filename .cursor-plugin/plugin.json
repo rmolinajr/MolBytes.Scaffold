@@ -1,0 +1,22 @@
+{
+  "name": "molbytes",
+  "version": "0.14.0",
+  "description": "Pipeline de 11 estágios que leva um projeto de software da ideia ao código testado, auditado e revisado, com roteamento de modelo por ticket.",
+  "author": {
+    "name": "Roberto Molina — MolBytes",
+    "url": "https://www.molbytes.io"
+  },
+  "homepage": "https://www.molbytes.io",
+  "repository": "https://github.com/rmolinajr/MolBytes.Scaffold",
+  "license": "MIT",
+  "keywords": [
+    "scaffold",
+    "pipeline",
+    "spec",
+    "tickets",
+    "security",
+    "code-review",
+    "subagents"
+  ],
+  "agents": "./adapters/cursor/agents/"
+}

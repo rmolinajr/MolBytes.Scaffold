@@ -4,15 +4,17 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.13.3-blue)
+![versão](https://img.shields.io/badge/versão-0.14.0-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
-![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code-d97757)
+![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
-Skill para o [Claude Code](https://claude.com/claude-code) que leva um projeto
-de software da ideia ao código testado, auditado e revisado, em 11 estágios.
+Skill para o [Claude Code](https://claude.com/claude-code), o Codex, o Gemini
+CLI e o Cursor que leva um projeto de software da ideia ao código testado,
+auditado e revisado, em 11 estágios.
 
 Uma sessão principal atua como **orquestrador**: conversa com você, delega cada
-estágio a um subagente especializado com o modelo certo (haiku, sonnet ou opus),
+estágio a um subagente especializado com o nível de modelo certo (leve, médio
+ou forte; no Claude Code, haiku, sonnet ou opus),
 confere o resultado e faz commit. Ela mesma não escreve código de produção.
 
 ## Pipeline
@@ -50,14 +52,15 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
   arquivos; um ticket `INFRA-000` prepara estrutura, testes e dependências antes
   de tudo.
 - **Roteamento de modelo por ticket:** pagamentos, auth, sync offline e
-  concorrência vão para opus; config e CRUD trivial para haiku; o resto sonnet.
+  concorrência vão para o nível forte; config e CRUD trivial para o leve; o
+  resto para o médio. Cada plataforma traduz o nível para um modelo dela.
   Quando os testes falham, tenta de novo no mesmo modelo e depois sobe um
   nível.
 - **Segurança em duas pontas:** modelo de ameaças e requisitos testáveis antes
   do código; gitleaks, semgrep e trivy (via Docker) + revisão OWASP depois. Toda
   correção começa por um teste que reproduz a falha e é verificada por outro
   agente.
-- **Watchdog:** `maxTurns` por subagente, orçamento de tempo em
+- **Watchdog:** limite de turnos por subagente (onde a plataforma tem), orçamento de tempo em
   `.project/runs.log`, comando `status` a qualquer momento (os
   implementadores rodam em segundo plano).
 - **Sessão principal leve:** ela só orquestra. Toda correção (teste,
@@ -143,6 +146,17 @@ estágios pesados já usam opus nos subagentes) e, nos pontos que a skill avisa
 `/molbytes:molbytes-scaffold continuar`: a sessão recomeça leve, pelo
 `state.md`. `/compact` também serve, mas custa mais.
 
+### Outras plataformas
+
+| Plataforma | Instalar | Rodar |
+|---|---|---|
+| Codex | copiar a skill e `adapters/codex/agents/` | `$molbytes-scaffold <descrição>` |
+| Gemini CLI | `gemini extensions install ./MolBytes.Scaffold/adapters/gemini-cli` | `/molbytes-scaffold <descrição>` |
+| Cursor | plugin pela URL do repositório, ou cópia manual | `/molbytes-scaffold <descrição>` |
+
+Os adaptadores são novos na v0.14.0 e ainda não rodaram um projeto real
+nessas plataformas. Passo a passo em [INSTALL.md](INSTALL.md).
+
 Outras formas de instalar e pré-requisitos (Docker): [INSTALL.md](INSTALL.md). Histórico: [CHANGELOG.md](CHANGELOG.md).
 
 ## Estrutura
@@ -151,6 +165,8 @@ Outras formas de instalar e pré-requisitos (Docker): [INSTALL.md](INSTALL.md). 
 .claude-plugin/
   plugin.json                   # manifesto do plugin (autor, versão, licença)
   marketplace.json              # permite instalar com /plugin
+.codex-plugin/plugin.json       # plugin do Codex (gerado)
+.cursor-plugin/                 # plugin e marketplace do Cursor (gerados)
 skills/molbytes-scaffold/
   SKILL.md                      # orquestrador
   references/
@@ -163,13 +179,24 @@ skills/molbytes-scaffold/
     alteracao.md                # alteração de sistema existente e sua documentação
     plano-de-teste.md           # plano de teste, execução, correção automática
     extensoes.md                # contrato das skills de extensão
+    plataformas.md              # Claude Code, Codex, Gemini CLI, Cursor: níveis e comandos
 agents/
-  scaffold-*.md                 # 8 subagentes
+  scaffold-*.md                 # 8 subagentes (formato Claude Code, fonte dos adaptadores)
+adapters/
+  build.py                      # gera os adaptadores a partir de skills/ e agents/
+  codex/agents/                 # subagentes em TOML
+  gemini-cli/                   # extensão: skill, comando e um subagente por nível
+  cursor/agents/                # subagentes com model: inherit
 ```
+
+Depois de mudar `skills/`, `agents/` ou a versão em `.claude-plugin/plugin.json`,
+rode `python adapters/build.py`; `python adapters/build.py --check` falha se
+algum adaptador estiver desatualizado.
 
 ## Status
 
-v0.13.3, em evolução: os ajustes da v0.10 vieram de uma execução real. Não substitui um pentest
+v0.14.0, em evolução: os ajustes da v0.10 vieram de uma execução real no
+Claude Code. Não substitui um pentest
 profissional antes de processar pagamentos reais.
 
 ## Autor
