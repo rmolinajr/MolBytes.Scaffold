@@ -7,6 +7,8 @@ Reescreva o arquivo inteiro ao fim de cada estágio. Não acumule histórico aqu
 # Estado do scaffold
 
 Projeto: <uma linha>
+Fase: <nome curto da rodada, ex.: fase2>
+Fases anteriores: <fase1, ...> | nenhuma
 Plataforma: claude-code | codex | gemini-cli | cursor
 Modelos: <só se diferente da tabela de plataformas.md: leve=..., medio=..., forte=...>
 Documentos: <caminho da pasta de documentos (.project/ ou externa)>

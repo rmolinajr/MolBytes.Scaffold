@@ -63,8 +63,9 @@ Informe o modo a cada subagente.
   dois repositórios: documentos e, se houve mudança de código, projeto).
 - Se o repositório não tiver git, rode `git init` antes do estágio 1.
 - Antes do primeiro commit, garanta que o `.gitignore` contém `.env`,
-  `.project/security/raw/` (os relatórios brutos contêm os segredos achados;
-  no modo externo, `security/raw/` vai no `.gitignore` da pasta de documentos) e
+  `.project/**/security/raw/` (os relatórios brutos contêm os segredos achados,
+  também nas fases arquivadas; no modo externo, `**/security/raw/` vai no
+  `.gitignore` da pasta de documentos) e
   as pastas de build/dependências da stack (`node_modules/`, `.venv/`, `bin/`, `obj/`, `.vs/`).
 - **Subagentes não leem os arquivos desta skill.** A skill pode estar instalada no
   projeto ou na pasta do usuário, em lugares diferentes em cada plataforma, então
@@ -183,7 +184,10 @@ próximo passo listado em "Próximo passo". Não refaça estágios já commitado
 Se a pasta de documentos já existir ao iniciar (interna ou achada pelo
 ponteiro), leia `.project/state.md` (ou, se não existir, deduza pelos arquivos
 e pelo `git log`), informe ao usuário o último estágio concluído e pergunte se
-continua dali. Se o ponteiro indicar uma pasta que não existe mais, siga
+continua dali. Se a rodada que está lá terminou (estágio 11 marcado) ou o
+pedido é outra mudança, é uma rodada nova: arquive a anterior em
+`.project/<fase>/` e comece a nova na raiz, como em "Rodada nova numa pasta
+que já tem documentos" (`references/documentos.md`). Se o ponteiro indicar uma pasta que não existe mais, siga
 `references/documentos.md`: diga onde procurou e pergunte onde estão os
 documentos.
 

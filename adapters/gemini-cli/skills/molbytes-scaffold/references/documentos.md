@@ -45,7 +45,8 @@ for externa, troque `.project/` pelo caminho real.
    }
    ```
 2. Se ela não for um repositório git, rode `git init` nela e crie um
-   `.gitignore` com `security/raw/` (relatórios brutos contêm segredos).
+   `.gitignore` com `**/security/raw/` (relatórios brutos contêm segredos; o
+   `**` cobre também as fases arquivadas).
 3. Grave ou atualize `~/.molbytes/projetos.json`:
    ```json
    {
@@ -79,3 +80,42 @@ nem entrada no `.gitignore`.
   repositórios.
 - **Estado:** em `state.md`, registre na primeira linha
   `Documentos: <caminho>` para o usuário saber onde estão.
+
+## Rodada nova numa pasta que já tem documentos
+
+A rodada atual fica sempre na raiz da pasta de documentos (`.project/state.md`,
+`.project/tickets.yaml`...). Nunca crie a rodada nova numa subpasta: a
+retomada com `continuar` e as ferramentas que leem o estado procuram na raiz.
+
+**Quando é rodada nova:** `state.md` existe e o estágio 11 está marcado, ou o
+usuário diz que o pedido é outra mudança e não a continuação da rodada que
+está lá. Rodada não terminada: pergunte antes
+> A rodada `<Fase:>` parou no estágio N. Continuo dela ou arquivo e começo
+> outra?
+
+e só arquive com a resposta `arquivar`.
+
+**Arquivar a rodada anterior:**
+
+1. **Nome da fase:** o `Fase:` do `state.md`. Sem ele (rodadas de antes desta
+   regra), proponha `fase1`, ou o próximo número livre, e confirme. Minúsculas,
+   com hífens, e nunca `design`, `security` ou `tickets` nem uma subpasta que
+   já exista.
+2. **`.gitignore`:** confira que cobre `security/raw/` também nas subpastas
+   (`.project/**/security/raw/` no modo interno, `**/security/raw/` no
+   externo). Se a entrada for a antiga, sem `**`, troque antes de mover.
+3. **Mover** para `.project/<fase>/`, com `git mv` (ou `mv` no que não está no
+   git), o que é só da rodada: `state.md`, `qa.json`, `risks.yaml`,
+   `tickets.yaml`, `tickets/`, `classificacao.json`, `agent-map.json`,
+   `regras-implementacao.md`, `plano-de-teste.yaml`, `test-report.md`,
+   `security/`, `code-review-report.md`, `pipeline-report.md`, `runs.log` e
+   `model-log.md`. O que não existir, pule.
+4. **Ficam na raiz e evoluem:** `spec.md`, `design/` e `docs-sistema.yaml`
+   descrevem o sistema inteiro. A rodada nova os atualiza (ver
+   `alteracao.md`); a versão de cada fase fica no git.
+5. **Commit:** `scaffold(0): arquiva <fase>` (no modo externo, no git da pasta
+   de documentos).
+6. **Estado novo:** `state.md` do modelo, com `Fase: <nome da rodada nova>`
+   (proponha o próximo número e confirme) e `Fases anteriores: <fase>, ...`.
+   Siga a escolha do modo (`alteracao.md`): com código, a rodada nova é
+   alteração, com `base_commit` novo.

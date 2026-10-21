@@ -2,6 +2,26 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.16.0
+
+Rodada nova num projeto que já tem pasta de documentos (antes, cada sessão
+improvisava uma subpasta para a fase nova, e a retomada e as ferramentas que
+leem `.project/state.md` não achavam o estado):
+
+- A rodada atual fica sempre na raiz de `.project/`. Ao começar outra mudança
+  (estágio 11 da anterior marcado, ou o usuário diz que é outro pedido), a
+  rodada anterior vai para `.project/<fase>/` com `git mv` e commit
+  `scaffold(0): arquiva <fase>`. Rodada não terminada só é arquivada com a
+  confirmação do usuário (`references/documentos.md`, "Rodada nova numa pasta
+  que já tem documentos").
+- `spec.md`, `design/` e `docs-sistema.yaml` ficam na raiz e evoluem com o
+  sistema; o resto (estado, tickets, roteamento, testes, segurança,
+  relatórios, `runs.log`, `model-log.md`) vai com a fase.
+- `state.md` ganha `Fase:` e `Fases anteriores:`.
+- `.gitignore` com `.project/**/security/raw/` (externo: `**/security/raw/`),
+  para os relatórios brutos das fases arquivadas continuarem fora do git.
+  Pastas com a entrada antiga são corrigidas antes de arquivar.
+
 ## v0.15.0
 
 Ondas por script, não pelo modelo (numa execução real, as ondas do router
