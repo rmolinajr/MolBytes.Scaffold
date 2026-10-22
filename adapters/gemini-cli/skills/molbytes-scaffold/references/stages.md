@@ -26,6 +26,13 @@ usuário, requisitos não funcionais, fora do escopo, e a seção
 **Modo alteração com documentação do sistema:** a spec ganha a seção
 "Documentação afetada" (ver `alteracao.md`).
 
+**Premissas sobre terceiros:** quando a spec depende de como um serviço de
+fora se comporta (API de pagamento, emissor de nota ou fatura, consulta
+pública, regra de órgão ou do contador), ela ganha a seção "Premissas sobre
+terceiros", uma linha por premissa: id (`P-01`), o que se supõe, como
+confirmar (`conta de teste`, `suporte` ou `pessoa`) e o que muda se for
+falsa. Sem nenhuma, a seção diz "nenhuma".
+
 **Tamanho:** a spec tem no máximo ~30 mil caracteres. Ela descreve decisões,
 contratos e regras; detalhe de implementação fica nos tickets. Spec maior é
 lida inteira por vários agentes e multiplica o custo.
@@ -55,6 +62,35 @@ Riscos de severidade alta com `quando: mvp` viram requisitos na etapa 5.
 
 Inclua também a lista `security_requirements` (formato em
 `references/security.md`, parte A). Cada requisito precisa ser testável.
+
+### Sondagem das premissas (fim do estágio 3)
+
+Premissa sobre terceiros que só se confirma depois da implementação vira
+retrabalho depois do gate: numa execução real, os testes passaram contra um
+simulador escrito com as premissas, e a conta de teste mostrou, no mesmo dia,
+que nenhuma fatura seria emitida. Por isso, se a spec tem premissas com
+`conta de teste`, pergunte antes do estágio 4:
+> A spec tem N premissas que a conta de teste de <serviço> responde (P-01,
+> ...). Há conta de teste ou sandbox com credencial configurada? Sondo agora,
+> só com operações de teste que desfaço no fim?
+
+Com o sim, lance o `scaffold-tester` (medio) com a lista das premissas e
+estas regras:
+
+- só conta de teste, sandbox ou modo de teste, nunca produção; se a
+  configuração apontar para produção ou não der para saber, ele para e diz;
+- a credencial vem da variável de ambiente ou do cofre que o usuário indicar,
+  nunca do prompt, do chat, da pasta de documentos ou do log;
+- chamadas mínimas e reversíveis (rascunho, modo de teste); o que ele criou,
+  ele apaga no fim;
+- grava `.project/sondagens.md`, por premissa: data, requisição (sem segredo
+  nem dado pessoal), o trecho da resposta que decide (status, campos,
+  mensagem de erro) e o veredito `confirmada`, `negada` ou `inconclusiva`.
+
+Premissa negada muda a spec: mande o architect ajustar a spec e os riscos,
+mostre ao usuário o que mudou e espere a aprovação, como no estágio 2. Sem
+conta de teste, ou premissa de `suporte` ou `pessoa`: ela fica aberta e segue
+para os estágios 5, 8 e 11.
 
 ## 4. to-design → scaffold-designer
 
@@ -101,6 +137,21 @@ Tickets pequenos (meio dia de trabalho humano no máximo). Inclua os riscos alto
 do MVP como tickets ou critérios de aceite. Cada item de `security_requirements`
 deve aparecer como critério de aceite (com teste) em pelo menos um ticket, que
 o lista em `security_reqs`.
+
+**Simuladores de serviço externo** (fake, mock, stub, simulador de
+desenvolvimento): reproduzem as respostas gravadas em `sondagens.md`,
+inclusive os erros, e o ticket copia o trecho da sondagem que usa. O que
+depende de premissa aberta fica atrás de configuração, e o ticket diz qual
+premissa supõe.
+
+**Arquivos de registro:** arquivo que precisa de uma entrada para cada valor
+novo (rótulo ou tradução de enum, ação ou chave de auditoria, categoria de
+filtro, mapa de nomes, lista fixada por teste de contrato). Se vários tickets
+criam valores para ele e um só é o dono (para não ser editado em paralelo), o
+dono depende de todos os que criam valores e tem o critério "todo valor novo
+da rodada tem entrada". Numa execução real, o dono rodou numa onda anterior e
+as chaves criadas depois chegaram cruas à tela. No modo alteração, procure
+esses arquivos no código existente.
 
 **Ticket de bootstrap obrigatório:** o primeiro ticket é sempre `INFRA-000`, sem
 dependências, e todos os outros dependem dele. Ele cria a estrutura de pastas,
@@ -303,19 +354,36 @@ no nível forte.
 5. Gere `.project/pipeline-report.md`: estágios, modelos usados, tokens por
    estágio (somados do `runs.log`), escaladas,
    resultado dos testes, resumo de segurança (achados por severidade:
-   corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status)
+   corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status),
+   as premissas sobre terceiros ainda abertas (com o que cada uma pode mudar)
    e a lista "Testes manuais a fazer", pendências. Commit final.
+
+## Depois do gate: testes manuais
+
+O gate não prova o que só a pessoa ou a conta real mostram (tela com dados
+reais, documento emitido, PDF). Quando o usuário executar os testes manuais,
+ou pedir que você os acompanhe, e um caso falhar:
+
+1. Ticket de correção `FIX-MANUAL-<n>` (fim deste arquivo), com o caso do
+   plano manual e os tickets de origem; medio e, na 2ª tentativa, forte.
+   START e END no `runs.log`, como no pipeline.
+2. Depois da correção: o teste da área e o caso manual de novo.
+3. `pipeline-report.md` ganha (ou atualiza) a seção "Testes manuais": data,
+   casos executados, defeitos e correções, premissas respondidas. Premissa
+   respondida também vai para `sondagens.md`.
+4. `state.md`: pendências e próximo passo. Commit
+   `scaffold(11): fix MANUAL-<n>`.
 
 ## Ticket de correção (implementador fora da onda)
 
 Sempre que um `scaffold-implementer` for lançado fora de um ticket do estágio 5
 (conflito de merge, falha da onda que não é de um ticket só, item do plano
 de teste, achado de segurança, crítico do code review, falha nova no estágio
-11),
+11, teste manual depois do gate),
 escreva antes `.project/tickets/<id>.md`, com até ~2 mil caracteres:
 
-- **id:** `FIX-<origem>` (ex.: `FIX-TP-007`, `FIX-REVIEW-3`, `FIX-MERGE-2`) ou
-  o próprio `SECURITY-00X`;
+- **id:** `FIX-<origem>` (ex.: `FIX-TP-007`, `FIX-REVIEW-3`, `FIX-MERGE-2`,
+  `FIX-MANUAL-1`) ou o próprio `SECURITY-00X`;
 - **origem:** o item, achado, ticket ou onda que gerou a correção;
 - **problema:** a falha resumida (erro, arquivo:linha, saída filtrada);
 - **arquivos:** os que ele pode mexer (os do ticket de origem e os apontados

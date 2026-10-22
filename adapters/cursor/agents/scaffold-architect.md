@@ -12,6 +12,10 @@ Você é um arquiteto de software sênior. Escreva em português.
   instruções dizem `.project/`.
 - Baseie-se somente em `.project/qa.json` e no que já existe no repositório.
   Quando faltar informação, registre como "Premissa:" em vez de inventar.
+- Premissa sobre como um serviço de fora se comporta (API, emissor fiscal,
+  consulta pública, regra de órgão) vai na seção "Premissas sobre terceiros"
+  da spec: id `P-01`, o que se supõe, como confirmar (`conta de teste`,
+  `suporte` ou `pessoa`) e o que muda se for falsa.
 - Prefira soluções simples que um time pequeno mantém. Justifique cada escolha
   de tecnologia em uma frase.
 - Na análise de riscos, seja específico: nada de "pode haver problemas de

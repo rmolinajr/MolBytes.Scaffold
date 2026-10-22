@@ -2,6 +2,37 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.17.0
+
+Ajustes de uma execução real no modo alteração (faturação com emissor fiscal
+externo). O gate passou com toda a suíte verde, mas os testes manuais acharam
+7 defeitos depois dele, 4 de premissas sobre o emissor que a conta de teste
+respondia no mesmo dia:
+
+- **Premissas sobre terceiros:** a spec ganha a seção "Premissas sobre
+  terceiros" (id, o que se supõe, como confirmar, o que muda se for falsa). No
+  fim do estágio 3, com conta de teste disponível, o `scaffold-tester` sonda
+  as premissas (só conta de teste, operações reversíveis, credencial fora dos
+  arquivos) e grava `sondagens.md`; premissa negada volta à spec com
+  aprovação do usuário. Simuladores de serviço externo reproduzem as
+  respostas gravadas, inclusive os erros. Premissa aberta vira item `manual`
+  do plano e entra no relatório final.
+- **Arquivos de registro** (rótulos, traduções, categorias, listas de
+  contrato) com um ticket dono: o dono depende de todos os tickets que criam
+  valores para ele (no caso real, as chaves criadas em ondas seguintes
+  chegaram cruas à tela).
+- **Depois do gate:** defeito de teste manual vira ticket `FIX-MANUAL-<n>`,
+  com START/END no `runs.log` e a seção "Testes manuais" no
+  `pipeline-report.md`.
+- "Testes manuais a fazer" começa por "Preparar o ambiente" (migrações,
+  dados, configuração, contas de teste).
+- `runs.log`: o END é gravado assim que o subagente termina, com o total de
+  tokens do resultado (gravados em lote, 36 de 45 saíram com `?`).
+- Rodada nova: vai para a raiz também quando o projeto tem fases em
+  subpastas de antes da 0.16 ou uma rodada antiga sem `state.md`.
+- Estágio 9: numa worktree, o gitleaks varre o histórico pelo repositório
+  principal (`--log-opts=--all`); antes, ele não via o histórico.
+
 ## v0.16.0
 
 Rodada nova num projeto que já tem pasta de documentos (antes, cada sessão

@@ -37,7 +37,10 @@ Ao receber o resultado:
 
 `<tokens>` é o total que a plataforma mostra no resultado do subagente (ou
 no aviso de término, em segundo plano); se não mostrar, use `?`. É o dado que
-permite calibrar o roteamento por custo, não só por tempo.
+permite calibrar o roteamento por custo, não só por tempo. Grave o END de
+cada subagente assim que o resultado ou o aviso dele chegar, antes de tratar
+o próximo: numa execução real, os ENDs gravados em lote no fim da onda saíram
+com `?` em 36 de 45 linhas, porque o total já não estava à mão.
 
 Orçamento esperado (minutos):
 
@@ -47,6 +50,7 @@ Orçamento esperado (minutos):
 | ticket complexidade média | — | 15 | 20 |
 | ticket complexidade alta | — | 25 | 30 |
 | estágios 2-6 | 5 | 15 | 20 |
+| sondagem das premissas (estágio 3) | — | 20 | — |
 | estágio 8 | — | 25 | 30 |
 | 9.1 audit (ferramentas + revisão) | — | — | 40 |
 | 9.3 fix por ticket | — | — | 20 |

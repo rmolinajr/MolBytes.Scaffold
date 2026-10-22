@@ -92,8 +92,15 @@ export MSYS_NO_PATHCONV=1
 SRC="$(pwd -W 2>/dev/null || pwd)"
 OUT="$(cd "$RAW" && { pwd -W 2>/dev/null || pwd; })"
 
-# Segredos no código e no histórico do git
-docker run --rm -v "$SRC:/src:ro" -v "$OUT:/out" zricethezav/gitleaks:v8.30.1 detect --source /src --report-format json --report-path /out/gitleaks.json
+# Segredos no histórico do git. Numa worktree, .git é um arquivo que aponta
+# para o repositório principal, fora do volume, e o gitleaks não vê o
+# histórico: varra o repositório principal, com todas as refs.
+GIT_SRC="$SRC"; LOG_OPTS=""
+if [ -f .git ]; then
+  GIT_SRC="$(cd "$(git rev-parse --git-common-dir)/.." && { pwd -W 2>/dev/null || pwd; })"
+  LOG_OPTS="--log-opts=--all"
+fi
+docker run --rm -v "$GIT_SRC:/src:ro" -v "$OUT:/out" zricethezav/gitleaks:v8.30.1 detect --source /src $LOG_OPTS --report-format json --report-path /out/gitleaks.json
 
 # Padrões inseguros no código (OWASP, injeção, etc.)
 docker run --rm -v "$SRC:/src:ro" -v "$OUT:/out" semgrep/semgrep:1.178.0 semgrep scan --metrics off --disable-version-check --config p/default --config p/owasp-top-ten --config p/secrets --exclude .project --json -o /out/semgrep.json /src
@@ -113,7 +120,9 @@ docker run --rm -v "$SRC:/src:ro" -v "$OUT:/out" python:3.12-slim sh -c "pip ins
 ```
 
 Versões testadas em 2026-10-11 (projeto de teste com segredo, SQL
-concatenado e dependência vulnerável: todos acharam o esperado).
+concatenado e dependência vulnerável: todos acharam o esperado). O gitleaks a
+partir de uma worktree foi testado em 2026-10-22 (798 commits de todas as
+refs, em 2 min).
 
 Se o Docker não estiver rodando, avise o usuário em vez de pular as ferramentas.
 

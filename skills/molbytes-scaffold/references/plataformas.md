@@ -24,6 +24,9 @@ quando existe, vale mais que a tabela.
   prefixo `molbytes:`), parâmetro `model` = `haiku`, `sonnet` ou `opus`.
 - **Paralelo:** várias chamadas na mesma mensagem; no estágio 7, com
   `run_in_background: true`. O aviso de término chega sozinho.
+- **Tokens:** o resultado do subagente (ou o aviso de término, em segundo
+  plano) traz o uso dele, com `total_tokens`; é esse número que vai no END do
+  `runs.log`.
 - **Limite de turnos:** `maxTurns` no frontmatter de cada agente (já vem
   definido).
 - **Tarefas em execução:** `/tasks`.

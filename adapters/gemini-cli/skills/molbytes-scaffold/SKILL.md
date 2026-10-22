@@ -137,7 +137,7 @@ pipeline funciona igual.
 |---|---------|--------------|-------|--------|
 | 1 | grill-me | você (sessão principal) | `.project/qa.json` | conversa |
 | 2 | to-spec (+ modelo de ameaças) | `scaffold-architect` | `.project/spec.md` | **SIM** |
-| 3 | risks-tech-debt (+ requisitos de segurança) | `scaffold-architect` | `.project/risks.yaml` | não |
+| 3 | risks-tech-debt (+ requisitos de segurança, sondagem das premissas) | `scaffold-architect`; sondagem: `scaffold-tester` | `.project/risks.yaml` (+ `sondagens.md`) | só se uma premissa for negada |
 | 4 | to-design | `scaffold-designer` | `.project/design/` | não |
 | 5 | to-tickets | `scaffold-planner` | `.project/tickets.yaml` | não |
 | 6 | assign-to-agents | `scaffold-router` (níveis) + `scripts/ondas.py` (ondas) | `.project/classificacao.json` + `.project/agent-map.json` | **SIM** (custo do estágio 7) |

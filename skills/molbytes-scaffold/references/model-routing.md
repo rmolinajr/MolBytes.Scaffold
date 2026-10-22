@@ -18,6 +18,7 @@ acaso.
 | 1 grill-me | sessão principal | sessão principal | conversa com o usuário |
 | 2 to-spec | forte | medio | decisões de arquitetura; erro aqui se propaga |
 | 3 risks | forte | medio | exige ver o que não é óbvio |
+| 3 sondagem das premissas | medio | medio | `scaffold-tester` faz chamadas de teste e registra o que viu |
 | 4 design | medio | medio | trabalho estruturado |
 | 5 tickets | medio | medio | decomposição da spec |
 | 6 assign | leve | leve | classificação simples |
@@ -30,6 +31,7 @@ acaso.
 | 11 final: testes | medio | medio | `scaffold-tester` roda a suíte e o plano |
 | 11 final: rescan | medio; forte para triar achado novo | igual | só ferramentas; triagem exige o auditor forte |
 | 11 final: gate e relatório | sessão principal | sessão principal | lê só resumos |
+| depois do gate: correção de teste manual | medio; forte na 2ª tentativa | igual | defeito achado pela pessoa ou na conta real |
 
 O estágio 9 continua em forte mesmo no modo econômico: é o filtro de segurança.
 

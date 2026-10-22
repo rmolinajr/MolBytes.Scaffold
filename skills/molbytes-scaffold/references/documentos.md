@@ -87,9 +87,17 @@ A rodada atual fica sempre na raiz da pasta de documentos (`.project/state.md`,
 `.project/tickets.yaml`...). Nunca crie a rodada nova numa subpasta: a
 retomada com `continuar` e as ferramentas que leem o estado procuram na raiz.
 
-**Quando é rodada nova:** `state.md` existe e o estágio 11 está marcado, ou o
-usuário diz que o pedido é outra mudança e não a continuação da rodada que
-está lá. Rodada não terminada: pergunte antes
+Vale também quando o projeto já tem fases em subpastas (`.project/fase2/`...)
+criadas antes desta regra: elas ficam como estão, e a rodada nova vai para a
+raiz. Numa execução real, a sessão seguiu essas subpastas e gravou a rodada
+nova em `.project/fase2d/`, fora da raiz em que a retomada e as ferramentas
+procuram.
+
+**Quando é rodada nova:** `state.md` existe e o estágio 11 está marcado; a
+raiz tem arquivos de uma rodada (`tickets.yaml`, `pipeline-report.md`...) sem
+`state.md` (rodada de antes desta regra, já encerrada); ou o usuário diz que o
+pedido é outra mudança e não a continuação da rodada que está lá. Rodada não
+terminada: pergunte antes
 > A rodada `<Fase:>` parou no estágio N. Continuo dela ou arquivo e começo
 > outra?
 

@@ -26,6 +26,9 @@ itens:
 
 - `manual`: só o que não dá para automatizar (impressora, leitor de código de
   barras, aparência visual, e-mail real, hardware). Diga por que no `detalhe`.
+- Premissa sobre terceiros ainda aberta (spec, `sondagens.md`): um item
+  `manual` "Confirmar P-0X na conta de teste" (ou com o suporte, ou com a
+  pessoa), com o que muda se ela for negada.
 - Modo alteração: inclua a regressão das áreas tocadas; teste que já falhava
   no ponto de partida recebe `status: aceito`, `detalhe: já falhava antes da
   alteração`.
@@ -68,8 +71,10 @@ Commit a cada item corrigido: `scaffold(8): fix TP-00X`.
 `.project/test-report.md`: comandos usados, totais por status, cobertura real
 (se a ferramenta medir), itens corrigidos e em quantas tentativas, itens
 aceitos com o motivo, e a lista **"Testes manuais a fazer"** (itens `manual`,
-com o passo a passo para a pessoa executar). Só números que a ferramenta
-mostrou.
+com o passo a passo para a pessoa executar). A lista começa por **"Preparar o
+ambiente"**: migrações a aplicar, dados de exemplo, variáveis e chaves de
+configuração, contas de teste; depois, as premissas abertas, que são as que
+mais podem mudar o código. Só números que a ferramenta mostrou.
 
 ## Estágio 11
 

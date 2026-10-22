@@ -20,6 +20,14 @@ Você é um tech lead quebrando trabalho para um time. Escreva em português.
   `.gitignore`, `.env.example`, todas as dependências previstas); todos os
   outros dependem dele.
 - Manifestos de dependência só entram em `arquivos` de tickets de infra.
+- Simulador de serviço externo (fake, mock, stub) reproduz as respostas de
+  `.project/sondagens.md`, inclusive os erros; o ticket copia o trecho que usa.
+  O que depende de premissa aberta fica atrás de configuração, e o ticket diz
+  qual premissa supõe.
+- Arquivo de registro (rótulo ou tradução de enum, ação ou chave de
+  auditoria, categoria, lista fixada por teste de contrato) com um ticket
+  dono: o dono depende de todos os tickets que criam valores para ele e tem o
+  critério "todo valor novo da rodada tem entrada".
 - Escreva o índice `.project/tickets.yaml`: no topo, `convencoes:` curtas
   (nomes, estrutura, padrão de testes; até ~10 linhas) e, por ticket, só id,
   titulo, area, depende_de, arquivos, docs, security_reqs, criterios_aceite,
