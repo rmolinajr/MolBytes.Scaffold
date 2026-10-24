@@ -4,7 +4,7 @@
 
 ![MolBytes Scaffold](assets/cover.png)
 
-> By [MolBytes](https://www.molbytes.io) · created by Roberto Molina
+> By [MolBytes](https://www.molbytes.io) · created by Roberto Molina · [project page](https://www.molbytes.io/en/projetos/molbytes-scaffold)
 
 ![version](https://img.shields.io/badge/version-0.17.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -215,6 +215,7 @@ does not replace a professional pentest before processing real payments.
 Created by **Roberto Molina**, founder of **MolBytes**.
 
 - Website: [www.molbytes.io](https://www.molbytes.io)
+- Project page: [molbytes.io/en/projetos/molbytes-scaffold](https://www.molbytes.io/en/projetos/molbytes-scaffold)
 
 ## Support and contact
 
