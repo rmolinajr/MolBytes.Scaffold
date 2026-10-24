@@ -196,9 +196,10 @@ algum adaptador estiver desatualizado.
 
 ## Status
 
-v0.14.0, em evolução: os ajustes da v0.10 vieram de uma execução real no
-Claude Code. Não substitui um pentest
-profissional antes de processar pagamentos reais.
+v0.17.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
+no Claude Code, a mais recente (v0.17.0) alterando um sistema existente. Os
+adaptadores de Codex, Gemini CLI e Cursor ainda não rodaram um projeto real.
+Não substitui um pentest profissional antes de processar pagamentos reais.
 
 ## Autor
 
