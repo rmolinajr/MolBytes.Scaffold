@@ -1,123 +1,131 @@
 # MolBytes.Scaffold
 
+**English** · [Português (Brasil)](README.pt-BR.md)
+
 ![MolBytes Scaffold](assets/cover.png)
 
-> Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina
+> By [MolBytes](https://www.molbytes.io) · created by Roberto Molina
 
-![versão](https://img.shields.io/badge/versão-0.17.0-blue)
-![licença](https://img.shields.io/badge/licença-MIT-green)
-![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
+![version](https://img.shields.io/badge/version-0.17.0-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+![made for](https://img.shields.io/badge/made%20for-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
-Skill para o [Claude Code](https://claude.com/claude-code), o Codex, o Gemini
-CLI e o Cursor que leva um projeto de software da ideia ao código testado,
-auditado e revisado, em 11 estágios.
+A skill for [Claude Code](https://claude.com/claude-code), Codex, Gemini CLI
+and Cursor that takes a software project from idea to tested, audited and
+reviewed code, in 11 stages.
 
-Uma sessão principal atua como **orquestrador**: conversa com você, delega cada
-estágio a um subagente especializado com o nível de modelo certo (leve, médio
-ou forte; no Claude Code, haiku, sonnet ou opus),
-confere o resultado e faz commit. Ela mesma não escreve código de produção.
+A main session acts as the **orchestrator**: it talks to you, hands each stage
+to a specialized subagent running at the right model tier (light, medium or
+strong; in Claude Code, haiku, sonnet or opus), checks the result and commits.
+It never writes production code itself.
+
+> **Language:** the skill's instructions, its in-pipeline commands
+> (`continuar`, `aprovado`), its flags and the files it creates are in
+> Brazilian Portuguese. You can describe your project in English.
 
 ## Pipeline
 
-| # | Estágio | Subagente | Saída | Pausa para você |
-|---|---------|-----------|-------|-----------------|
-| 1 | grill-me | sessão principal | `.project/qa.json` | conversa |
-| 2 | spec + modelo de ameaças | `scaffold-architect` | `.project/spec.md` | **aprovar spec** |
-| 3 | riscos, dívida técnica, requisitos de segurança | `scaffold-architect` | `.project/risks.yaml` | — |
+| # | Stage | Subagent | Output | Pauses for you |
+|---|-------|----------|--------|----------------|
+| 1 | grill-me | main session | `.project/qa.json` | conversation |
+| 2 | spec + threat model | `scaffold-architect` | `.project/spec.md` | **approve spec** |
+| 3 | risks, tech debt, security requirements | `scaffold-architect` | `.project/risks.yaml` | — |
 | 4 | design | `scaffold-designer` | `.project/design/` | — |
 | 5 | tickets | `scaffold-planner` | `.project/tickets.yaml` | — |
-| 6 | roteamento de modelos e ondas | `scaffold-router` + `scripts/ondas.py` | `.project/agent-map.json` | **aprovar plano e custo** |
-| 7 | implementação paralela por ondas | `scaffold-implementer` | código | — |
-| 8 | plano de teste → executar → corrigir falhas | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes | se a correção falhar 2x |
-| 9 | segurança: audit → triage → fix → verify | `scaffold-security` + `scaffold-implementer` | `.project/security/` | achados médios |
-| 10 | code review | `scaffold-reviewer` | `.project/code-review-report.md` | **decidir correções** |
-| 11 | testes finais + rescan + gate | `scaffold-tester` + `scaffold-security` | `.project/pipeline-report.md` | se bloquear |
+| 6 | model routing and waves | `scaffold-router` + `scripts/ondas.py` | `.project/agent-map.json` | **approve plan and cost** |
+| 7 | parallel implementation in waves | `scaffold-implementer` | code | — |
+| 8 | test plan → run → fix failures | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + tests | if a fix fails twice |
+| 9 | security: audit → triage → fix → verify | `scaffold-security` + `scaffold-implementer` | `.project/security/` | medium findings |
+| 10 | code review | `scaffold-reviewer` | `.project/code-review-report.md` | **decide on fixes** |
+| 11 | final tests + rescan + gate | `scaffold-tester` + `scaffold-security` | `.project/pipeline-report.md` | if blocked |
 
-## Destaques
+## Highlights
 
-- **Retomável:** `state.md` + git são a fonte da verdade. Nos pontos de
-  pausa, `/clear` e `/molbytes:molbytes-scaffold continuar` (o mesmo comando
-  serve numa sessão nova); depois de `/compact`, só `continuar`.
-- **Extensível:** uma skill de extensão acrescenta regras por stack, domínio
-  ou compliance sem mudar o pipeline; o contrato está em
+- **Resumable:** `state.md` + git are the source of truth. At the pause
+  points, `/clear` and `/molbytes:molbytes-scaffold continuar` (the same
+  command works in a new session); after `/compact`, just `continuar`.
+- **Extensible:** an extension skill adds rules per stack, domain or
+  compliance without changing the pipeline; the contract is in
   `references/extensoes.md`.
-- **Alteração de sistema existente:** a skill procura a documentação do
-  sistema (no projeto ou fora) e a atualiza junto com o código; sem
-  documentação, só altera o sistema. Mudança pequena sai mais barata: riscos
-  só do que muda e design pulado quando não há tela nova.
-- **Documentos fora do projeto, se quiser:** spec, design e relatórios ficam em
-  `.project/` ou numa pasta separada com git próprio, para não sujar o projeto
-  do cliente. Ver [INSTALL.md](INSTALL.md#onde-ficam-os-documentos).
-- **Paralelismo sem conflito:** tickets da mesma onda nunca tocam os mesmos
-  arquivos; um ticket `INFRA-000` prepara estrutura, testes e dependências antes
-  de tudo. As ondas saem de um script (`scripts/ondas.py`), não do modelo: ele
-  confere dependências, conflitos de arquivo e tickets faltando ou inventados.
-- **Roteamento de modelo por ticket:** pagamentos, auth, sync offline e
-  concorrência vão para o nível forte; config e CRUD trivial para o leve; o
-  resto para o médio. Cada plataforma traduz o nível para um modelo dela.
-  Quando os testes falham, tenta de novo no mesmo modelo e depois sobe um
-  nível.
-- **Segurança em duas pontas:** modelo de ameaças e requisitos testáveis antes
-  do código; gitleaks, semgrep e trivy (via Docker) + revisão OWASP depois. Toda
-  correção começa por um teste que reproduz a falha e é verificada por outro
-  agente.
-- **Watchdog:** limite de turnos por subagente (onde a plataforma tem), orçamento de tempo em
-  `.project/runs.log`, comando `status` a qualquer momento (os
-  implementadores rodam em segundo plano).
-- **Sessão principal leve:** ela só orquestra. Toda correção (teste,
-  segurança, review, merge) vai para um implementador com um ticket de
-  correção, e os testes e o rescan do estágio 11 rodam em subagentes.
-- **Plano de teste com correção:** cada requisito vira item de um plano de
-  teste; o que falha é corrigido no código (sem afrouxar o teste) e testado de
-  novo; testes manuais vão como lista no relatório.
-- **Sem números inventados:** relatórios só com o que testes e ferramentas
-  mostraram.
+- **Changing an existing system:** the skill looks for the system's
+  documentation (inside the project or elsewhere) and updates it along with
+  the code; without documentation, it only changes the system. Small changes
+  cost less: risks only for what changes, and design is skipped when there is
+  no new screen.
+- **Documents outside the project, if you want:** spec, design and reports
+  live in `.project/` or in a separate folder with its own git, so the
+  client's project stays clean. See
+  [INSTALL.md](INSTALL.md#onde-ficam-os-documentos) (in Portuguese).
+- **Parallelism without conflicts:** tickets in the same wave never touch the
+  same files; an `INFRA-000` ticket sets up structure, tests and dependencies
+  before anything else. Waves come from a script (`scripts/ondas.py`), not
+  from the model: it checks dependencies, file conflicts and missing or
+  invented tickets.
+- **Model routing per ticket:** payments, auth, offline sync and concurrency
+  go to the strong tier; config and trivial CRUD to the light tier; the rest
+  to medium. Each platform maps the tier to one of its own models. When tests
+  fail, it retries on the same model and then moves up one tier.
+- **Security at both ends:** threat model and testable requirements before
+  the code; gitleaks, semgrep and trivy (via Docker) + an OWASP review after.
+  Every fix starts with a test that reproduces the failure and is verified by
+  another agent.
+- **Watchdog:** turn limit per subagent (where the platform has one), time
+  budget in `.project/runs.log`, and a `status` command at any time
+  (implementers run in the background).
+- **Lightweight main session:** it only orchestrates. Every fix (tests,
+  security, review, merge) goes to an implementer as a fix ticket, and the
+  stage 11 tests and rescan run in subagents.
+- **Test plan with fixes:** each requirement becomes an item in a test plan;
+  whatever fails is fixed in the code (without loosening the test) and tested
+  again; manual tests go into the report as a checklist.
+- **No made-up numbers:** reports only contain what tests and tools showed.
 
-## Uso rápido
+## Quick start
 
-Instale como plugin no Claude Code:
+Install it as a plugin in Claude Code:
 
 ```
 /plugin marketplace add rmolinajr/MolBytes.Scaffold
 /plugin install molbytes@molbytes
 ```
 
-E rode, com o Claude Code aberto na pasta do projeto:
+Then run it, with Claude Code open in the project folder:
 
 ```
-/molbytes:molbytes-scaffold Sistema PDV para restaurante: terminal, cozinha, admin, offline-first, Stripe e PIX
+/molbytes:molbytes-scaffold POS system for restaurants: terminal, kitchen, admin, offline-first, Stripe and PIX
 ```
 
-Copiada à mão para `~/.claude/skills/` (sem plugin), o comando é só
-`/molbytes-scaffold`.
+If you copy it by hand to `~/.claude/skills/` (no plugin), the command is
+just `/molbytes-scaffold`.
 
-### Exemplos
+### Examples
 
-Projeto novo, do grill-me ao gate:
-
-```
-/molbytes:molbytes-scaffold Agenda para clínicas: agendamento online, lembrete por WhatsApp, painel do médico
-```
-
-Alterar um sistema que já existe (abra o Claude Code na pasta dele):
+New project, from grill-me to the gate:
 
 ```
-/molbytes:molbytes-scaffold Alteração: aceitar PIX no checkout
+/molbytes:molbytes-scaffold Clinic scheduling: online booking, WhatsApp reminders, doctor dashboard
 ```
 
-Só até os tickets, para revisar o plano antes de gastar com implementação:
+Change a system that already exists (open Claude Code in its folder):
 
 ```
-/molbytes:molbytes-scaffold Agenda para clínicas: agendamento online e lembretes --ate tickets
+/molbytes:molbytes-scaffold Change: accept PIX at checkout
 ```
 
-API sem interface, pulando o design e com o roteamento econômico:
+Only up to the tickets, to review the plan before spending on
+implementation:
 
 ```
-/molbytes:molbytes-scaffold API de cotação de frete para lojas virtuais --sem-design --economico
+/molbytes:molbytes-scaffold Clinic scheduling: online booking and reminders --ate tickets
 ```
 
-Retomar em outro dia, numa sessão nova:
+API with no UI, skipping design and using economy routing:
+
+```
+/molbytes:molbytes-scaffold Shipping quote API for online stores --sem-design --economico
+```
+
+Resume another day, in a new session:
 
 ```
 /molbytes:molbytes-scaffold continuar
@@ -125,94 +133,95 @@ Retomar em outro dia, numa sessão nova:
 
 ### Flags
 
-| Flag | O que faz |
+| Flag | What it does |
 |---|---|
-| `--ate <estágio>` | Para depois do estágio indicado, pelo número ou pelo nome (`--ate 5`, `--ate tickets`). |
-| `--sem-design` | Pula o estágio 4; tickets e testes usam a spec no lugar do design. |
-| `--economico` | Usa a coluna "econômico" do roteamento de modelos. |
+| `--ate <stage>` | Stops after the given stage, by number or by name (`--ate 5`, `--ate tickets`). |
+| `--sem-design` | Skips stage 4; tickets and tests use the spec instead of the design. |
+| `--economico` | Uses the "econômico" (economy) column of the model routing. |
 
-### Durante o pipeline
+### During the pipeline
 
-Digite na conversa:
+Type in the conversation:
 
-| Comando | O que faz |
+| Command | What it does |
 |---|---|
-| `status` | Tabela dos subagentes rodando (ticket, modelo, tempo, orçamento) e o estágio ou a onda atual. |
-| `continuar` | Depois de `/compact`: relê o `state.md` e segue do próximo passo. Depois de `/clear` (mais barato), use `/molbytes:molbytes-scaffold continuar`. |
-| `aprovado`, ou o que mudar | Resposta às pausas: spec (estágio 2), plano e custo (6) e code review (10). |
+| `status` | Table of running subagents (ticket, model, time, budget) and the current stage or wave. |
+| `continuar` | After `/compact`: rereads `state.md` and continues from the next step. After `/clear` (cheaper), use `/molbytes:molbytes-scaffold continuar`. |
+| `aprovado`, or what to change | Answer to the pauses: spec (stage 2), plan and cost (6) and code review (10). |
 
-Recomendados do Claude Code: `/model sonnet` na sessão principal (os
-estágios pesados já usam opus nos subagentes) e, nos pontos que a skill avisa
-(fim dos estágios 2, 5, 8 e 9 e de cada onda do 7), `/clear` seguido de
-`/molbytes:molbytes-scaffold continuar`: a sessão recomeça leve, pelo
-`state.md`. `/compact` também serve, mas custa mais.
+Recommended in Claude Code: `/model sonnet` in the main session (the heavy
+stages already use opus in the subagents) and, at the points the skill
+tells you (end of stages 2, 5, 8 and 9 and of each wave in stage 7),
+`/clear` followed by `/molbytes:molbytes-scaffold continuar`: the session
+starts over light, from `state.md`. `/compact` also works, but costs more.
 
-### Outras plataformas
+### Other platforms
 
-| Plataforma | Instalar | Rodar |
+| Platform | Install | Run |
 |---|---|---|
-| Codex | copiar a skill e `adapters/codex/agents/` | `$molbytes-scaffold <descrição>` |
-| Gemini CLI | `gemini extensions install ./MolBytes.Scaffold/adapters/gemini-cli` | `/molbytes-scaffold <descrição>` |
-| Cursor | plugin pela URL do repositório, ou cópia manual | `/molbytes-scaffold <descrição>` |
+| Codex | copy the skill and `adapters/codex/agents/` | `$molbytes-scaffold <description>` |
+| Gemini CLI | `gemini extensions install ./MolBytes.Scaffold/adapters/gemini-cli` | `/molbytes-scaffold <description>` |
+| Cursor | plugin from the repository URL, or manual copy | `/molbytes-scaffold <description>` |
 
-Os adaptadores são novos na v0.14.0 e ainda não rodaram um projeto real
-nessas plataformas. Passo a passo em [INSTALL.md](INSTALL.md).
+The adapters are new in v0.14.0 and have not yet run a real project on those
+platforms. Step by step in [INSTALL.md](INSTALL.md) (in Portuguese).
 
-Outras formas de instalar e pré-requisitos (Docker): [INSTALL.md](INSTALL.md). Histórico: [CHANGELOG.md](CHANGELOG.md).
+Other ways to install and prerequisites (Docker): [INSTALL.md](INSTALL.md).
+History: [CHANGELOG.md](CHANGELOG.md) (in Portuguese).
 
-## Estrutura
+## Structure
 
 ```
 .claude-plugin/
-  plugin.json                   # manifesto do plugin (autor, versão, licença)
-  marketplace.json              # permite instalar com /plugin
-.codex-plugin/plugin.json       # plugin do Codex (gerado)
-.cursor-plugin/                 # plugin e marketplace do Cursor (gerados)
+  plugin.json                   # plugin manifest (author, version, license)
+  marketplace.json              # lets you install with /plugin
+.codex-plugin/plugin.json       # Codex plugin (generated)
+.cursor-plugin/                 # Cursor plugin and marketplace (generated)
 skills/molbytes-scaffold/
-  SKILL.md                      # orquestrador
+  SKILL.md                      # orchestrator
   references/
-    stages.md                   # instruções de cada estágio
-    model-routing.md            # qual modelo em cada estágio/ticket
-    security.md                 # ameaças, código seguro, auditoria, rescan
-    watchdog.md                 # limites, orçamento de tempo, reexecução
-    state-template.md           # modelo do .project/state.md
-    documentos.md               # pasta de documentos: interna ou externa
-    alteracao.md                # alteração de sistema existente e sua documentação
-    plano-de-teste.md           # plano de teste, execução, correção automática
-    extensoes.md                # contrato das skills de extensão
-    plataformas.md              # Claude Code, Codex, Gemini CLI, Cursor: níveis e comandos
+    stages.md                   # instructions for each stage
+    model-routing.md            # which model in each stage/ticket
+    security.md                 # threats, secure code, audit, rescan
+    watchdog.md                 # limits, time budget, reruns
+    state-template.md           # template for .project/state.md
+    documentos.md               # documents folder: internal or external
+    alteracao.md                # changing an existing system and its documentation
+    plano-de-teste.md           # test plan, execution, automatic fixes
+    extensoes.md                # contract for extension skills
+    plataformas.md              # Claude Code, Codex, Gemini CLI, Cursor: tiers and commands
 agents/
-  scaffold-*.md                 # 8 subagentes (formato Claude Code, fonte dos adaptadores)
+  scaffold-*.md                 # 8 subagents (Claude Code format, source for the adapters)
 adapters/
-  build.py                      # gera os adaptadores a partir de skills/ e agents/
-  codex/agents/                 # subagentes em TOML
-  gemini-cli/                   # extensão: skill, comando e um subagente por nível
-  cursor/agents/                # subagentes com model: inherit
+  build.py                      # generates the adapters from skills/ and agents/
+  codex/agents/                 # subagents in TOML
+  gemini-cli/                   # extension: skill, command and one subagent per tier
+  cursor/agents/                # subagents with model: inherit
 ```
 
-Depois de mudar `skills/`, `agents/` ou a versão em `.claude-plugin/plugin.json`,
-rode `python adapters/build.py`; `python adapters/build.py --check` falha se
-algum adaptador estiver desatualizado.
+After changing `skills/`, `agents/` or the version in
+`.claude-plugin/plugin.json`, run `python adapters/build.py`;
+`python adapters/build.py --check` fails if any adapter is out of date.
 
 ## Status
 
-v0.17.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
-no Claude Code, a mais recente (v0.17.0) alterando um sistema existente. Os
-adaptadores de Codex, Gemini CLI e Cursor ainda não rodaram um projeto real.
-Não substitui um pentest profissional antes de processar pagamentos reais.
+v0.17.0, evolving: the changes from v0.10 onward came from real runs in
+Claude Code, the most recent one (v0.17.0) changing an existing system. The
+Codex, Gemini CLI and Cursor adapters have not yet run a real project. It
+does not replace a professional pentest before processing real payments.
 
-## Autor
+## Author
 
-Criado por **Roberto Molina**, fundador da **MolBytes**.
+Created by **Roberto Molina**, founder of **MolBytes**.
 
-- Site: [www.molbytes.io](https://www.molbytes.io)
+- Website: [www.molbytes.io](https://www.molbytes.io)
 
-## Suporte e contato
+## Support and contact
 
-Dúvidas, sugestões ou uso em empresa: fale com a MolBytes pelo site
+Questions, suggestions or company use: reach MolBytes through the website
 [www.molbytes.io](https://www.molbytes.io).
 
-## Licença
+## License
 
-[MIT](LICENSE) — livre para usar, modificar e distribuir, mantendo o aviso de
-copyright da MolBytes.
+[MIT](LICENSE): free to use, modify and distribute, keeping the MolBytes
+copyright notice.
