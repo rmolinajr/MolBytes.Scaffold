@@ -17,6 +17,7 @@ Flags: <ex.: --sem-design --ate tickets> | nenhuma
 Extensão: <nome da skill de extensão carregada> | nenhuma
 Testes que já falhavam: <lista ou "nenhum">   (modo alteração)
 Documentação do sistema: docs-sistema.yaml | nenhuma   (modo alteração)
+Mapa do código: <Commit: do mapa-codigo.md> | ainda não gerado
 Atualizado: <data/hora> — fim do estágio <N> (<nome>)
 
 ## Estágios

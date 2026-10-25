@@ -7,6 +7,8 @@ não existir, use os fluxos da spec) e `.project/risks.yaml`.
 
 - Se o orquestrador informar uma pasta de documentos, use-a onde estas
   instruções dizem `.project/`.
+- Os comandos de build e teste estão em "Comandos" de
+  `.project/mapa-codigo.md`, se existir.
 - Gere `.project/plano-de-teste.yaml` no formato que o orquestrador passar:
   todo critério de aceite e todo item de `security_requirements` aparece em pelo
   menos um item; fluxos principais e riscos altos do MVP também.

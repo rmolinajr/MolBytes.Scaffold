@@ -2,12 +2,37 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.18.0
+
+Mapa do código, para cada rodada não redescobrir o sistema do zero (ainda
+sem execução real):
+
+- `.project/mapa-codigo.md` (`references/mapa-codigo.md`): visão e comandos,
+  estrutura, pontos de entrada, módulos, contratos, arquivos de registro e
+  convenções. É um índice, com caminho em cada item e sem código copiado nem
+  segredo, de até ~15 mil caracteres. O mapa diz onde olhar; quem decide ou
+  altera lê o código que ele aponta.
+- Carimbo `Commit:` (último commit de código mapeado). Quem lê confere o diff
+  desde ele, e área com arquivo no diff se confirma no código.
+- Gerado pelo `scaffold-architect` (medio) antes do estágio 1 no modo
+  alteração e no fim do estágio 7 no modo novo. Atualizado pelo diff, só nas
+  seções afetadas, no estágio 11 e no começo de cada rodada nova, se o código
+  mudou fora do pipeline. Os implementadores não editam o mapa (todos da
+  onda mexeriam no mesmo arquivo).
+- Lido no grill-me (alteração), pelo architect (estágio 2), pelo planner
+  (`arquivos`, arquivos de registro e trecho copiado em cada ticket) e pelo
+  tester ("Comandos").
+- Gate do estágio 11: não fecha como "concluído" se o mapa não cobre o
+  código atual. Na rodada nova, o mapa fica na raiz, como a `spec.md`.
+- `state.md` ganha `Mapa do código:`; orçamentos do mapa em `watchdog.md` e
+  nível em `model-routing.md`.
+
 ## v0.17.0
 
-Ajustes de uma execução real no modo alteração (faturação com emissor fiscal
+Ajustes de uma execução real no modo alteração (integração com serviço
 externo). O gate passou com toda a suíte verde, mas os testes manuais acharam
-7 defeitos depois dele, 4 de premissas sobre o emissor que a conta de teste
-respondia no mesmo dia:
+defeitos depois dele, a maioria de premissas sobre o serviço que a conta de
+teste respondia no mesmo dia:
 
 - **Premissas sobre terceiros:** a spec ganha a seção "Premissas sobre
   terceiros" (id, o que se supõe, como confirmar, o que muda se for falsa). No

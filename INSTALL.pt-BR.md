@@ -31,7 +31,7 @@ do seu usuário (`%USERPROFILE%\.claude\` no Windows, `~/.claude/` no macOS/Linu
 Resultado esperado:
 
     ~/.claude/skills/molbytes-scaffold/SKILL.md
-    ~/.claude/skills/molbytes-scaffold/references/   (10 arquivos .md)
+    ~/.claude/skills/molbytes-scaffold/references/   (11 arquivos .md)
     ~/.claude/agents/scaffold-*.md   (8 arquivos)
 
 Se já existir `~/.claude/agents/`, só acrescente os arquivos.
@@ -221,7 +221,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.17.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais no
+v0.18.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais no
 Claude Code. Espere ajustes a cada projeto. Ajuste modelos em
 `references/model-routing.md` com base em `.project/model-log.md`.
 

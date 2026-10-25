@@ -8,7 +8,8 @@ partida, documentação do sistema e as regras de cada estágio marcadas abaixo)
 Entreviste o usuário sobre o projeto. Uma pergunta por vez, no máximo 8.
 Cubra: usuários e papéis, fluxos principais, stack (se ele já tiver preferência),
 restrições (offline, pagamentos, LGPD/RGPD, países), integrações, prazo e o que
-fica fora do MVP. Não pergunte o que já está na descrição.
+fica fora do MVP. Não pergunte o que já está na descrição nem, no modo
+alteração, o que "Visão" e "Estrutura" do `mapa-codigo.md` já respondem.
 
 Salve em `.project/qa.json`:
 ```json
@@ -25,6 +26,9 @@ usuário, requisitos não funcionais, fora do escopo, e a seção
 
 **Modo alteração com documentação do sistema:** a spec ganha a seção
 "Documentação afetada" (ver `alteracao.md`).
+
+**Modo alteração:** passe ao architect o caminho do `mapa-codigo.md`; ele
+parte do mapa e lê no código só as áreas que a alteração toca.
 
 **Premissas sobre terceiros:** quando a spec depende de como um serviço de
 fora se comporta (API de pagamento, emissor de nota ou fatura, consulta
@@ -68,7 +72,7 @@ Inclua também a lista `security_requirements` (formato em
 Premissa sobre terceiros que só se confirma depois da implementação vira
 retrabalho depois do gate: numa execução real, os testes passaram contra um
 simulador escrito com as premissas, e a conta de teste mostrou, no mesmo dia,
-que nenhuma fatura seria emitida. Por isso, se a spec tem premissas com
+que o serviço recusaria a operação principal. Por isso, se a spec tem premissas com
 `conta de teste`, pergunte antes do estágio 4:
 > A spec tem N premissas que a conta de teste de <serviço> responde (P-01,
 > ...). Há conta de teste ou sandbox com credencial configurada? Sondo agora,
@@ -151,7 +155,11 @@ criam valores para ele e um só é o dono (para não ser editado em paralelo), o
 dono depende de todos os que criam valores e tem o critério "todo valor novo
 da rodada tem entrada". Numa execução real, o dono rodou numa onda anterior e
 as chaves criadas depois chegaram cruas à tela. No modo alteração, procure
-esses arquivos no código existente.
+esses arquivos em "Arquivos de registro" do `mapa-codigo.md` e confirme no
+código.
+
+**Mapa do código** (se existir): o planner preenche `arquivos` a partir dele
+e copia em cada ticket o trecho do mapa que o ticket usa, como faz com a spec.
 
 **Ticket de bootstrap obrigatório:** o primeiro ticket é sempre `INFRA-000`, sem
 dependências, e todos os outros dependem dele. Ele cria a estrutura de pastas,
@@ -268,6 +276,9 @@ Para cada onda, em ordem:
 - Commit por onda: `scaffold(7): onda N`.
 - **Modo alteração:** o ticket traz a lista `docs`; o implementador atualiza
   esses documentos junto com o código.
+- **Modo novo:** depois do commit da última onda, gere o `mapa-codigo.md`
+  (`references/mapa-codigo.md`, "Gerar") e faça o commit
+  `scaffold(7): mapa do código`. Os implementadores não editam o mapa.
 
 ## 8. tests → scaffold-tester + scaffold-implementer
 
@@ -335,23 +346,27 @@ no nível forte.
 2. **Rescan** → `scaffold-security` (medio): roda o rescan rápido de
    `references/security.md`, parte D, e devolve "nada novo" ou a lista de
    achados novos. Achado novo: triagem em outra chamada, no nível forte.
-3. **Gate** (você, lendo os resumos): o pipeline só termina como "concluído" se:
+3. **Mapa do código:** atualize-o pelo diff (`references/mapa-codigo.md`,
+   "Atualizar"), depois de toda correção de código deste estágio.
+4. **Gate** (você, lendo os resumos): o pipeline só termina como "concluído" se:
    - todos os testes passam e todo item automatizado do plano está `passou`
      ou `aceito` (itens `manual` não bloqueiam);
    - não há achado crítico ou alto aberto;
    - todo achado médio aberto está em `accepted.md`;
    - **modo alteração:** nenhuma falha de teste nova em relação ao ponto de
      partida, e todo documento do sistema da "Documentação afetada" foi
-     atualizado (os de `site` vão para o relatório como atualização manual).
+     atualizado (os de `site` vão para o relatório como atualização manual);
+   - o `Commit:` do `mapa-codigo.md` cobre o código: diff dele até o `HEAD`
+     do código vazio.
    Se algo falhar, mostre o motivo e pergunte ao usuário: corrigir agora, ou
    encerrar como "concluído com pendências" (registrado no relatório).
-4. **Limpeza:** não pode sobrar worktree nem branch criada pelo pipeline
+5. **Limpeza:** não pode sobrar worktree nem branch criada pelo pipeline
    (estágio 7 e tickets de correção dos estágios 8 a 11). Confira
    `git worktree list` e as branches das worktrees do pipeline (no Claude
    Code, `git branch --list "worktree-agent-*"`): o que está
    mergeado sai como no estágio 7; o que não está vai para as pendências do
    relatório e é mostrado ao usuário.
-5. Gere `.project/pipeline-report.md`: estágios, modelos usados, tokens por
+6. Gere `.project/pipeline-report.md`: estágios, modelos usados, tokens por
    estágio (somados do `runs.log`), escaladas,
    resultado dos testes, resumo de segurança (achados por severidade:
    corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status),

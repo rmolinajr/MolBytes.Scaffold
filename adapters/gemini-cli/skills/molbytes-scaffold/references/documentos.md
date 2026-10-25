@@ -118,8 +118,8 @@ e só arquive com a resposta `arquivar`.
    `regras-implementacao.md`, `plano-de-teste.yaml`, `test-report.md`,
    `security/`, `code-review-report.md`, `pipeline-report.md`, `runs.log` e
    `model-log.md`. O que não existir, pule.
-4. **Ficam na raiz e evoluem:** `spec.md`, `design/` e `docs-sistema.yaml`
-   descrevem o sistema inteiro. A rodada nova os atualiza (ver
+4. **Ficam na raiz e evoluem:** `spec.md`, `design/`, `docs-sistema.yaml` e
+   `mapa-codigo.md` descrevem o sistema inteiro. A rodada nova os atualiza (ver
    `alteracao.md`); a versão de cada fase fica no git.
 5. **Commit:** `scaffold(0): arquiva <fase>` (no modo externo, no git da pasta
    de documentos).

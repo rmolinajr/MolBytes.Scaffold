@@ -16,6 +16,7 @@ acaso.
 | Estágio | Padrão | Econômico | Por quê |
 |---------|--------|-----------|---------|
 | 1 grill-me | sessão principal | sessão principal | conversa com o usuário |
+| mapa do código (gerar e atualizar) | medio | medio | `scaffold-architect` lê estrutura e diff, não decide nada |
 | 2 to-spec | forte | medio | decisões de arquitetura; erro aqui se propaga |
 | 3 risks | forte | medio | exige ver o que não é óbvio |
 | 3 sondagem das premissas | medio | medio | `scaffold-tester` faz chamadas de teste e registra o que viu |

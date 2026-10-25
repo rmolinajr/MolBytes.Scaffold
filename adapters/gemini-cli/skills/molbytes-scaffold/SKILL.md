@@ -49,6 +49,15 @@ fora dele). Se o sistema tiver documentação, ela é atualizada junto com o
 código e entra no gate do estágio 11; se não tiver, só o sistema é alterado.
 Informe o modo a cada subagente.
 
+## Mapa do código
+
+`.project/mapa-codigo.md` diz onde fica cada coisa no código (estrutura,
+pontos de entrada, módulos, contratos, comandos), com o commit que ele
+descreve. Siga `references/mapa-codigo.md`: ele nasce antes do estágio 1 no
+modo alteração e no fim do estágio 7 no modo novo, é atualizado pelo diff no
+estágio 11 e entra no gate. O mapa diz onde olhar; quem decide ou altera lê
+o código que ele aponta.
+
 ## Regras gerais
 
 - Artefatos de planejamento vão em `.project/`. Código de produção vai na raiz do

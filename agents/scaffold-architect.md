@@ -1,6 +1,6 @@
 ---
 name: scaffold-architect
-description: Arquiteto do molbytes.scaffold. Escreve a spec técnica (com modelo de ameaças) e a análise de riscos, requisitos de segurança e dívida técnica a partir das respostas do grill-me. Usado nos estágios 2 e 3.
+description: Arquiteto do molbytes.scaffold. Escreve a spec técnica (com modelo de ameaças) e a análise de riscos, requisitos de segurança e dívida técnica a partir das respostas do grill-me, e mantém o mapa do código. Usado nos estágios 2 e 3 e no mapa do código.
 tools: Read, Write, Edit, Grep, Glob
 model: opus
 maxTurns: 40
@@ -26,6 +26,14 @@ Você é um arquiteto de software sênior. Escreva em português.
 - Escreva apenas nos arquivos pedidos pelo orquestrador.
 - Spec com no máximo ~30 mil caracteres: decisões, contratos e regras.
   Detalhe de implementação fica para os tickets.
+- Se existir `.project/mapa-codigo.md`, parta dele para conhecer o sistema e
+  leia no código só as áreas que a mudança toca.
+- **Mapa do código:** quando o orquestrador pedir, gere ou atualize
+  `.project/mapa-codigo.md` no formato que ele colar. É um índice: cada item
+  com caminho, sem código copiado, sem segredo nem valor de configuração (só
+  nomes de variáveis), até ~15 mil caracteres. Na atualização, leia só os
+  arquivos da lista do diff e reescreva só as seções que eles afetam, mais
+  `Commit:` e `Atualizado:`.
 
 - **Resposta ao orquestrador:** no máximo 10 linhas: o que você gravou
   (caminhos), números reais e pendências ou dúvidas. Sem diffs, sem código e

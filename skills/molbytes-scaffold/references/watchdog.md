@@ -51,6 +51,8 @@ Orçamento esperado (minutos):
 | ticket complexidade alta | — | 25 | 30 |
 | estágios 2-6 | 5 | 15 | 20 |
 | sondagem das premissas (estágio 3) | — | 20 | — |
+| mapa do código: gerar | — | 20 | — |
+| mapa do código: atualizar | — | 10 | — |
 | estágio 8 | — | 25 | 30 |
 | 9.1 audit (ferramentas + revisão) | — | — | 40 |
 | 9.3 fix por ticket | — | — | 20 |
