@@ -66,7 +66,8 @@ precisa de permissão para ela (como em `documentos.md`).
 
 ### 3. Mapa do código
 
-Sem `mapa-codigo.md` na pasta de documentos, gere-o; com ele, atualize-o se o
+Depois de carregar as extensões (`extensoes.md`), para o que elas acrescentam
+ao mapa entrar no prompt. Sem `mapa-codigo.md` na pasta de documentos, gere-o; com ele, atualize-o se o
 código mudou desde o `Commit:` (`references/mapa-codigo.md`). O mapa não é
 documentação do sistema: fica na pasta de documentos e não entra em
 `docs-sistema.yaml`.

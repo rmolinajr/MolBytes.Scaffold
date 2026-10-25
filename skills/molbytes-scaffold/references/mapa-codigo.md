@@ -64,13 +64,15 @@ Regras:
 ## Gerar
 
 - **Modo alteração:** antes do estágio 1, depois do ponto de partida
-  (`alteracao.md`), se o mapa não existir.
+  (`alteracao.md`) e das extensões, se o mapa não existir.
 - **Modo novo:** no fim do estágio 7, depois do commit da última onda.
 
 Lance o `scaffold-architect` (medio) com: o caminho do mapa, o formato acima
 colado no prompt, o `Commit:` a gravar e a regra "leia a estrutura de pastas,
 os manifestos, os pontos de entrada e um ou dois arquivos por módulo; não leia
-o código inteiro". Registre no `runs.log` como `mapa do código`.
+o código inteiro". Se uma extensão tiver trecho para o mapa (onde olhar em
+cada stack, por exemplo), cole-o também; o formato do mapa não muda. Registre
+no `runs.log` como `mapa do código`.
 
 ## Atualizar
 

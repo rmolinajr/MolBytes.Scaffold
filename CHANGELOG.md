@@ -26,6 +26,8 @@ sem execução real):
   código atual. Na rodada nova, o mapa fica na raiz, como a `spec.md`.
 - `state.md` ganha `Mapa do código:`; orçamentos do mapa em `watchdog.md` e
   nível em `model-routing.md`.
+- Extensões carregam antes do mapa do código e podem acrescentar trecho ao
+  prompt dele (onde olhar em cada stack); o formato do mapa não muda.
 
 ## v0.17.0
 
