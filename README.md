@@ -55,7 +55,7 @@ It never writes production code itself.
 - **Documents outside the project, if you want:** spec, design and reports
   live in `.project/` or in a separate folder with its own git, so the
   client's project stays clean. See
-  [INSTALL.md](INSTALL.md#onde-ficam-os-documentos) (in Portuguese).
+  [INSTALL.md](INSTALL.md#where-the-documents-live).
 - **Parallelism without conflicts:** tickets in the same wave never touch the
   same files; an `INFRA-000` ticket sets up structure, tests and dependencies
   before anything else. Waves come from a script (`scripts/ondas.py`), not
@@ -164,7 +164,7 @@ starts over light, from `state.md`. `/compact` also works, but costs more.
 | Cursor | plugin from the repository URL, or manual copy | `/molbytes-scaffold <description>` |
 
 The adapters are new in v0.14.0 and have not yet run a real project on those
-platforms. Step by step in [INSTALL.md](INSTALL.md) (in Portuguese).
+platforms. Step by step in [INSTALL.md](INSTALL.md).
 
 Other ways to install and prerequisites (Docker): [INSTALL.md](INSTALL.md).
 History: [CHANGELOG.md](CHANGELOG.md) (in Portuguese).

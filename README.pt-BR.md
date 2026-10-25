@@ -49,7 +49,7 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
   só do que muda e design pulado quando não há tela nova.
 - **Documentos fora do projeto, se quiser:** spec, design e relatórios ficam em
   `.project/` ou numa pasta separada com git próprio, para não sujar o projeto
-  do cliente. Ver [INSTALL.md](INSTALL.md#onde-ficam-os-documentos).
+  do cliente. Ver [INSTALL.pt-BR.md](INSTALL.pt-BR.md#onde-ficam-os-documentos).
 - **Paralelismo sem conflito:** tickets da mesma onda nunca tocam os mesmos
   arquivos; um ticket `INFRA-000` prepara estrutura, testes e dependências antes
   de tudo. As ondas saem de um script (`scripts/ondas.py`), não do modelo: ele
@@ -158,9 +158,9 @@ estágios pesados já usam opus nos subagentes) e, nos pontos que a skill avisa
 | Cursor | plugin pela URL do repositório, ou cópia manual | `/molbytes-scaffold <descrição>` |
 
 Os adaptadores são novos na v0.14.0 e ainda não rodaram um projeto real
-nessas plataformas. Passo a passo em [INSTALL.md](INSTALL.md).
+nessas plataformas. Passo a passo em [INSTALL.pt-BR.md](INSTALL.pt-BR.md).
 
-Outras formas de instalar e pré-requisitos (Docker): [INSTALL.md](INSTALL.md). Histórico: [CHANGELOG.md](CHANGELOG.md).
+Outras formas de instalar e pré-requisitos (Docker): [INSTALL.pt-BR.md](INSTALL.pt-BR.md). Histórico: [CHANGELOG.md](CHANGELOG.md).
 
 ## Estrutura
 

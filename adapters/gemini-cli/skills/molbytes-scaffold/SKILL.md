@@ -93,7 +93,7 @@ chamada. Por isso:
 - **Um processo só.** Não invoque skills de processo de outros plugins
   (brainstorming, planos, desenvolvimento por subagentes) durante o pipeline: o
   processo é este. Se um plugin desses estiver ativo, sugira uma vez
-  desligá-lo neste projeto (ver INSTALL.md, "Custo").
+  desligá-lo neste projeto (ver INSTALL.pt-BR.md, "Custo").
 - **Você só orquestra.** Não faça trabalho pesado na sessão principal: merge com
   conflito, correção de teste, depuração, investigação de falha e refatoração
   vão para um subagente (`scaffold-implementer`) com um ticket de correção
