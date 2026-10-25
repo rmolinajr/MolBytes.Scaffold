@@ -2,6 +2,26 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.19.0
+
+Histórico das rodadas, para saber quando e por que o sistema mudou sem abrir
+fase por fase (ainda sem execução real):
+
+- `.project/historico.md` (`references/historico.md`): uma entrada por
+  rodada, a mais nova no topo, com até ~10 linhas: pedido, modo, commits,
+  áreas (com os nomes de "Módulos" do mapa), decisões, o que ficou de fora,
+  premissas abertas e o resultado do gate.
+- Escrito pela sessão principal, sem subagente, no fim do estágio 11; a
+  correção de teste manual acrescenta a linha `Depois do gate:`.
+- Mudanças feitas fora do pipeline: no começo da rodada nova, se o mapa
+  achar diff, entra uma entrada `fora do pipeline` com os commits e as áreas.
+- Lido no começo de cada rodada nova (as 3 entradas do topo) e pelo
+  architect no estágio 2: se a alteração muda uma decisão registrada, a spec
+  diz qual, de que fase e por que.
+- Projetos com fases de antes do histórico: a skill propõe montar uma
+  entrada por fase a partir dos relatórios.
+- Fica na raiz da pasta de documentos, como a `spec.md` e o mapa.
+
 ## v0.18.1
 
 Ponto de partida do modo alteração em projeto sem git ou com mudanças não

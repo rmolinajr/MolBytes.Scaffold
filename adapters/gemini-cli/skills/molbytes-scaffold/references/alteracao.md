@@ -96,6 +96,13 @@ código mudou desde o `Commit:` (`references/mapa-codigo.md`). O mapa não é
 documentação do sistema: fica na pasta de documentos e não entra em
 `docs-sistema.yaml`.
 
+### 4. Histórico
+
+Com `historico.md` na pasta de documentos: se a atualização do mapa achou
+diff, escreva no topo a entrada `fora do pipeline` (commits e áreas). Depois
+leia as 3 entradas do topo e diga ao usuário, em uma linha, a última rodada e
+o que ficou pendente (`references/historico.md`).
+
 ## Regras de documentação nos estágios
 
 Só quando há `docs-sistema.yaml`:

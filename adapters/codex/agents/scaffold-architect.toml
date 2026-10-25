@@ -24,6 +24,9 @@ Você é um arquiteto de software sênior. Escreva em português.
   Detalhe de implementação fica para os tickets.
 - Se existir `.project/mapa-codigo.md`, parta dele para conhecer o sistema e
   leia no código só as áreas que a mudança toca.
+- Se o orquestrador passar `.project/historico.md`, busque nele as áreas que
+  a mudança toca. Se ela muda uma decisão registrada, a spec diz qual, de que
+  fase e por que muda.
 - **Mapa do código:** quando o orquestrador pedir, gere ou atualize
   `.project/mapa-codigo.md` no formato que ele colar. É um índice: cada item
   com caminho, sem código copiado, sem segredo nem valor de configuração (só

@@ -6,7 +6,7 @@
 
 > By [MolBytes](https://www.molbytes.io) · created by Roberto Molina · [project page](https://www.molbytes.io/en/projetos/molbytes-scaffold)
 
-![version](https://img.shields.io/badge/version-0.18.1-blue)
+![version](https://img.shields.io/badge/version-0.19.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![made for](https://img.shields.io/badge/made%20for-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -56,6 +56,10 @@ It never writes production code itself.
   (structure, entry points, modules, contracts, commands), stamped with the
   commit it describes. It is updated from the diff and checked at the gate,
   so a new round starts from the map instead of rediscovering the code.
+- **Round history:** `.project/historico.md` keeps a short entry per round
+  (request, commits, areas, decisions, what was left out) and the changes
+  made outside the pipeline, so "when and why did this change?" has an
+  answer without opening each phase.
 - **Documents outside the project, if you want:** spec, design and reports
   live in `.project/` or in a separate folder with its own git, so the
   client's project stays clean. See
@@ -192,6 +196,7 @@ skills/molbytes-scaffold/
     documentos.md               # documents folder: internal or external
     alteracao.md                # changing an existing system and its documentation
     mapa-codigo.md              # code map: where each thing lives, kept in sync by diff
+    historico.md                # round history: when and why the system changed
     plano-de-teste.md           # test plan, execution, automatic fixes
     extensoes.md                # contract for extension skills
     plataformas.md              # Claude Code, Codex, Gemini CLI, Cursor: tiers and commands
@@ -210,11 +215,11 @@ After changing `skills/`, `agents/` or the version in
 
 ## Status
 
-v0.18.1, evolving: the changes from v0.10 onward came from real runs in
+v0.19.0, evolving: the changes from v0.10 onward came from real runs in
 Claude Code, the most recent one (v0.17.0) changing an existing system. The
-code map (v0.18.0) has not yet run in a real project, nor have the Codex,
-Gemini CLI and Cursor adapters. It does not replace a professional pentest
-before processing real payments.
+code map (v0.18.0) and the round history (v0.19.0) have not yet run in a
+real project, nor have the Codex, Gemini CLI and Cursor adapters. It does
+not replace a professional pentest before processing real payments.
 
 ## Author
 

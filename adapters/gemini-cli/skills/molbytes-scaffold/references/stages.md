@@ -28,7 +28,10 @@ usuário, requisitos não funcionais, fora do escopo, e a seção
 "Documentação afetada" (ver `alteracao.md`).
 
 **Modo alteração:** passe ao architect o caminho do `mapa-codigo.md`; ele
-parte do mapa e lê no código só as áreas que a alteração toca.
+parte do mapa e lê no código só as áreas que a alteração toca. Com
+`historico.md`, passe também o caminho: se a alteração muda uma decisão de
+rodada anterior, a spec diz qual, de que fase e por que muda
+(`references/historico.md`).
 
 **Premissas sobre terceiros:** quando a spec depende de como um serviço de
 fora se comporta (API de pagamento, emissor de nota ou fatura, consulta
@@ -371,7 +374,10 @@ no nível forte.
    resultado dos testes, resumo de segurança (achados por severidade:
    corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status),
    as premissas sobre terceiros ainda abertas (com o que cada uma pode mudar)
-   e a lista "Testes manuais a fazer", pendências. Commit final.
+   e a lista "Testes manuais a fazer", pendências.
+7. **Histórico:** escreva a entrada da rodada no topo de `historico.md`
+   (`references/historico.md`), a partir do relatório e do `state.md`.
+   Commit final.
 
 ## Depois do gate: testes manuais
 
@@ -386,7 +392,9 @@ ou pedir que você os acompanhe, e um caso falhar:
 3. `pipeline-report.md` ganha (ou atualiza) a seção "Testes manuais": data,
    casos executados, defeitos e correções, premissas respondidas. Premissa
    respondida também vai para `sondagens.md`.
-4. `state.md`: pendências e próximo passo. Commit
+4. `historico.md`: a linha `Depois do gate:` da entrada da rodada ganha o
+   `FIX-MANUAL-<n>` e o que ele corrigiu.
+5. `state.md`: pendências e próximo passo. Commit
    `scaffold(11): fix MANUAL-<n>`.
 
 ## Ticket de correção (implementador fora da onda)

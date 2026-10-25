@@ -58,6 +58,13 @@ modo alteração e no fim do estágio 7 no modo novo, é atualizado pelo diff no
 estágio 11 e entra no gate. O mapa diz onde olhar; quem decide ou altera lê
 o código que ele aponta.
 
+## Histórico das rodadas
+
+`.project/historico.md` guarda uma entrada curta por rodada (pedido, commits,
+áreas, decisões, o que ficou de fora) e as mudanças feitas fora do pipeline.
+Siga `references/historico.md`: você escreve a entrada no fim do estágio 11,
+sem subagente, e lê o topo no começo de cada rodada nova.
+
 ## Regras gerais
 
 - Artefatos de planejamento vão em `.project/`. Código de produção vai na raiz do
