@@ -22,10 +22,34 @@ Registre em `state.md`: `Modo: novo` ou `Modo: alteração`.
 
 ### 1. Ponto de partida
 
-- Grave em `state.md` o commit atual do projeto como `base_commit`.
-- Rode a suíte de testes existente, se houver, e registre em `state.md` quais
-  testes **já falham antes da alteração**. Essas falhas não bloqueiam o gate,
-  desde que não piorem.
+O `base_commit` separa o que já existia do que a rodada muda: testes que já
+falhavam, achados de segurança preexistentes (estágio 9) e o `Commit:` do mapa
+do código dependem dele. Ele precisa ser um commit que contém o código como o
+usuário o entregou, sem nada a mais e sem nada a menos.
+
+1. **Sem git, ou git sem nenhum commit** (`git rev-parse HEAD` falha): rode
+   `git init` se preciso, garanta o `.gitignore` das regras gerais do
+   `SKILL.md` e mostre ao usuário o que vai entrar no commit (`git status
+   --short`, agrupado por pasta se for longo). Peça que confira se há algo que
+   não deve ir para o git (credenciais, certificados, dumps de banco) e, com
+   o sim, faça o commit `scaffold(0): ponto de partida` com o código e o
+   `.gitignore`, sem a pasta de documentos
+   (`git add -A -- . ':(exclude).project'`). O commit é só local: não
+   configure remoto nem faça push.
+2. **Alterações não commitadas** (`git status --porcelain` não vazio, sem
+   contar a pasta de documentos nem o `.gitignore` que você acabou de
+   ajustar): não comece. Diga quantos arquivos e pergunte
+   > Há N arquivos alterados e não commitados. Antes de começar:
+   > 1. commito como estão (`scaffold(0): ponto de partida`)
+   > 2. você commita ou guarda (`git stash`) e me avisa
+
+   Com 1, faça o commit (também sem a pasta de documentos); com 2, espere e
+   confira de novo. Sem isso, essas mudanças entrariam no diff como se fossem
+   da rodada.
+3. Grave em `state.md` o commit atual do projeto (`HEAD`) como `base_commit`.
+4. Rode a suíte de testes existente, se houver, e registre em `state.md` quais
+   testes **já falham antes da alteração**. Essas falhas não bloqueiam o gate,
+   desde que não piorem.
 
 ### 2. Documentação do sistema
 

@@ -2,6 +2,19 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.18.1
+
+Ponto de partida do modo alteração em projeto sem git ou com mudanças não
+commitadas (antes, depois do `git init` não havia commit para o
+`base_commit` nem para o `Commit:` do mapa, e o código antigo contava como
+mudança da rodada, inclusive nos achados de segurança):
+
+- Sem git ou sem commit: `git init`, `.gitignore` das regras gerais, o
+  usuário confere a lista do que entra e a skill faz o commit local
+  `scaffold(0): ponto de partida`, sem a pasta de documentos.
+- Com alterações não commitadas: a skill não começa; o usuário escolhe entre
+  ela commitar como estão ou ele commitar ou guardar com `git stash`.
+
 ## v0.18.0
 
 Mapa do código, para cada rodada não redescobrir o sistema do zero (ainda

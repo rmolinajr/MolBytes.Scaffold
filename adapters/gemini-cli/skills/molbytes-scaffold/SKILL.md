@@ -70,7 +70,10 @@ o código que ele aponta.
   atualize `.project/state.md` (ver "Estado e compactação"), depois faça
   `git add` + `git commit -m "scaffold(N): <estágio>"` (no modo externo, nos
   dois repositórios: documentos e, se houve mudança de código, projeto).
-- Se o repositório não tiver git, rode `git init` antes do estágio 1.
+- Se o repositório não tiver git, rode `git init` antes do estágio 1. No modo
+  alteração, sem git, sem commit ou com alterações não commitadas, siga
+  "Ponto de partida" em `references/alteracao.md` antes de gravar o
+  `base_commit`.
 - Antes do primeiro commit, garanta que o `.gitignore` contém `.env`,
   `.project/**/security/raw/` (os relatórios brutos contêm os segredos achados,
   também nas fases arquivadas; no modo externo, `**/security/raw/` vai no

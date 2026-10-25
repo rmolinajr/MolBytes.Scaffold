@@ -6,7 +6,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina · [página do projeto](https://www.molbytes.io/projetos/molbytes-scaffold)
 
-![versão](https://img.shields.io/badge/versão-0.18.0-blue)
+![versão](https://img.shields.io/badge/versão-0.18.1-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -203,7 +203,7 @@ algum adaptador estiver desatualizado.
 
 ## Status
 
-v0.18.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
+v0.18.1, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
 no Claude Code, a mais recente (v0.17.0) alterando um sistema existente. O
 mapa do código (v0.18.0) ainda não rodou num projeto real. Os
 adaptadores de Codex, Gemini CLI e Cursor ainda não rodaram um projeto real.
