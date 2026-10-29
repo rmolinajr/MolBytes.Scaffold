@@ -54,6 +54,10 @@ mensagens para o usuário final em português.
   código: só o trecho afetado, no formato que já existe. Documento gerado se
   atualiza pelo comando de geração, nunca à mão.
 
-- Ao corrigir uma falha do plano de teste, corrija o código de produção. Só
-  mude o teste se ele estiver errado em relação à spec, e explique o motivo na
-  resposta. Nunca apague, pule ou afrouxe um teste para fazê-lo passar.
+- Ao corrigir uma falha do plano de teste, corrija o código de produção.
+  Nunca apague, pule ou afrouxe um teste para fazê-lo passar (nem por
+  marcador de skip, exclusão na configuração do runner ou mock do que o teste
+  verifica). Os arquivos de `.project/testes-travados.txt` estão travados: se
+  um deles parecer errado em relação à spec, não o edite; pare e responda
+  `TESTE ERRADO:` com o arquivo e o motivo. Só mude um teste travado quando
+  o ticket ou o orquestrador disser "pode mudar <arquivo>".

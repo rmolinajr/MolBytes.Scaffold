@@ -18,6 +18,7 @@ Extensão: <nome da skill de extensão carregada> | nenhuma
 Testes que já falhavam: <lista ou "nenhum">   (modo alteração)
 Documentação do sistema: docs-sistema.yaml | nenhuma   (modo alteração)
 Mapa do código: <Commit: do mapa-codigo.md> | ainda não gerado
+Testes travados: <sha do fim do 8.2, ou da última mudança aceita> | ainda não   (a partir do estágio 8)
 Atualizado: <data/hora> — fim do estágio <N> (<nome>)
 
 ## Estágios

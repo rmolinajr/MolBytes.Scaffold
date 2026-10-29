@@ -6,7 +6,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina · [página do projeto](https://www.molbytes.io/projetos/molbytes-scaffold)
 
-![versão](https://img.shields.io/badge/versão-0.20.0-blue)
+![versão](https://img.shields.io/badge/versão-0.21.0-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -61,6 +61,13 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
   torna a mudança segura, conferido ou não, e se é difícil de desfazer. Bug
   real ou risco alto não provado é corrigido ou aceito por você antes do
   gate.
+- **Testes travados por commit:** depois que o estágio 8 escreve os testes,
+  os arquivos e o commit ficam registrados. Depois de cada correção o
+  orquestrador confere o diff deles; teste mudado vai para você (aceitar ou
+  desfazer), e o gate exige o diff vazio.
+- **A entrevista confirma o que já sabe:** decisão que o `CLAUDE.md` do
+  projeto, o histórico ou o mapa já respondem vira confirmação com a fonte, e
+  o histórico conta perguntas feitas e confirmadas.
 - **Documentos fora do projeto, se quiser:** spec, design e relatórios ficam em
   `.project/` ou numa pasta separada com git próprio, para não sujar o projeto
   do cliente. Ver [INSTALL.pt-BR.md](INSTALL.pt-BR.md#onde-ficam-os-documentos).
@@ -146,6 +153,7 @@ Retomar em outro dia, numa sessão nova:
 | `--ate <estágio>` | Para depois do estágio indicado, pelo número ou pelo nome (`--ate 5`, `--ate tickets`). |
 | `--sem-design` | Pula o estágio 4; tickets e testes usam a spec no lugar do design. |
 | `--economico` | Usa a coluna "econômico" do roteamento de modelos. |
+| `--pequeno` | Alteração pequena (até 3 tickets) num sistema existente: menos perguntas, spec curta, sem design nem pausa de custo. Testes, segurança, code review, impacto e gate continuam iguais. |
 
 ### Durante o pipeline
 
@@ -174,7 +182,7 @@ estágios pesados já usam opus nos subagentes) e, nos pontos que a skill avisa
 Os adaptadores são novos na v0.14.0 e ainda não rodaram um projeto real
 nessas plataformas. Passo a passo em [INSTALL.pt-BR.md](INSTALL.pt-BR.md).
 
-Outras formas de instalar e pré-requisitos (Docker): [INSTALL.pt-BR.md](INSTALL.pt-BR.md). Histórico: [CHANGELOG.md](CHANGELOG.md).
+Outras formas de instalar e pré-requisitos (Docker): [INSTALL.pt-BR.md](INSTALL.pt-BR.md). Histórico: [CHANGELOG.md](CHANGELOG.md). Cada salvaguarda e quanto ela segura: [SALVAGUARDAS.md](SALVAGUARDAS.md).
 
 ## Estrutura
 
@@ -214,10 +222,10 @@ algum adaptador estiver desatualizado.
 
 ## Status
 
-v0.20.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
+v0.21.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
 no Claude Code, a mais recente (v0.17.0) alterando um sistema existente. O
 mapa do código (v0.18.0), o histórico das rodadas (v0.19.0) e o impacto
-fora do diff (v0.20.0) ainda não
+fora do diff (v0.20.0) e a trava dos testes (v0.21.0) ainda não
 rodaram num projeto real, nem os adaptadores de Codex, Gemini CLI e Cursor.
 Não substitui um pentest profissional antes de processar pagamentos reais.
 

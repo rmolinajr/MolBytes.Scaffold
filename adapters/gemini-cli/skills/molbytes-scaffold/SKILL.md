@@ -167,7 +167,7 @@ pipeline funciona igual.
 | 3 | risks-tech-debt (+ requisitos de segurança, sondagem das premissas) | `scaffold-architect`; sondagem: `scaffold-tester` | `.project/risks.yaml` (+ `sondagens.md`) | só se uma premissa for negada |
 | 4 | to-design | `scaffold-designer` | `.project/design/` | não |
 | 5 | to-tickets | `scaffold-planner` | `.project/tickets.yaml` | não |
-| 6 | assign-to-agents | `scaffold-router` (níveis) + `scripts/ondas.py` (ondas) | `.project/classificacao.json` + `.project/agent-map.json` | **SIM** (custo do estágio 7) |
+| 6 | assign-to-agents | `scaffold-router` (níveis) + `scripts/ondas.py` (ondas) | `.project/classificacao.json` + `.project/agent-map.json` | **SIM** (custo do estágio 7; não com `--pequeno`) |
 | 7 | implement | `scaffold-implementer` (N em paralelo) | código na raiz | não |
 | 8 | tests (plano → executar → corrigir) | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes + relatório | só se a correção falhar 2x |
 | 9 | security (audit → triage → fix → verify) | `scaffold-security` + `scaffold-implementer` | `.project/security/` | só se houver decisão |
@@ -188,7 +188,8 @@ Ao fim de **cada** estágio, reescreva `.project/state.md` com o modelo em
 pendências, não cópias dos artefatos.
 
 **Pontos de compactação:** ao terminar os estágios **2, 5, 8 e 9**, **cada onda
-do estágio 7** e a cada 10 itens corrigidos no estágio 8, depois do commit:
+do estágio 7** e a cada 10 itens corrigidos no estágio 8, depois do commit
+(com `--pequeno`, só ao terminar os estágios 2 e 9):
 1. Confira que "Próximo passo" do `state.md` diz exatamente o que fazer, e
    diga ao usuário: "Estágio N salvo e commitado. Para economizar, abra uma
    sessão limpa (`<comando da plataforma>`) e rode `<o comando que iniciou o
@@ -226,5 +227,9 @@ documentos.
 - `--sem-design`: pula o estágio 4. Sem `.project/design/`, os estágios
   seguintes usam a spec no lugar do design (fluxos e telas vêm dela).
 - `--economico`: aplica a coluna "econômico" do roteamento de modelos.
+- `--pequeno`: alteração pequena (até 3 tickets) num sistema que já existe.
+  Menos perguntas, spec curta, sem design nem pausa de custo; testes,
+  segurança, code review, impacto fora do diff e gate continuam iguais. Só no
+  modo alteração. Regras em `references/alteracao.md`, "Alteração pequena".
 
 Registre as flags em `state.md` (`Flags:`); valem até o fim do ciclo.

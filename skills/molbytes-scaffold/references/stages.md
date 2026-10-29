@@ -11,11 +11,26 @@ restrições (offline, pagamentos, LGPD/RGPD, países), integrações, prazo e o
 fica fora do MVP. Não pergunte o que já está na descrição nem, no modo
 alteração, o que "Visão" e "Estrutura" do `mapa-codigo.md` já respondem.
 
+**Contexto antes de perguntar.** Leia o `CLAUDE.md` ou `AGENTS.md` da raiz do
+projeto (e, no modo alteração, o das pastas que a mudança deve tocar), as 3
+entradas do topo de `historico.md` e "Convenções" do `mapa-codigo.md`, se
+existirem. Decisão que um deles já toma não vira pergunta aberta: vira
+**confirmação**, com a fonte ("Arredondamento por item, como decidido na
+fase2 (`historico.md`). Continua valendo?"). Junte até 4 confirmações numa
+pergunta só; ela conta 1 no limite de 8. Fato que está no código (o mapa
+aponta onde) você busca, não pergunta.
+
 Salve em `.project/qa.json`:
 ```json
-{ "descricao": "...", "respostas": [{"pergunta": "...", "resposta": "..."}],
+{ "descricao": "...", "respostas": [{"pergunta": "...", "resposta": "...",
+  "fonte": "perguntada"}],
   "stack": {}, "fora_do_mvp": [] }
 ```
+
+`fonte` é `perguntada`, `confirmada: <arquivo ou fase>` (o usuário confirmou
+o que o contexto dizia) ou `mudou: <decisão antiga e onde>` (o usuário
+trocou; a spec diz o que muda, como em `historico.md`). Uma resposta de uma
+confirmação agrupada vira um item por decisão.
 
 ## 2. to-spec → scaffold-architect (pausa)
 
@@ -164,7 +179,8 @@ código.
 **Mapa do código** (se existir): o planner preenche `arquivos` a partir dele
 e copia em cada ticket o trecho do mapa que o ticket usa, como faz com a spec.
 
-**Ticket de bootstrap obrigatório:** o primeiro ticket é sempre `INFRA-000`, sem
+**Ticket de bootstrap obrigatório** (com `--pequeno`, só se a mudança mexer em
+dependência ou ferramenta; ver `alteracao.md`): o primeiro ticket é sempre `INFRA-000`, sem
 dependências, e todos os outros dependem dele. Ele cria a estrutura de pastas,
 o runner de testes unitários (com um teste trivial passando), o linter, o
 `.gitignore`, o `.env.example` e **todas as dependências previstas pela spec**.
@@ -241,7 +257,8 @@ resumo do script lista cada um com o motivo da lista fechada de
 
 Mostre ao usuário: total de tickets, quantos em cada nível (forte/medio/leve), número de
 ondas e tempo estimado (soma dos orçamentos de `watchdog.md` pela onda mais
-lenta). **Espere aprovação explícita** antes do estágio 7, o mais caro. Se o
+lenta). **Espere aprovação explícita** antes do estágio 7, o mais caro (com
+`--pequeno`, mostre o plano em uma linha e siga; ver `alteracao.md`). Se o
 usuário pedir, rebaixe tickets (na `classificacao.json`, registrando em
 `model-log.md`, ver `model-routing.md`) ou aplique `--economico` e reenvie ao
 router; depois rode o script de novo.
@@ -298,10 +315,13 @@ Siga `references/plano-de-teste.md`:
    (ex.: webhook sem assinatura é rejeitado, pagamento não duplica cobrança).
    Mostre só o resumo ao usuário e siga.
 2. **8.2 executar** — o tester escreve os testes que faltam, roda tudo e marca
-   cada item (`passou`, `falhou`, `bloqueado`, `manual`).
+   cada item (`passou`, `falhou`, `bloqueado`, `manual`). Depois, **trave os
+   testes** (`plano-de-teste.md`, "Trava dos testes"): commit, a lista
+   `testes-travados.txt` e `Testes travados:` no `state.md`.
 3. **8.3 corrigir** — cada `falhou` vai para um `scaffold-implementer`, que
-   corrige o código (não afrouxa o teste). Máximo de 2 tentativas por item;
-   depois, pergunte ao usuário.
+   corrige o código (não afrouxa o teste). Depois de cada correção, a
+   conferência da trava. Máximo de 2 tentativas por item; depois, pergunte
+   ao usuário.
 4. **8.4 relatório** — `.project/test-report.md` com totais reais, correções,
    aceites e a lista "Testes manuais a fazer". Só números que a ferramenta
    mostrou.
@@ -415,6 +435,9 @@ no nível forte (`FIX-IMPACTO-<n>` para os que vêm do `impacto.md`).
    - **modo alteração:** nenhuma falha de teste nova em relação ao ponto de
      partida, e todo documento do sistema da "Documentação afetada" foi
      atualizado (os de `site` vão para o relatório como atualização manual);
+   - `git diff --name-only <Testes travados> -- <testes-travados.txt>` vazio:
+     toda mudança em teste travado passou pela conferência da trava
+     (`plano-de-teste.md`);
    - **modo alteração:** todo `bug` do `impacto.md` foi corrigido e todo
      `não provado` de impacto alto foi corrigido ou aceito;
    - o `Commit:` do `mapa-codigo.md` cobre o código: diff dele até o `HEAD`

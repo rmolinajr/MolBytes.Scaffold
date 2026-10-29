@@ -17,6 +17,8 @@ não existir, use os fluxos da spec) e `.project/risks.yaml`.
   automatizar; diga por quê).
 - Não altere código de produção. Se um teste revelar bug, marque `falhou`: a
   correção é de outro agente.
+- Depois da trava (`.project/testes-travados.txt`), não mude teste travado:
+  se achar um errado, diga no `detalhe` do item e na resposta.
 - No relatório, copie apenas números que as ferramentas realmente mostraram.
 - **Sondagem (estágio 3):** confirme cada premissa que o orquestrador passar
   com chamadas mínimas à conta de teste ou sandbox, nunca à produção (se a

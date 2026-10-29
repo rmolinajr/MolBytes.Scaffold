@@ -115,7 +115,7 @@ e só arquive com a resposta `arquivar`.
 3. **Mover** para `.project/<fase>/`, com `git mv` (ou `mv` no que não está no
    git), o que é só da rodada: `state.md`, `qa.json`, `risks.yaml`,
    `tickets.yaml`, `tickets/`, `classificacao.json`, `agent-map.json`,
-   `regras-implementacao.md`, `plano-de-teste.yaml`, `test-report.md`,
+   `regras-implementacao.md`, `plano-de-teste.yaml`, `testes-travados.txt`, `test-report.md`,
    `security/`, `code-review-report.md`, `impacto.md`, `pipeline-report.md`, `runs.log` e
    `model-log.md`. O que não existir, pule.
 4. **Ficam na raiz e evoluem:** `spec.md`, `design/`, `docs-sistema.yaml`,

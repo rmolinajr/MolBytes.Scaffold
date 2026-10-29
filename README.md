@@ -6,7 +6,7 @@
 
 > By [MolBytes](https://www.molbytes.io) · created by Roberto Molina · [project page](https://www.molbytes.io/en/projetos/molbytes-scaffold)
 
-![version](https://img.shields.io/badge/version-0.20.0-blue)
+![version](https://img.shields.io/badge/version-0.21.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![made for](https://img.shields.io/badge/made%20for-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -66,6 +66,14 @@ It never writes production code itself.
   makes the change safe, checked or not, and whether it is hard to undo.
   A real bug or an unproven high-impact risk is fixed or accepted by you
   before the gate.
+- **Tests locked by a commit:** after stage 8 writes the tests, their files
+  and commit are recorded. After every fix the orchestrator diffs them
+  itself; a changed test goes to you (accept or undo), and the gate needs the
+  diff empty.
+- **The interview confirms what it already knows:** a decision that the
+  project's `CLAUDE.md`, the round history or the code map already answer is
+  asked as a confirmation with its source, and the history counts asked
+  versus confirmed questions.
 - **Documents outside the project, if you want:** spec, design and reports
   live in `.project/` or in a separate folder with its own git, so the
   client's project stays clean. See
@@ -152,6 +160,7 @@ Resume another day, in a new session:
 | `--ate <stage>` | Stops after the given stage, by number or by name (`--ate 5`, `--ate tickets`). |
 | `--sem-design` | Skips stage 4; tickets and tests use the spec instead of the design. |
 | `--economico` | Uses the "econômico" (economy) column of the model routing. |
+| `--pequeno` | Small change (up to 3 tickets) to an existing system: fewer questions, short spec, no design and no cost pause. Tests, security, code review, impact check and gate stay the same. |
 
 ### During the pipeline
 
@@ -181,7 +190,7 @@ The adapters are new in v0.14.0 and have not yet run a real project on those
 platforms. Step by step in [INSTALL.md](INSTALL.md).
 
 Other ways to install and prerequisites (Docker): [INSTALL.md](INSTALL.md).
-History: [CHANGELOG.md](CHANGELOG.md) (in Portuguese).
+History: [CHANGELOG.md](CHANGELOG.md). Every safety rule and how strong it is: [SALVAGUARDAS.md](SALVAGUARDAS.md). Both in Portuguese.
 
 ## Structure
 
@@ -221,10 +230,10 @@ After changing `skills/`, `agents/` or the version in
 
 ## Status
 
-v0.20.0, evolving: the changes from v0.10 onward came from real runs in
+v0.21.0, evolving: the changes from v0.10 onward came from real runs in
 Claude Code, the most recent one (v0.17.0) changing an existing system. The
 code map (v0.18.0), the round history (v0.19.0) and the impact check
-(v0.20.0) have not yet run in a
+(v0.20.0) and the test lock (v0.21.0) have not yet run in a
 real project, nor have the Codex, Gemini CLI and Cursor adapters. It does
 not replace a professional pentest before processing real payments.
 

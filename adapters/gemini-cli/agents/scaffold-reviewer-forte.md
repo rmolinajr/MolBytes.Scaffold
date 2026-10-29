@@ -38,9 +38,12 @@ relatório.
 Modo alteração: se houver "Documentação afetada" na spec, confira se cada
 documento bate com o código; documento desatualizado é achado importante.
 
-Confira os testes alterados nas correções do plano de teste (`detalhe` em
-`plano-de-teste.yaml`): teste afrouxado, pulado ou apagado sem motivo válido
-pela spec é achado crítico.
+Confira os testes travados: rode `git diff <Testes travados> -- <arquivos de
+.project/testes-travados.txt>` (o sha está no `state.md`). Toda mudança ali
+precisa de motivo no `detalhe` do item em `plano-de-teste.yaml`; sem motivo
+válido pela spec, é achado crítico. Procure também, no diff da rodada,
+marcador novo de skip ou ignore, teste excluído na configuração do runner e
+fixture mudada de que um teste travado depende.
 
 ## Impacto fora do diff (modo alteração, chamada própria)
 

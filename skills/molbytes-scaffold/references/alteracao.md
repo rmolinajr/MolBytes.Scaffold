@@ -121,6 +121,29 @@ Só quando há `docs-sistema.yaml`:
   `site` vai para o relatório como "atualizar manualmente: <documento>,
   <trecho>".
 
+## Alteração pequena (`--pequeno`)
+
+Para uma mudança que cabe em até 3 tickets, os 11 estágios custam mais que a
+mudança. A flag encurta o que existe para decidir e planejar; o que verifica
+o código não muda. Sem modo alteração (projeto novo), ignore a flag e diga
+isso em uma linha.
+
+| Estágio | Com `--pequeno` |
+|---|---|
+| 1 | no máximo 4 perguntas (confirmações agrupadas contam 1) |
+| 2 | spec de até ~8 mil caracteres, só com as seções que a mudança toca; **a pausa de aprovação continua** |
+| 3 | curto, como no modo alteração; a sondagem das premissas continua |
+| 4 | pulado (registre `--sem-design`). Se a mudança muda tela, pergunte antes: "A mudança mexe em <tela>; faço o design ou sigo sem?" |
+| 5 | até 3 tickets; `INFRA-000` só se a mudança mexer em dependência ou ferramenta de build/teste |
+| 6 | o router e o `scripts/ondas.py` rodam (as conferências valem); mostre o plano em uma linha e siga, **sem a pausa de custo** |
+| 7 a 11 | iguais, inclusive a trava dos testes, a segurança, o code review com a pausa, o impacto fora do diff e o gate |
+
+- **Passou de 3 tickets no estágio 5:** pare e pergunte: "A mudança deu N
+  tickets; sigo sem o `--pequeno` (com a pausa de custo) ou divido?". Sem a
+  flag, o estágio 6 volta a ter a pausa.
+- Compactação: só ao terminar os estágios 2 e 9.
+- `historico.md` registra a flag na linha `Modo:`.
+
 ## Outras regras do modo alteração
 
 - Testes (estágios 8 e 11): falha que já existia no ponto de partida não é da

@@ -2,6 +2,30 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.21.0
+
+Regras que eram só texto viram conferência, a entrevista aproveita o
+contexto e mudança pequena custa menos (ainda sem execução real):
+
+- **Trava dos testes por commit** (`plano-de-teste.md`): no fim do 8.2, commit
+  dos testes, `.project/testes-travados.txt` e `Testes travados: <sha>` no
+  `state.md`, com o sha tirado do git. Depois de cada correção, o
+  orquestrador roda `git diff --name-only` nos travados; teste mudado sem o sim
+  do usuário vai a ele (aceitar ou desfazer). O implementador não edita teste
+  travado: responde `TESTE ERRADO:`. O reviewer confere o diff, skip novo e
+  exclusão no runner, e o gate exige o diff vazio.
+- **Entrevista com contexto** (estágio 1): lê o `CLAUDE.md`/`AGENTS.md`, o topo
+  do `historico.md` e as convenções do mapa; o que já está decidido vira
+  confirmação com a fonte (até 4 numa pergunta). `qa.json` ganha `fonte` em
+  cada resposta e o histórico, a linha `Entrevista:`.
+- **`--pequeno`** (`alteracao.md`): alteração de até 3 tickets. Até 4
+  perguntas, spec curta (a aprovação continua), sem design, `INFRA-000` só se
+  mexer em dependência, estágio 6 sem a pausa de custo e compactação só nos
+  estágios 2 e 9. Testes, segurança, code review, impacto e gate iguais.
+  Passou de 3 tickets, o pipeline pergunta.
+- **`SALVAGUARDAS.md`**: cada regra com o nível que a aplica (script,
+  ferramentas, pausa, prompt), onde está e as falhas conhecidas.
+
 ## v0.20.0
 
 Impacto fora do diff no modo alteração (ainda sem execução real). O code

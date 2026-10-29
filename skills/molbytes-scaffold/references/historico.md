@@ -25,6 +25,7 @@ Mudou: Pagamentos (provedor PIX novo), Pedidos (status "aguardando PIX")
 Decisões: webhook com assinatura HMAC; QR expira em 30 min
 Fora / dívida: estorno PIX (fora do MVP); TD-004
 Premissas abertas: P-02 (prazo de compensação, confirmar com o suporte)
+Entrevista: 6 perguntas · 3 confirmadas pelo contexto · 1 mudou
 
 ## fora do pipeline — 2026-11-03
 Commits: 9f8e7d6..a1b2c3d (3 commits)
@@ -39,6 +40,9 @@ Regras:
 - Decisões são as que valem para as próximas rodadas (de "Decisões que valem
   para os próximos estágios" do `state.md` e das mudanças que o usuário pediu
   na spec), não o passo a passo.
+- `Entrevista:` vem do `fonte` de `qa.json`: quantas `perguntada`, quantas
+  `confirmada` e quantas `mudou`. Rodada após rodada, mais confirmadas e
+  menos perguntadas mostram que o contexto está respondendo.
 - No cabeçalho, o resultado do gate: `concluído` ou `concluído com
   pendências`. Com pendências, a linha `Pendências:` resume quais.
 - Commits: do `base_commit` (no modo novo, o primeiro commit) ao último

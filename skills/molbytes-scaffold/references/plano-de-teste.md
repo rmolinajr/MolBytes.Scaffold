@@ -46,6 +46,36 @@ com o resultado real:
   ocupada, serviço externo fora). Não vai para correção: resolva o ambiente ou
   informe o usuário.
 
+## Trava dos testes (fim do 8.2)
+
+Depois de marcar o plano, e antes de qualquer correção, trave os testes: a
+partir daqui, o que muda é o código, não o teste.
+
+1. Commit `scaffold(8): testes do plano`.
+2. Grave `.project/testes-travados.txt`: um caminho por linha, relativo à
+   raiz do projeto, de cada arquivo citado em `teste:` de um item
+   automatizado (a parte antes de `::`), sem repetir.
+3. Grave em `state.md` a linha `Testes travados: <sha>`, com o `HEAD` que o
+   próprio git dá (`git rev-parse --short HEAD`), não o que um subagente
+   relatar.
+
+**Conferência depois de cada correção** (8.3, 9.3, `FIX-REVIEW`,
+`FIX-IMPACTO`, estágio 11, `FIX-MANUAL`): rode você mesmo
+`git diff --name-only <Testes travados> -- <caminhos de testes-travados.txt>`.
+
+- Vazio: segue.
+- Algum arquivo mudou com o sim do usuário (passo 2 do 8.3): aceite como
+  abaixo, sem perguntar de novo.
+- Algum arquivo mudou sem o sim: mostre ao usuário o arquivo, o motivo que o
+  implementador deu e o diff resumido, e pergunte: **aceitar** (o teste
+  estava errado em relação à spec; o motivo vai para o `detalhe` do item e
+  `Testes travados:` passa a ser o `HEAD` atual) ou **desfazer**
+  (`git checkout <Testes travados> -- <arquivo>`, e o ticket de correção
+  volta ao implementador com "o teste não muda").
+- Teste novo que uma correção criou (ex.: o de reprodução de um
+  `SECURITY-00X`) entra em `testes-travados.txt` quando a correção é aceita,
+  e `Testes travados:` passa a ser o `HEAD`.
+
 ## 8.3 Corrigir as falhas (automático)
 
 Para cada item `falhou`, um por vez:
@@ -55,9 +85,11 @@ Para cada item `falhou`, um por vez:
    `scaffold-implementer` com ele. Modelo na 1ª tentativa: o mais alto entre
    os tickets de `origem` em `agent-map.json` (sem ticket na origem, só fluxo,
    risco ou SR: medio); na 2ª, forte.
-2. A correção é **no código de produção**. O teste só pode mudar se estiver
-   errado em relação à spec; nesse caso o implementador explica o motivo, que
-   vai para o `detalhe`, e o reviewer confere no estágio 10.
+2. A correção é **no código de produção**. Se o implementador achar que o
+   teste está errado em relação à spec, ele não o edita: responde
+   `TESTE ERRADO:` com o arquivo e o motivo. Pergunte ao usuário; com o sim,
+   relance o implementador com "pode mudar <arquivo>: <motivo>". Isso não
+   conta tentativa.
 3. Rode de novo o teste do item e os da mesma área. Marque o resultado e some
    1 em `tentativas`.
 4. **Máximo de 2 tentativas por item.** Depois disso, pare e pergunte ao
@@ -80,6 +112,7 @@ mais podem mudar o código. Só números que a ferramenta mostrou.
 
 O `scaffold-tester` roda o plano inteiro de novo (os estágios 9 e 10 mudam
 código). Atualize os
-status. Falha nova passa pelo mesmo ciclo do 8.3. O gate exige todo item
+status. O tester não muda teste travado: teste que ele acha errado vai para
+o `detalhe` e para você, como na conferência da trava. Falha nova passa pelo mesmo ciclo do 8.3. O gate exige todo item
 automatizado `passou` ou `aceito`. Itens `manual` não bloqueiam: vão para o
 `pipeline-report.md` em "Testes manuais a fazer".
