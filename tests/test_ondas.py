@@ -131,6 +131,51 @@ class Montar(unittest.TestCase):
         self.assertEqual(ondas_de(mapa), {"A": 1, "B": 2})
 
 
+RISCOS = """\
+risks:
+- id: RISK-001
+  titulo: Pagamento duplicado
+security_requirements:
+  - id: SR-001
+    requisito: "Webhook só com assinatura válida"
+  - id: "SR-002"   # entre aspas
+    requisito: Senha com bcrypt
+tech_debt:
+  - id: TD-001
+"""
+
+
+class Requisitos(unittest.TestCase):
+    def test_le_so_a_lista_de_requisitos(self):
+        self.assertEqual(ondas.ler_requisitos(RISCOS), ["SR-001", "SR-002"])
+        self.assertEqual(ondas.ler_requisitos("risks: []\n"), [])
+
+    def test_requisito_sem_ticket_e_ticket_com_requisito_inexistente(self):
+        indice = INDICE.replace("arquivos: [src/auth/login.py, tests/test_login.py]",
+                                "arquivos: [src/auth/login.py, tests/test_login.py]\n  security_reqs: [SR-001, SR-009]")
+        mapa, erros, _ = ondas.montar(ondas.ler_indice(indice), TODOS, ["SR-001", "SR-002"])
+        self.assertIsNone(mapa)
+        texto = "\n".join(erros)
+        self.assertIn("SR-002 (risks.yaml) não está em `security_reqs` de nenhum ticket", texto)
+        self.assertIn("BE-001 lista SR-009 em `security_reqs`, que não existe no risks.yaml", texto)
+        self.assertTrue(all(e.startswith("tickets.yaml:") for e in erros))   # erro do estágio 5
+
+    def test_cobertos_em_bloco_passam_e_sem_risks_nao_confere(self):
+        indice = INDICE.replace("  arquivos: [web/home.html]\n",
+                                "  arquivos: [web/home.html]\n  security_reqs:\n    - SR-001\n    - SR-002\n")
+        self.assertEqual(ondas.montar(ondas.ler_indice(indice), TODOS, ["SR-001", "SR-002"])[1], [])
+        self.assertEqual(ondas.montar(ondas.ler_indice(INDICE), TODOS, None)[1], [])
+
+    def test_linha_de_comando_le_o_risks_yaml(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            p = pathlib.Path(pasta)
+            (p / "tickets.yaml").write_text(INDICE, encoding="utf-8")
+            (p / "classificacao.json").write_text(json.dumps(TODOS), encoding="utf-8")
+            (p / "risks.yaml").write_text(RISCOS, encoding="utf-8")
+            self.assertEqual(ondas.main([pasta]), 1)
+            self.assertFalse((p / "agent-map.json").exists())
+
+
 class Conflito(unittest.TestCase):
     def test_caminhos(self):
         self.assertTrue(ondas.conflitam(["src/auth/"], ["src/auth/login.py"]))

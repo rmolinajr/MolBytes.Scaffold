@@ -1,11 +1,13 @@
 """Monta e valida as ondas do estágio 6 (molbytes.scaffold).
 
-Lê o índice `tickets.yaml` (estágio 5) e a `classificacao.json` do
-`scaffold-router` e grava o `agent-map.json` do estágio 7. Só biblioteca
-padrão do Python 3.8+.
+Lê o índice `tickets.yaml` (estágio 5), a `classificacao.json` do
+`scaffold-router` e, se existir, o `risks.yaml` (estágio 3), e grava o
+`agent-map.json` do estágio 7. Só biblioteca padrão do Python 3.8+.
 
 Valida antes de gravar (com erro, não grava nada e sai com código 1):
 - índice: id duplicado, dependência que não existe, ciclo de dependências;
+- requisitos de segurança (com `risks.yaml`): requisito que nenhum ticket
+  lista em `security_reqs`, ticket que lista requisito que não existe;
 - classificação: ticket sem classificação, ticket que não está no índice,
   ticket repetido, nível inválido, `forte` sem motivo.
 
@@ -30,8 +32,9 @@ LIMITE_FORTE = 0.25
 
 def _escalar(valor: str) -> str:
     valor = valor.strip()
-    if valor[:1] in "\"'" and valor[-1:] == valor[:1] and len(valor) >= 2:
-        return valor[1:-1]
+    aspas = re.match(r"([\"'])(.*?)\1", valor)          # entre aspas, com ou sem comentário depois
+    if aspas:
+        return aspas.group(2)
     return re.sub(r"\s+#.*$", "", valor).strip()
 
 
@@ -44,7 +47,7 @@ def _lista(valor: str) -> list:
 
 
 def ler_indice(texto: str) -> list:
-    """Tickets do índice: id, area, depende_de, arquivos (e a linha onde começam).
+    """Tickets do índice: id, area, depende_de, arquivos, security_reqs (e a linha onde começam).
 
     Lê o formato do estágio 5: um ticket por item `- id:`, campos um por linha,
     listas como `[a, b]` ou em bloco (`- a`). Outros campos são ignorados.
@@ -63,7 +66,7 @@ def ler_indice(texto: str) -> list:
         novo = re.match(r"(\s*)-\s+id:\s*(.+)$", linha)
         if novo:
             atual = {"id": _escalar(novo.group(2)), "area": "", "depende_de": [],
-                     "arquivos": [], "linha": numero}
+                     "arquivos": [], "security_reqs": [], "linha": numero}
             tickets.append(atual)
             recuo, chave_lista = len(novo.group(1)), None
             continue
@@ -81,7 +84,7 @@ def ler_indice(texto: str) -> list:
             continue
         chave, valor = campo.group(1), campo.group(2).strip()
         chave_lista = None
-        if chave not in ("area", "depende_de", "arquivos"):
+        if chave not in ("area", "depende_de", "arquivos", "security_reqs"):
             continue
         if chave == "area":
             atual["area"] = _escalar(valor)
@@ -94,6 +97,21 @@ def ler_indice(texto: str) -> list:
         else:
             atual[chave] = [_escalar(valor)]
     return tickets
+
+
+def ler_requisitos(texto: str) -> list:
+    """Ids da lista `security_requirements` do `risks.yaml`, na ordem."""
+    ids, dentro = [], False
+    for linha in texto.splitlines():
+        if not linha.strip() or linha.lstrip().startswith("#"):
+            continue
+        if not linha[:1].isspace() and not linha.startswith("-"):   # chave do topo
+            dentro = linha.split(":", 1)[0].strip() == "security_requirements"
+            continue
+        item = re.match(r"\s*-\s+id:\s*(.+)$", linha)
+        if dentro and item:
+            ids.append(_escalar(item.group(1)))
+    return ids
 
 
 def ler_classificacao(texto: str) -> list:
@@ -121,8 +139,12 @@ def conflitam(a: list, b: list) -> bool:
     return False
 
 
-def montar(indice: list, classificacao: list) -> tuple:
-    """(agent-map, erros, avisos). Com erro, o agent-map é None."""
+def montar(indice: list, classificacao: list, requisitos: list | None = None) -> tuple:
+    """(agent-map, erros, avisos). Com erro, o agent-map é None.
+
+    `requisitos`: ids de `security_requirements` do `risks.yaml`; None quando
+    ele não existe (a cobertura não é conferida).
+    """
     erros, avisos = [], []
     por_id = {}
     for t in indice:
@@ -136,6 +158,17 @@ def montar(indice: list, classificacao: list) -> tuple:
                 erros.append(f"tickets.yaml: {t['id']} depende de {dep}, que não existe")
         if not t["arquivos"]:
             avisos.append(f"tickets.yaml: {t['id']} sem `arquivos` (não entra na checagem de conflito)")
+    if requisitos is not None:
+        cobertos = set()
+        for t in por_id.values():
+            for sr in t["security_reqs"]:
+                if sr in requisitos:
+                    cobertos.add(sr)
+                else:
+                    erros.append(f"tickets.yaml: {t['id']} lista {sr} em `security_reqs`, que não existe no risks.yaml")
+        for sr in requisitos:
+            if sr not in cobertos:
+                erros.append(f"tickets.yaml: {sr} (risks.yaml) não está em `security_reqs` de nenhum ticket")
 
     classes = {}
     for c in classificacao:
@@ -240,7 +273,9 @@ def main(args: list) -> int:
     except (ValueError, json.JSONDecodeError) as erro:
         print(f"erro: {classes_arq}: {erro}")
         return 1
-    mapa, erros, avisos = montar(ler_indice(indice_arq.read_text(encoding="utf-8")), classificacao)
+    riscos_arq = pasta / "risks.yaml"
+    requisitos = ler_requisitos(riscos_arq.read_text(encoding="utf-8")) if riscos_arq.exists() else None
+    mapa, erros, avisos = montar(ler_indice(indice_arq.read_text(encoding="utf-8")), classificacao, requisitos)
     for aviso in avisos:
         print(f"aviso: {aviso}")
     if erros:

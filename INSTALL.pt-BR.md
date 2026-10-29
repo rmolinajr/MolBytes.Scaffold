@@ -221,7 +221,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.19.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais no
+v0.19.1, em evolução: os ajustes da v0.10 em diante vieram de execuções reais no
 Claude Code. Espere ajustes a cada projeto. Ajuste modelos em
 `references/model-routing.md` com base em `.project/model-log.md`.
 

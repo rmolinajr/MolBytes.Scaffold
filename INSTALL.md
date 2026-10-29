@@ -233,7 +233,7 @@ where the documents are when the skill asks).
 
 ## Status
 
-v0.19.0, evolving: the changes from v0.10 onward came from real runs in
+v0.19.1, evolving: the changes from v0.10 onward came from real runs in
 Claude Code. Expect adjustments with each project. Tune models in
 `references/model-routing.md` based on `.project/model-log.md`.
 

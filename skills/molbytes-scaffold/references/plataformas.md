@@ -30,6 +30,8 @@ quando existe, vale mais que a tabela.
 - **Limite de turnos:** `maxTurns` no frontmatter de cada agente (já vem
   definido).
 - **Tarefas em execução:** `/tasks`.
+- **Notificação push:** ferramenta `PushNotification`, quando a sessão a
+  tiver (app desktop ou celular conectado).
 - **Comandos:** sessão limpa `/clear`; compactar `/compact`; modelo
   `/model sonnet`; retomar `/molbytes:molbytes-scaffold continuar` (cópia
   manual: `/molbytes-scaffold continuar`).

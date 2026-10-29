@@ -2,6 +2,23 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.19.1
+
+Três reforços pequenos (ainda sem execução real):
+
+- `scripts/ondas.py` confere a cobertura dos requisitos de segurança: com
+  `risks.yaml` na pasta de documentos, todo item de `security_requirements`
+  precisa estar em `security_reqs` de algum ticket, e nenhum ticket lista um
+  que não existe. Antes era só regra no prompt do estágio 5; agora o erro
+  volta para o planner, como dependência que não existe. O leitor também
+  aceita valor entre aspas seguido de comentário.
+- O relatório do code review ganha a seção "Conferido": o que o revisor
+  verificou e achou certo. Sem ela, "nenhum crítico" não diz se a área foi
+  olhada.
+- Notificação push quando o pipeline para esperando o usuário depois de
+  trabalho feito sem ele (pausas, escaladas, falha, gate, fim), se a
+  plataforma tiver a ferramenta (no Claude Code, `PushNotification`).
+
 ## v0.19.0
 
 Histórico das rodadas, para saber quando e por que o sistema mudou sem abrir

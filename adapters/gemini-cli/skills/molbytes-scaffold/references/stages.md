@@ -198,8 +198,10 @@ roteamento calibrado, cole também a tabela dela, conforme
     py -3 <skill>/scripts/ondas.py <documentos>
     docker run --rm -v "<documentos>:/docs" -v "<skill>/scripts:/s:ro" python:3.12-slim python /s/ondas.py /docs
 
-O script confere o índice (id duplicado, dependência que não existe, ciclo) e
-a classificação (ticket faltando, inventado ou repetido, nível inválido, forte
+O script confere o índice (id duplicado, dependência que não existe, ciclo),
+os requisitos de segurança do `risks.yaml` (requisito que nenhum ticket lista
+em `security_reqs`, ticket que lista requisito que não existe) e a
+classificação (ticket faltando, inventado ou repetido, nível inválido, forte
 sem motivo) e só então grava `.project/agent-map.json`:
 ```json
 { "fonte": "scripts/ondas.py", "ondas": [
@@ -214,7 +216,8 @@ plano, sem abrir o `agent-map.json`.
 
 Com erro, o script não grava nada e sai com código 1. Erro de classificação:
 reenvie ao router com as linhas de erro. Erro do índice (dependência que não
-existe, ciclo, id duplicado): é do estágio 5; mande o planner corrigir o
+existe, ciclo, id duplicado, requisito de segurança sem ticket): é do
+estágio 5; mande o planner corrigir o
 `tickets.yaml` e rode o 6 de novo. Não edite o `agent-map.json` à mão; para
 mudar um nível, mude a `classificacao.json` e rode o script de novo.
 
@@ -222,6 +225,9 @@ mudar um nível, mude a `classificacao.json` e rode o script de novo.
 `"fonte": "orquestrador"` no `agent-map.json` e confira, ticket a ticket,
 antes do plano:
 - todo id do `tickets.yaml` aparece uma vez, e nenhum id fora dele;
+- todo item de `security_requirements` do `risks.yaml` está em
+  `security_reqs` de pelo menos um ticket, e nenhum ticket lista um que não
+  existe;
 - `INFRA-000` está sozinho na onda 1;
 - toda dependência está numa onda **anterior** à do ticket;
 - na mesma onda, nenhum arquivo (nem um diretório e algo dentro dele) aparece
@@ -329,7 +335,8 @@ verificado (`scaffold(9): fix SECURITY-00X`).
 
 O reviewer não altera código; ele mesmo grava `.project/code-review-report.md`
 com achados classificados como crítico/importante/sugestão, cada um com
-arquivo e linha, e responde só com o resumo.
+arquivo e linha, e a seção "Conferido" (o que verificou e achou certo), e
+responde só com o resumo.
 Rode também os linters do projeto, se existirem. A segurança já foi auditada no
 estágio 9: o reviewer foca em corretude e manutenção, mas ainda registra
 qualquer problema de segurança que notar.

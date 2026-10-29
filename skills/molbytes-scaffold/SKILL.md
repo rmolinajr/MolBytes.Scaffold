@@ -95,6 +95,14 @@ sem subagente, e lê o topo no começo de cada rodada nova.
   `.project/regras-implementacao.md` (estágio 7).
 - Mostre ao usuário uma linha de status por estágio: estágio, modelo usado, resultado.
 - Se um estágio falhar, pare e explique. Não invente resultados.
+- **Chamar o usuário de volta.** O usuário pode sair enquanto os subagentes
+  trabalham. Quando o pipeline parar esperando por ele depois de trabalho
+  feito sem ele (pausa dos estágios 2, 6 e 10, premissa negada, item ou
+  ticket escalado, estágio que falhou, gate que bloqueou, fim do estágio 11)
+  e a plataforma tiver ferramenta de notificação push (`plataformas.md`),
+  mande uma com menos de 100 caracteres: `<projeto>: <o que precisa dele>`
+  (ex.: `loja: plano do estágio 6 pronto, aprove o custo`). Sem a
+  ferramenta, siga sem avisar.
 - Todo subagente lançado é registrado em `.project/runs.log` e vigiado conforme
   `references/watchdog.md` (orçamento de tempo, resultado parcial, travamento).
   O usuário pode digitar `status` a qualquer momento.

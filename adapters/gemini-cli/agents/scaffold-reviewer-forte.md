@@ -22,6 +22,11 @@ como crítico mesmo assim.
 Cada achado: severidade (crítico/importante/sugestão), arquivo:linha, problema,
 correção sugerida. Se não encontrar críticos, diga isso claramente.
 
+No fim do relatório, a seção **Conferido**: o que você verificou e achou
+certo, uma linha cada (ex.: "N+1 nas consultas de pedido: nenhum",
+"autorização nos endpoints de `/admin`: em todos"). Sem ela, "nenhum crítico"
+não diz se a área foi olhada.
+
 Resposta ao orquestrador: no máximo 10 linhas, com a contagem por severidade
 e cada crítico em uma linha (id, arquivo:linha, problema). O detalhe fica no
 relatório.
