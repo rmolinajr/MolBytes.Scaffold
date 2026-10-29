@@ -2,6 +2,29 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.20.0
+
+Impacto fora do diff no modo alteração (ainda sem execução real). O code
+review lê o que mudou, mas numa alteração o que quebra costuma estar fora:
+a procedure que o código chama, o job que lê a tabela, a configuração de
+outro ambiente, quem consome o contrato, as linhas antigas.
+
+- Estágio 10, depois do code review: o `scaffold-reviewer` (forte; econômico:
+  medio) lê o diff da rodada inteira (`base_commit..HEAD`) uma vez, com o
+  mapa do código, e grava `.project/impacto.md`. Cada risco diz o fato que
+  torna a mudança segura e o resultado da conferência (`provado`, `bug` ou
+  `não provado`, com como a pessoa confirma), o impacto e se é difícil de
+  desfazer. Procura também problemas entre tickets (regra duplicada, casos
+  tratados de jeitos diferentes, merge que desfez um ticket).
+- Só lê e roda testes: nunca escreve em banco nem se conecta a banco ou
+  serviço de verdade.
+- `bug` e problema entre tickets viram críticos (`FIX-IMPACTO-<n>`); cada
+  `não provado` de impacto alto vai ao usuário: corrigir ou aceitar.
+- O gate do estágio 11 confere o `impacto.md`, e o `pipeline-report.md` lista
+  os riscos aceitos ou não provados, os difíceis de desfazer primeiro.
+- Extensões podem colar no prompt dessa chamada onde procurar dependências
+  escondidas de cada stack (`extensoes.md`, contrato 1, só acréscimo).
+
 ## v0.19.1
 
 Três reforços pequenos (ainda sem execução real):

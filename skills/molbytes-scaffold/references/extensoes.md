@@ -41,6 +41,7 @@ nunca o substitui. Sem extensão, o pipeline funciona igual.
 | Pausas | Pausas novas (ex.: aprovação do cliente) | Registre a pausa em `state.md` ("Próximo passo"). |
 | Mapa do código | Onde olhar em cada stack ou domínio | Trecho colado no prompt do `scaffold-architect` ao gerar ou atualizar o mapa (`mapa-codigo.md`). O formato do mapa não muda. |
 | 6 roteamento | Trocar o modelo padrão de um tipo de ticket com base em dados reais | O router continua gravando `model` e `motivo` de cada ticket na `classificacao.json`; o motivo cita a extensão. As ondas continuam saindo de `scripts/ondas.py`. Valem o limite do nível forte e a aprovação do plano. Nomes de modelo do Claude na tabela da extensão valem como nível: haiku = leve, sonnet = medio, opus = forte. |
+| 10 impacto fora do diff | Onde procurar dependências escondidas em cada stack ou domínio | Trecho colado no prompt do `scaffold-reviewer` na chamada de impacto (modo alteração). O formato do `impacto.md` não muda. |
 | 11 gate | Condições de bloqueio e itens no `pipeline-report.md` | Só acrescenta; nunca afrouxa uma condição do gate. |
 
 ## O que a extensão não pode mudar
@@ -51,7 +52,7 @@ nunca o substitui. Sem extensão, o pipeline funciona igual.
   ou lançar outros.
 - Mudar o formato dos arquivos do pipeline (`state.md`, `runs.log`,
   `qa.json`, `tickets.yaml`, `classificacao.json`, `agent-map.json`,
-  `model-log.md`, `plano-de-teste.yaml`, `findings.yaml`): só acrescentar o
+  `model-log.md`, `plano-de-teste.yaml`, `findings.yaml`, `impacto.md`): só acrescentar o
   que este arquivo permite.
 - Reduzir requisitos de segurança ou o escopo da auditoria.
 - Ignorar flags: com `--sem-design`, o que ela faria no estágio 4 também é

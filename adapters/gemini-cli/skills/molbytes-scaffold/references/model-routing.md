@@ -29,6 +29,7 @@ acaso.
 | 9 security: audit, triage, verify | forte | forte | auditor precisa ser o mais forte |
 | 9 security: fix | forte | forte | correção de segurança não pode ser superficial |
 | 10 code-review | forte | medio | segurança já foi auditada no 9 |
+| 10 impacto fora do diff (modo alteração) | forte | medio | achar o que o diff não mostra |
 | 11 final: testes | medio | medio | `scaffold-tester` roda a suíte e o plano |
 | 11 final: rescan | medio; forte para triar achado novo | igual | só ferramentas; triagem exige o auditor forte |
 | 11 final: gate e relatório | sessão principal | sessão principal | lê só resumos |

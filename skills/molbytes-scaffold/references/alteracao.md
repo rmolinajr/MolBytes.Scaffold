@@ -128,6 +128,9 @@ Só quando há `docs-sistema.yaml`:
 - Segurança (estágio 9): achado em código que a alteração não tocou
   (`git diff <base_commit>`) fica com status `divida` e vai para `tech_debt`
   com `preexistente: true`; não bloqueia e aparece no relatório.
+- Estágio 10: depois do code review, o impacto fora do diff (`stages.md`,
+  estágio 10) grava `impacto.md`; o gate do estágio 11 confere que todo `bug`
+  foi corrigido e todo `não provado` de impacto alto foi corrigido ou aceito.
 - Estágio 2: se `spec.md` já existir de um uso anterior da skill, atualize-a
   com a alteração em vez de reescrever.
 - Estágio 3 curto: só os riscos e requisitos de segurança que a alteração

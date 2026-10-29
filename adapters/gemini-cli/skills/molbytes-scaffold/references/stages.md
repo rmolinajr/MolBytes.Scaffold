@@ -344,9 +344,58 @@ qualquer problema de segurança que notar.
 **Modo alteração com documentação do sistema:** o reviewer confere se cada
 documento da "Documentação afetada" bate com o código.
 
+### Modo alteração: impacto fora do diff
+
+O code review lê o que mudou; o que quebra numa alteração costuma estar fora
+dela: a procedure que o código novo chama, o job que lê a tabela, a
+configuração de outro ambiente, o sistema que consome o contrato, as linhas
+antigas com `NULL` ou formato velho. Depois do code review, lance o
+`scaffold-reviewer` de novo, em outra chamada, com: o `base_commit`, o
+caminho do `mapa-codigo.md`, a seção "Premissas sobre terceiros" da spec e,
+com extensão, o trecho "Impacto fora do diff" das camadas carregadas
+(`references/extensoes.md`). Ele lê o diff da rodada uma vez e grava
+`.project/impacto.md`:
+
+```markdown
+# Impacto fora do diff
+
+Diff: <base_commit>..<HEAD> · Atualizado: <data>
+
+## Riscos
+| id | O que pode quebrar | Fato que torna seguro | Como conferiu | Resultado | Impacto | Desfazer | Decisão |
+|---|---|---|---|---|---|---|---|
+| IMP-01 | pedidos antigos sem cupom (`cupom` NULL) quebram o total novo | `calcular_total` trata NULL | leu `orders/total.py:42` | não provado | alto | fácil | |
+
+## Entre tickets
+- <regra escrita em dois tickets, dois tickets que tratam o mesmo caso de
+  jeitos diferentes, merge que desfez o que um ticket fez>, ou "nada"
+
+## Conferido
+- <o que olhou e achou certo, uma linha cada>
+```
+
+- **Resultado:** `provado` (conferiu o fato no código ou num teste e ele
+  vale), `não provado` (não deu para conferir só lendo e testando; a coluna
+  "Como conferiu" diz como a pessoa confirma, ex.: a consulta de leitura que
+  ela roda no banco) ou `bug` (conferiu e o fato é falso).
+- **Desfazer:** `fácil` ou `difícil` (migração que apaga ou transforma dado,
+  mensagem ou arquivo que outro sistema já consumiu, dado enviado a terceiro).
+- O reviewer só lê o repositório e roda testes. Nunca escreve em banco, não
+  se conecta a banco ou serviço de verdade e não chama serviço externo.
+
+Na pausa, junto dos críticos do code review:
+
+- todo `bug` e todo problema "Entre tickets" entram como críticos;
+- cada `não provado` de impacto `alto` vai ao usuário, um por vez:
+  **corrigir** (ticket `FIX-IMPACTO-<n>`, no nível forte) ou **aceitar**
+  (a coluna "Decisão" recebe `aceito: <motivo dele>`). Os `difícil` primeiro.
+
+O orquestrador grava a coluna "Decisão" (`FIX-IMPACTO-<n>` ou `aceito: ...`);
+o reviewer não a preenche.
+
 Apresente o resumo ao usuário e **pergunte** se quer que os críticos sejam
 corrigidos antes de seguir: um ticket de correção `FIX-REVIEW-<n>` por crítico,
-no nível forte.
+no nível forte (`FIX-IMPACTO-<n>` para os que vêm do `impacto.md`).
 
 ## 11. final → testes + rescan + gate
 
@@ -366,6 +415,8 @@ no nível forte.
    - **modo alteração:** nenhuma falha de teste nova em relação ao ponto de
      partida, e todo documento do sistema da "Documentação afetada" foi
      atualizado (os de `site` vão para o relatório como atualização manual);
+   - **modo alteração:** todo `bug` do `impacto.md` foi corrigido e todo
+     `não provado` de impacto alto foi corrigido ou aceito;
    - o `Commit:` do `mapa-codigo.md` cobre o código: diff dele até o `HEAD`
      do código vazio.
    Se algo falhar, mostre o motivo e pergunte ao usuário: corrigir agora, ou
@@ -380,7 +431,9 @@ no nível forte.
    estágio (somados do `runs.log`), escaladas,
    resultado dos testes, resumo de segurança (achados por severidade:
    corrigidos, aceitos, em dívida), resumo do plano de teste (itens por status),
-   as premissas sobre terceiros ainda abertas (com o que cada uma pode mudar)
+   as premissas sobre terceiros ainda abertas (com o que cada uma pode mudar),
+   no modo alteração os riscos fora do diff que ficaram aceitos ou não
+   provados (os `difícil` primeiro, com o "Como conferiu" de cada um),
    e a lista "Testes manuais a fazer", pendências.
 7. **Histórico:** escreva a entrada da rodada no topo de `historico.md`
    (`references/historico.md`), a partir do relatório e do `state.md`.
@@ -408,12 +461,13 @@ ou pedir que você os acompanhe, e um caso falhar:
 
 Sempre que um `scaffold-implementer` for lançado fora de um ticket do estágio 5
 (conflito de merge, falha da onda que não é de um ticket só, item do plano
-de teste, achado de segurança, crítico do code review, falha nova no estágio
+de teste, achado de segurança, crítico do code review ou do impacto fora do
+diff, falha nova no estágio
 11, teste manual depois do gate),
 escreva antes `.project/tickets/<id>.md`, com até ~2 mil caracteres:
 
-- **id:** `FIX-<origem>` (ex.: `FIX-TP-007`, `FIX-REVIEW-3`, `FIX-MERGE-2`,
-  `FIX-MANUAL-1`) ou o próprio `SECURITY-00X`;
+- **id:** `FIX-<origem>` (ex.: `FIX-TP-007`, `FIX-REVIEW-3`, `FIX-IMPACTO-1`,
+  `FIX-MERGE-2`, `FIX-MANUAL-1`) ou o próprio `SECURITY-00X`;
 - **origem:** o item, achado, ticket ou onda que gerou a correção;
 - **problema:** a falha resumida (erro, arquivo:linha, saída filtrada);
 - **arquivos:** os que ele pode mexer (os do ticket de origem e os apontados

@@ -59,6 +59,7 @@ Orçamento esperado (minutos):
 | 9.4 verify por ticket | — | — | 15 |
 | ticket de correção (FIX-...) | — | 15 | 20 |
 | estágio 10 | — | 25 | 30 |
+| 10 impacto fora do diff | — | 20 | 25 |
 | 11 testes | — | 20 | — |
 | 11 rescan | — | 15 | 20 |
 

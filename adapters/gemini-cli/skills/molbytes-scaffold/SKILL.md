@@ -171,7 +171,7 @@ pipeline funciona igual.
 | 7 | implement | `scaffold-implementer` (N em paralelo) | código na raiz | não |
 | 8 | tests (plano → executar → corrigir) | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes + relatório | só se a correção falhar 2x |
 | 9 | security (audit → triage → fix → verify) | `scaffold-security` + `scaffold-implementer` | `.project/security/` | só se houver decisão |
-| 10 | code-review | `scaffold-reviewer` | `.project/code-review-report.md` | **SIM** |
+| 10 | code-review (+ impacto fora do diff no modo alteração) | `scaffold-reviewer` | `.project/code-review-report.md` (+ `impacto.md`) | **SIM** |
 | 11 | final (testes + rescan + gate) | `scaffold-tester` + `scaffold-security`; gate: você | `.project/pipeline-report.md` | só se bloquear |
 
 Instruções detalhadas de cada estágio: `references/stages.md`. Leia a seção do

@@ -6,7 +6,7 @@
 
 > By [MolBytes](https://www.molbytes.io) · created by Roberto Molina · [project page](https://www.molbytes.io/en/projetos/molbytes-scaffold)
 
-![version](https://img.shields.io/badge/version-0.19.1-blue)
+![version](https://img.shields.io/badge/version-0.20.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![made for](https://img.shields.io/badge/made%20for-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -36,7 +36,7 @@ It never writes production code itself.
 | 7 | parallel implementation in waves | `scaffold-implementer` | code | — |
 | 8 | test plan → run → fix failures | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + tests | if a fix fails twice |
 | 9 | security: audit → triage → fix → verify | `scaffold-security` + `scaffold-implementer` | `.project/security/` | medium findings |
-| 10 | code review | `scaffold-reviewer` | `.project/code-review-report.md` | **decide on fixes** |
+| 10 | code review (+ impact outside the diff, when changing a system) | `scaffold-reviewer` | `.project/code-review-report.md` (+ `impacto.md`) | **decide on fixes** |
 | 11 | final tests + rescan + gate | `scaffold-tester` + `scaffold-security` | `.project/pipeline-report.md` | if blocked |
 
 ## Highlights
@@ -60,6 +60,12 @@ It never writes production code itself.
   (request, commits, areas, decisions, what was left out) and the changes
   made outside the pipeline, so "when and why did this change?" has an
   answer without opening each phase.
+- **Impact outside the diff:** when changing a system, a second review reads
+  the whole round's diff for what it can break outside itself (procedures,
+  jobs, config, other systems, old data). Each risk names the fact that
+  makes the change safe, checked or not, and whether it is hard to undo.
+  A real bug or an unproven high-impact risk is fixed or accepted by you
+  before the gate.
 - **Documents outside the project, if you want:** spec, design and reports
   live in `.project/` or in a separate folder with its own git, so the
   client's project stays clean. See
@@ -215,9 +221,10 @@ After changing `skills/`, `agents/` or the version in
 
 ## Status
 
-v0.19.1, evolving: the changes from v0.10 onward came from real runs in
+v0.20.0, evolving: the changes from v0.10 onward came from real runs in
 Claude Code, the most recent one (v0.17.0) changing an existing system. The
-code map (v0.18.0) and the round history (v0.19.0) have not yet run in a
+code map (v0.18.0), the round history (v0.19.0) and the impact check
+(v0.20.0) have not yet run in a
 real project, nor have the Codex, Gemini CLI and Cursor adapters. It does
 not replace a professional pentest before processing real payments.
 

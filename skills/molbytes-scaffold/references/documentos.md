@@ -116,7 +116,7 @@ e só arquive com a resposta `arquivar`.
    git), o que é só da rodada: `state.md`, `qa.json`, `risks.yaml`,
    `tickets.yaml`, `tickets/`, `classificacao.json`, `agent-map.json`,
    `regras-implementacao.md`, `plano-de-teste.yaml`, `test-report.md`,
-   `security/`, `code-review-report.md`, `pipeline-report.md`, `runs.log` e
+   `security/`, `code-review-report.md`, `impacto.md`, `pipeline-report.md`, `runs.log` e
    `model-log.md`. O que não existir, pule.
 4. **Ficam na raiz e evoluem:** `spec.md`, `design/`, `docs-sistema.yaml`,
    `mapa-codigo.md` e `historico.md` descrevem o sistema inteiro. A rodada nova os atualiza (ver

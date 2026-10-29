@@ -6,7 +6,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina · [página do projeto](https://www.molbytes.io/projetos/molbytes-scaffold)
 
-![versão](https://img.shields.io/badge/versão-0.19.1-blue)
+![versão](https://img.shields.io/badge/versão-0.20.0-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -32,7 +32,7 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
 | 7 | implementação paralela por ondas | `scaffold-implementer` | código | — |
 | 8 | plano de teste → executar → corrigir falhas | `scaffold-tester` + `scaffold-implementer` | `.project/plano-de-teste.yaml` + testes | se a correção falhar 2x |
 | 9 | segurança: audit → triage → fix → verify | `scaffold-security` + `scaffold-implementer` | `.project/security/` | achados médios |
-| 10 | code review | `scaffold-reviewer` | `.project/code-review-report.md` | **decidir correções** |
+| 10 | code review (+ impacto fora do diff, na alteração) | `scaffold-reviewer` | `.project/code-review-report.md` (+ `impacto.md`) | **decidir correções** |
 | 11 | testes finais + rescan + gate | `scaffold-tester` + `scaffold-security` | `.project/pipeline-report.md` | se bloquear |
 
 ## Destaques
@@ -55,6 +55,12 @@ confere o resultado e faz commit. Ela mesma não escreve código de produção.
   por rodada (pedido, commits, áreas, decisões, o que ficou de fora) e as
   mudanças feitas fora do pipeline: "quando e por que isso mudou?" tem
   resposta sem abrir fase por fase.
+- **Impacto fora do diff:** na alteração, uma segunda revisão lê o diff da
+  rodada inteira procurando o que ele quebra fora de si (procedures, jobs,
+  configuração, outros sistemas, dados antigos). Cada risco diz o fato que
+  torna a mudança segura, conferido ou não, e se é difícil de desfazer. Bug
+  real ou risco alto não provado é corrigido ou aceito por você antes do
+  gate.
 - **Documentos fora do projeto, se quiser:** spec, design e relatórios ficam em
   `.project/` ou numa pasta separada com git próprio, para não sujar o projeto
   do cliente. Ver [INSTALL.pt-BR.md](INSTALL.pt-BR.md#onde-ficam-os-documentos).
@@ -208,9 +214,10 @@ algum adaptador estiver desatualizado.
 
 ## Status
 
-v0.19.1, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
+v0.20.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
 no Claude Code, a mais recente (v0.17.0) alterando um sistema existente. O
-mapa do código (v0.18.0) e o histórico das rodadas (v0.19.0) ainda não
+mapa do código (v0.18.0), o histórico das rodadas (v0.19.0) e o impacto
+fora do diff (v0.20.0) ainda não
 rodaram num projeto real, nem os adaptadores de Codex, Gemini CLI e Cursor.
 Não substitui um pentest profissional antes de processar pagamentos reais.
 
