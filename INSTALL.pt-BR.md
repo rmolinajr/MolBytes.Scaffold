@@ -7,6 +7,11 @@ A skill são arquivos Markdown que o agente lê. Funciona no
 e no [Cursor](#cursor). O pipeline é o mesmo; muda a instalação e os comandos
 de cada plataforma (tabela em `references/plataformas.md`).
 
+Palavras e flags digitadas valem em português ou inglês (`continuar` ou
+`continue`, `--ate` ou `--until`), e a descrição do projeto também. O comando
+com barra tem um nome só, em inglês. As instruções da skill e os arquivos que
+ela cria são em português.
+
 ## Claude Code
 
 Há três formas de instalar.
@@ -221,7 +226,7 @@ onde estão os documentos quando a skill perguntar).
 
 ## Status
 
-v0.21.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais no
+v0.22.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais no
 Claude Code. Espere ajustes a cada projeto. Ajuste modelos em
 `references/model-routing.md` com base em `.project/model-log.md`.
 

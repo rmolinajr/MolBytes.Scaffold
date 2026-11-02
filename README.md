@@ -6,7 +6,7 @@
 
 > By [MolBytes](https://www.molbytes.io) · created by Roberto Molina · [project page](https://www.molbytes.io/en/projetos/molbytes-scaffold)
 
-![version](https://img.shields.io/badge/version-0.21.0-blue)
+![version](https://img.shields.io/badge/version-0.22.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![made for](https://img.shields.io/badge/made%20for-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -19,9 +19,10 @@ to a specialized subagent running at the right model tier (light, medium or
 strong; in Claude Code, haiku, sonnet or opus), checks the result and commits.
 It never writes production code itself.
 
-> **Language:** the skill's instructions, its in-pipeline commands
-> (`continuar`, `aprovado`), its flags and the files it creates are in
-> Brazilian Portuguese. You can describe your project in English.
+> **Language:** typed words and flags work in English or Brazilian Portuguese
+> (`continue` or `continuar`, `--until` or `--ate`), and you can describe your
+> project in either. Slash commands have one name, in English. The skill's
+> instructions and the files it creates are in Brazilian Portuguese.
 
 ## Pipeline
 
@@ -42,8 +43,8 @@ It never writes production code itself.
 ## Highlights
 
 - **Resumable:** `state.md` + git are the source of truth. At the pause
-  points, `/clear` and `/molbytes:molbytes-scaffold continuar` (the same
-  command works in a new session); after `/compact`, just `continuar`.
+  points, `/clear` and `/molbytes:molbytes-scaffold continue` (the same
+  command works in a new session); after `/compact`, just `continue`.
 - **Extensible:** an extension skill adds rules per stack, domain or
   compliance without changing the pipeline; the contract is in
   `references/extensoes.md`.
@@ -128,7 +129,7 @@ New project, from grill-me to the gate:
 /molbytes:molbytes-scaffold Clinic scheduling: online booking, WhatsApp reminders, doctor dashboard
 ```
 
-Change a system that already exists (open Claude Code in its folder):
+Change a system that already exists (open Claude Code in its folder; `Change:` and `Alteração:` work the same):
 
 ```
 /molbytes:molbytes-scaffold Change: accept PIX at checkout
@@ -138,29 +139,29 @@ Only up to the tickets, to review the plan before spending on
 implementation:
 
 ```
-/molbytes:molbytes-scaffold Clinic scheduling: online booking and reminders --ate tickets
+/molbytes:molbytes-scaffold Clinic scheduling: online booking and reminders --until tickets
 ```
 
 API with no UI, skipping design and using economy routing:
 
 ```
-/molbytes:molbytes-scaffold Shipping quote API for online stores --sem-design --economico
+/molbytes:molbytes-scaffold Shipping quote API for online stores --no-design --economy
 ```
 
 Resume another day, in a new session:
 
 ```
-/molbytes:molbytes-scaffold continuar
+/molbytes:molbytes-scaffold continue
 ```
 
 ### Flags
 
 | Flag | What it does |
 |---|---|
-| `--ate <stage>` | Stops after the given stage, by number or by name (`--ate 5`, `--ate tickets`). |
-| `--sem-design` | Skips stage 4; tickets and tests use the spec instead of the design. |
-| `--economico` | Uses the "econômico" (economy) column of the model routing. |
-| `--pequeno` | Small change (up to 3 tickets) to an existing system: fewer questions, short spec, no design and no cost pause. Tests, security, code review, impact check and gate stay the same. |
+| `--until <stage>` or `--ate` | Stops after the given stage, by number or by name (`--until 5`, `--until tickets`). |
+| `--no-design` or `--sem-design` | Skips stage 4; tickets and tests use the spec instead of the design. |
+| `--economy` or `--economico` | Uses the "econômico" (economy) column of the model routing. |
+| `--small` or `--pequeno` | Small change (up to 3 tickets) to an existing system: fewer questions, short spec, no design and no cost pause. Tests, security, code review, impact check and gate stay the same. |
 
 ### During the pipeline
 
@@ -169,13 +170,13 @@ Type in the conversation:
 | Command | What it does |
 |---|---|
 | `status` | Table of running subagents (ticket, model, time, budget) and the current stage or wave. |
-| `continuar` | After `/compact`: rereads `state.md` and continues from the next step. After `/clear` (cheaper), use `/molbytes:molbytes-scaffold continuar`. |
-| `aprovado`, or what to change | Answer to the pauses: spec (stage 2), plan and cost (6) and code review (10). |
+| `continue` or `continuar` | After `/compact`: rereads `state.md` and continues from the next step. After `/clear` (cheaper), use `/molbytes:molbytes-scaffold continue`. |
+| `approved` or `aprovado`, or what to change | Answer to the pauses: spec (stage 2), plan and cost (6) and code review (10). |
 
 Recommended in Claude Code: `/model sonnet` in the main session (the heavy
 stages already use opus in the subagents) and, at the points the skill
 tells you (end of stages 2, 5, 8 and 9 and of each wave in stage 7),
-`/clear` followed by `/molbytes:molbytes-scaffold continuar`: the session
+`/clear` followed by `/molbytes:molbytes-scaffold continue`: the session
 starts over light, from `state.md`. `/compact` also works, but costs more.
 
 ### Other platforms
@@ -230,7 +231,7 @@ After changing `skills/`, `agents/` or the version in
 
 ## Status
 
-v0.21.0, evolving: the changes from v0.10 onward came from real runs in
+v0.22.0, evolving: the changes from v0.10 onward came from real runs in
 Claude Code, the most recent one (v0.17.0) changing an existing system. The
 code map (v0.18.0), the round history (v0.19.0) and the impact check
 (v0.20.0) and the test lock (v0.21.0) have not yet run in a

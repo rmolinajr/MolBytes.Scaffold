@@ -16,7 +16,7 @@ Se a linha acima mostrar `$ARGUMENTS` literalmente, a plataforma não substitui
 argumentos: a descrição é o texto que o usuário escreveu junto com a chamada
 da skill.
 
-Se a descrição for só `continuar`, é a retomada de um pipeline numa sessão
+Se a descrição for só `continuar` ou `continue`, é a retomada de um pipeline numa sessão
 nova: não é um projeto novo. Siga "Depois de qualquer compactação" (em
 "Estado e compactação") sem perguntar se continua.
 
@@ -41,8 +41,9 @@ subagente.
 
 ## Projeto novo ou alteração
 
-Logo depois, se o projeto já tiver código, pergunte se é projeto novo ou
-alteração do sistema existente e siga `references/alteracao.md`. No modo
+Logo depois, se o projeto já tiver código e a descrição não começar com
+`Alteração:` ou `Change:`, pergunte se é projeto novo ou alteração do sistema
+existente. Siga `references/alteracao.md`. No modo
 alteração, antes do estágio 1: registre o ponto de partida (`base_commit` e os
 testes que já falham) e verifique a **documentação do sistema** (no projeto ou
 fora dele). Se o sistema tiver documentação, ela é atualizada junto com o
@@ -200,7 +201,7 @@ do estágio 7** e a cada 10 itens corrigidos no estágio 8, depois do commit
 2. Espere a resposta. Se ele disser para seguir sem limpar, siga.
 
 **Depois de qualquer compactação** (manual ou automática), ou ao ser chamado
-com "continuar": antes de qualquer outra ação, releia a seção da sua
+com "continuar" ou "continue": antes de qualquer outra ação, releia a seção da sua
 plataforma em `plataformas.md`, resolva a pasta de documentos,
 leia `.project/state.md` e `git log --oneline -15` (no modo externo, dos dois
 repositórios), invoque de novo a extensão de `Extensão:` (se houver),
@@ -233,3 +234,21 @@ documentos.
   modo alteração. Regras em `references/alteracao.md`, "Alteração pequena".
 
 Registre as flags em `state.md` (`Flags:`); valem até o fim do ciclo.
+
+## Comandos em português e inglês
+
+Estas palavras e flags valem nos dois idiomas, com o mesmo efeito:
+
+| Português | Inglês |
+|---|---|
+| `continuar` | `continue` |
+| `aprovado` | `approved` |
+| `ajustes: ...` | `changes: ...` |
+| `Alteração: ...` | `Change: ...` |
+| `--ate` | `--until` |
+| `--sem-design` | `--no-design` |
+| `--economico` | `--economy` |
+| `--pequeno` | `--small` |
+
+Em `state.md`, grave sempre a forma em português: é a que as referências e as
+extensões usam. O comando com barra tem um nome só, em inglês.

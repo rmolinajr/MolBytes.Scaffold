@@ -12,6 +12,9 @@ documentos, e vice-versa.
 
 Depois de resolver a pasta de documentos e antes das extensões:
 
+- Descrição que começa com `Alteração:` ou `Change:`: **modo alteração**, sem
+  perguntar. Sem código na raiz, diga isso e pergunte se é projeto novo ou se
+  o sistema está em outra pasta.
 - Raiz do projeto sem código e sem `state.md`: **modo novo**, sem perguntar.
 - Existe código: pergunte
   > Isto é um projeto novo ou uma alteração no sistema que já existe?

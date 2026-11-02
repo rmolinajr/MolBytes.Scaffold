@@ -8,9 +8,10 @@ and [Cursor](#cursor). The pipeline is the same; what changes is the
 installation and each platform's commands (table in
 `references/plataformas.md`).
 
-The skill's instructions, its in-pipeline commands (`continuar`, `aprovado`),
-its flags and the files it creates are in Brazilian Portuguese. You can
-describe your project in English.
+Typed words and flags work in English or Brazilian Portuguese (`continue` or
+`continuar`, `--until` or `--ate`), and you can describe your project in either.
+Slash commands have one name, in English. The skill's instructions and the
+files it creates are in Brazilian Portuguese.
 
 ## Claude Code
 
@@ -214,11 +215,11 @@ the default: `/autocompact auto`.
 
 On top of that, at the end of stages 2, 5, 8 and 9 and after each wave of
 stage 7, the skill tells you it is a good moment to restart the session. The
-cheapest way is `/clear` followed by `/molbytes:molbytes-scaffold continuar`
-(manual copy: `/molbytes-scaffold continuar`): the session comes back light
+cheapest way is `/clear` followed by `/molbytes:molbytes-scaffold continue`
+(manual copy: `/molbytes-scaffold continue`): the session comes back light
 and the skill resumes from the `state.md` in the documents folder.
-`/compact` followed by `continuar` also works, but it rereads the whole
-conversation to summarize it. The same `/molbytes:molbytes-scaffold continuar`
+`/compact` followed by `continue` also works, but it rereads the whole
+conversation to summarize it. The same `/molbytes:molbytes-scaffold continue`
 resumes on another day.
 
 On the other platforms, the equivalent commands are in
@@ -233,7 +234,7 @@ where the documents are when the skill asks).
 
 ## Status
 
-v0.21.0, evolving: the changes from v0.10 onward came from real runs in
+v0.22.0, evolving: the changes from v0.10 onward came from real runs in
 Claude Code. Expect adjustments with each project. Tune models in
 `references/model-routing.md` based on `.project/model-log.md`.
 

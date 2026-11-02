@@ -6,7 +6,7 @@
 
 > Por [MolBytes](https://www.molbytes.io) · criado por Roberto Molina · [página do projeto](https://www.molbytes.io/projetos/molbytes-scaffold)
 
-![versão](https://img.shields.io/badge/versão-0.21.0-blue)
+![versão](https://img.shields.io/badge/versão-0.22.0-blue)
 ![licença](https://img.shields.io/badge/licença-MIT-green)
 ![feito para](https://img.shields.io/badge/feito%20para-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -18,6 +18,11 @@ Uma sessão principal atua como **orquestrador**: conversa com você, delega cad
 estágio a um subagente especializado com o nível de modelo certo (leve, médio
 ou forte; no Claude Code, haiku, sonnet ou opus),
 confere o resultado e faz commit. Ela mesma não escreve código de produção.
+
+> **Idioma:** palavras e flags digitadas valem em português ou inglês
+> (`continuar` ou `continue`, `--ate` ou `--until`), e a descrição do projeto
+> também. O comando com barra tem um nome só, em inglês. As instruções da skill
+> e os arquivos que ela cria são em português.
 
 ## Pipeline
 
@@ -122,7 +127,7 @@ Projeto novo, do grill-me ao gate:
 /molbytes:molbytes-scaffold Agenda para clínicas: agendamento online, lembrete por WhatsApp, painel do médico
 ```
 
-Alterar um sistema que já existe (abra o Claude Code na pasta dele):
+Alterar um sistema que já existe (abra o Claude Code na pasta dele; `Alteração:` e `Change:` valem igual):
 
 ```
 /molbytes:molbytes-scaffold Alteração: aceitar PIX no checkout
@@ -150,10 +155,10 @@ Retomar em outro dia, numa sessão nova:
 
 | Flag | O que faz |
 |---|---|
-| `--ate <estágio>` | Para depois do estágio indicado, pelo número ou pelo nome (`--ate 5`, `--ate tickets`). |
-| `--sem-design` | Pula o estágio 4; tickets e testes usam a spec no lugar do design. |
-| `--economico` | Usa a coluna "econômico" do roteamento de modelos. |
-| `--pequeno` | Alteração pequena (até 3 tickets) num sistema existente: menos perguntas, spec curta, sem design nem pausa de custo. Testes, segurança, code review, impacto e gate continuam iguais. |
+| `--ate <estágio>` ou `--until` | Para depois do estágio indicado, pelo número ou pelo nome (`--ate 5`, `--ate tickets`). |
+| `--sem-design` ou `--no-design` | Pula o estágio 4; tickets e testes usam a spec no lugar do design. |
+| `--economico` ou `--economy` | Usa a coluna "econômico" do roteamento de modelos. |
+| `--pequeno` ou `--small` | Alteração pequena (até 3 tickets) num sistema existente: menos perguntas, spec curta, sem design nem pausa de custo. Testes, segurança, code review, impacto e gate continuam iguais. |
 
 ### Durante o pipeline
 
@@ -162,8 +167,8 @@ Digite na conversa:
 | Comando | O que faz |
 |---|---|
 | `status` | Tabela dos subagentes rodando (ticket, modelo, tempo, orçamento) e o estágio ou a onda atual. |
-| `continuar` | Depois de `/compact`: relê o `state.md` e segue do próximo passo. Depois de `/clear` (mais barato), use `/molbytes:molbytes-scaffold continuar`. |
-| `aprovado`, ou o que mudar | Resposta às pausas: spec (estágio 2), plano e custo (6) e code review (10). |
+| `continuar` ou `continue` | Depois de `/compact`: relê o `state.md` e segue do próximo passo. Depois de `/clear` (mais barato), use `/molbytes:molbytes-scaffold continuar`. |
+| `aprovado` ou `approved`, ou o que mudar | Resposta às pausas: spec (estágio 2), plano e custo (6) e code review (10). |
 
 Recomendados do Claude Code: `/model sonnet` na sessão principal (os
 estágios pesados já usam opus nos subagentes) e, nos pontos que a skill avisa
@@ -222,7 +227,7 @@ algum adaptador estiver desatualizado.
 
 ## Status
 
-v0.21.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
+v0.22.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
 no Claude Code, a mais recente (v0.17.0) alterando um sistema existente. O
 mapa do código (v0.18.0), o histórico das rodadas (v0.19.0) e o impacto
 fora do diff (v0.20.0) e a trava dos testes (v0.21.0) ainda não

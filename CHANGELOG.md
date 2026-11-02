@@ -2,6 +2,21 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.22.0
+
+Comandos digitados em português ou inglês (ainda sem execução real):
+
+- **Palavras e flags nos dois idiomas** (`SKILL.md`): `continue`, `approved`,
+  `changes:`, `Change:`, `--until`, `--no-design`, `--economy` e `--small` valem
+  como `continuar`, `aprovado`, `ajustes:`, `Alteração:`, `--ate`,
+  `--sem-design`, `--economico` e `--pequeno`. O `state.md` grava a forma em
+  português.
+- **Prefixo `Alteração:` ou `Change:`** escolhe o modo alteração sem perguntar
+  (`alteracao.md`). Os READMEs já mostravam o prefixo, mas a skill não tinha
+  regra para ele.
+- Instruções e arquivos gerados continuam em português; o comando com barra tem
+  um nome só, em inglês.
+
 ## v0.21.0
 
 Regras que eram só texto viram conferência, a entrevista aproveita o
