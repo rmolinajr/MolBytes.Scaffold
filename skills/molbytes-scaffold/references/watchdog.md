@@ -104,6 +104,14 @@ Em cada verificação, para cada START sem END, calcule o tempo decorrido:
 O orquestrador não força a parada de um subagente: quem para é o usuário, pelo
 painel de tarefas da plataforma. Os outros subagentes da onda continuam.
 
+**"Aguardando" não é estado:** um subagente que diz esperar trabalho em
+segundo plano (suíte, repetição de teste) por mais de 2x o tempo esperado
+pode estar preso num processo sem prazo. Confira o processo e os arquivos de
+log ou resumo que ele citou antes de marcá-lo como aguardando; parado ou sem
+saída nova, avise o usuário como acima. Numa execução real, uma repetição sem
+prazo ficou parada por quase duas horas e só foi vista porque o usuário
+perguntou.
+
 ## Tratamento do resultado
 
 | Resultado | Ação |

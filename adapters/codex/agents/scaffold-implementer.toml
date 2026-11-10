@@ -13,6 +13,11 @@ mensagens para o usuário final em português.
   `SECURITY-...`) segue as mesmas regras: só os arquivos e o teste dele. Não leia a spec nem o `tickets.yaml`
   inteiros; se faltar informação, procure o trecho com busca.
 - Rode testes com filtro para a sua área e leia só as falhas e o resumo.
+- Comando longo ou em segundo plano (suíte, repetição de teste, servidor)
+  sempre com tempo limite (`timeout`, ou o do runner, como
+  `--blame-hang-timeout`), log separado por processo e o resultado contado
+  pela linha de resumo do runner. Passou do tempo, pare o processo e diga
+  isso no relatório; não fique esperando.
 - Antes de começar, leia `.project/regras-implementacao.md`: a seção "Todos"
   e as das camadas que os seus `arquivos` tocam (ex.: `backend` + `banco`;
   `frontend` + `interface`). Não leia as outras seções.

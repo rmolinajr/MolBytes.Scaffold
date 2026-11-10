@@ -2,6 +2,31 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.24.0
+
+Mais lições das mesmas rodadas longas (ainda sem execução real destas mudanças):
+
+- **Intermitentes da base em quarentena** (`alteracao.md`, `plano-de-teste.md`):
+  no modo alteração, a suíte da base roda duas vezes; o que falha numa e passa
+  na outra vai para `testes-intermitentes.txt` e não bloqueia, não gera
+  correção nem repete a suíte inteira. Intermitente da rodada é falha dela e vira
+  correção. Antes de outra suíte inteira, a classe que oscilou roda cinco vezes
+  junto da suíte da área.
+- **Testes da base travados desde o estágio 7** (`alteracao.md`, estágios 5 e
+  6): o que uma rodada anterior provou não muda calado. Ticket que precisa
+  mudar um teste da base o lista em `testes_alterados` com o motivo, e o plano
+  do estágio 6 mostra a lista ao usuário.
+- **"Concluído com premissas abertas"** (estágio 11): premissa sobre terceiros
+  não confirmada encerra a rodada assim, nunca como "concluído", com o que
+  testar no serviço real antes de produção. Rodadas que passaram no gate
+  falharam depois numa premissa que só o simulador tinha exercitado.
+- **Worktree da base certa** (estágio 7): `Base da onda` no `state.md` e
+  `git merge-base --is-ancestor` antes de mergear a branch de um ticket;
+  worktree nascida de outra base é descartada e o ticket relançado.
+- **Espera com prazo** (implementer, `watchdog.md`): comando longo sempre com
+  tempo limite e log por processo; "aguardando" além de 2x o tempo esperado é
+  conferido no processo, não aceito como estado.
+
 ## v0.23.0
 
 Lições de duas rodadas longas de estágio 7, em dois sistemas diferentes

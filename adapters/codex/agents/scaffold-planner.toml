@@ -24,6 +24,8 @@ Você é um tech lead quebrando trabalho para um time. Escreva em português.
   arquivo, chamadores e testes dos símbolos que ele muda. Os que mudam entram
   em `arquivos`. Acima de ~1.500 linhas mexidas num arquivo, ~5 arquivos ou
   ~40 pontos de chamada, divida o ticket e aponte o molde (`arquivo:linha`).
+  Teste que já existe e que o ticket precisa mudar vai em `testes_alterados`,
+  com o motivo: os testes da base ficam travados.
 - Primeiro ticket sempre `INFRA-000` (estrutura, runner de testes, linter,
   `.gitignore`, `.env.example`, todas as dependências previstas); todos os
   outros dependem dele.

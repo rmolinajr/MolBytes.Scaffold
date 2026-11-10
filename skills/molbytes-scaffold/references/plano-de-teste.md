@@ -54,10 +54,23 @@ partir daqui, o que muda é o código, não o teste.
 1. Commit `scaffold(8): testes do plano`.
 2. Grave `.project/testes-travados.txt`: um caminho por linha, relativo à
    raiz do projeto, de cada arquivo citado em `teste:` de um item
-   automatizado (a parte antes de `::`), sem repetir.
+   automatizado (a parte antes de `::`), sem repetir. **Modo alteração:**
+   mantenha os da base, travados desde o estágio 7 (`alteracao.md`, passo
+   5), e acrescente os do plano.
 3. Grave em `state.md` a linha `Testes travados: <sha>`, com o `HEAD` que o
    próprio git dá (`git rev-parse --short HEAD`), não o que um subagente
    relatar.
+
+**Modo alteração, estágio 7:** os testes da base já estão travados desde o
+`base_commit`. Ao fim de cada onda, rode a mesma conferência abaixo; arquivo
+mudado que está em `testes_alterados` de um ticket da onda já foi aprovado
+com o plano, e o resto segue a conferência.
+
+**Intermitente:** um teste que falha e, rodado de novo sem mudança de código,
+passa. Antes de gastar outra suíte inteira, rode só a classe dele cinco vezes
+junto da suíte da área. Se estiver em `testes-intermitentes.txt` (base), siga
+sem correção. Se for da rodada, é falha da rodada: ticket de correção para
+estabilizar, e ele não entra na quarentena.
 
 **Conferência depois de cada correção** (8.3, 9.3, `FIX-REVIEW`,
 `FIX-IMPACTO`, estágio 11, `FIX-MANUAL`): rode você mesmo

@@ -154,6 +154,7 @@ tickets:
   security_reqs: [SR-001]           # requisitos de segurança que o ticket cumpre
   criterios_aceite: [...]
   testes: [...]
+  testes_alterados: []              # modo alteração: teste da base que o ticket muda, com o motivo
 ```
 **Dependências:** `B` depende de `A` só se `B` usa algo que `A` cria (arquivo,
 tipo, endpoint, migração, registro de injeção de dependência); o arquivo de
@@ -281,6 +282,10 @@ rever essas dependências pela regra do estágio 5 (cada uma cita o que o
 ticket anterior cria). Uma cadeia de ordem roda em série: cada onda paga a
 verificação de fim de onda inteira por um ticket.
 
+**Modo alteração, testes da base:** liste ao usuário os `testes_alterados` de
+todos os tickets (arquivo e motivo). Aprovado o plano, eles podem mudar; o
+resto dos testes da base fica travado (`alteracao.md`, passo 5).
+
 Mostre ao usuário: total de tickets, quantos em cada nível (forte/medio/leve), número de
 ondas e tempo estimado (soma dos orçamentos de `watchdog.md` pela onda mais
 lenta). **Espere aprovação explícita** antes do estágio 7, o mais caro (com
@@ -322,6 +327,14 @@ Para cada onda, em ordem:
   o escalonamento de `model-routing.md`. Conflito de merge ou falha que não é
   de um ticket só vai para um subagente com um **ticket de correção** (fim
   deste arquivo), não para você.
+- **Worktree da base certa.** Antes de lançar a onda, grave a base dela
+  (`git rev-parse HEAD`) em `Base da onda:` do `state.md`. Antes de mergear a
+  branch de um ticket em worktree, rode
+  `git merge-base --is-ancestor <Base da onda> <branch do ticket>`: falhou, a
+  worktree nasceu de outra base (ex.: o `main` do remoto) e o diff dela traria
+  ou desfaria commits que não são do ticket. Não mergeie: descarte a
+  worktree e relance o ticket. Em execuções reais, worktrees nascidas da base
+  errada foram vistas em dois projetos.
 - **Worktree não fica para trás.** Se os implementadores rodarem em worktree
   isolada (ex.: `isolation: "worktree"` no Claude Code), cada ticket
   mergeado sai na hora: `git worktree remove <caminho>` e
@@ -464,8 +477,10 @@ no nível forte (`FIX-IMPACTO-<n>` para os que vêm do `impacto.md`).
    - não há achado crítico ou alto aberto;
    - todo achado médio aberto está em `accepted.md`;
    - **modo alteração:** nenhuma falha de teste nova em relação ao ponto de
-     partida, e todo documento do sistema da "Documentação afetada" foi
-     atualizado (os de `site` vão para o relatório como atualização manual);
+     partida (falha de teste de `testes-intermitentes.txt` não conta e vai
+     para o relatório), e todo documento do sistema da "Documentação
+     afetada" foi atualizado (os de `site` vão para o relatório como
+     atualização manual);
    - `git diff --name-only <Testes travados> -- <testes-travados.txt>` vazio:
      toda mudança em teste travado passou pela conferência da trava
      (`plano-de-teste.md`);
@@ -475,6 +490,15 @@ no nível forte (`FIX-IMPACTO-<n>` para os que vêm do `impacto.md`).
      do código vazio.
    Se algo falhar, mostre o motivo e pergunte ao usuário: corrigir agora, ou
    encerrar como "concluído com pendências" (registrado no relatório).
+
+   **Premissas abertas:** passando tudo acima, se alguma premissa sobre
+   terceiros da spec (`P-0X`) não foi confirmada na conta de teste, por
+   sondagem ou pelo usuário, o pipeline termina como **"concluído com
+   premissas abertas"**, nunca "concluído". O relatório lista cada uma com o
+   que testar no serviço real antes de produção, e a notificação ao usuário
+   diz isso. Em execuções reais, rodadas que passaram no gate falharam depois
+   no serviço real, exatamente numa premissa que só o simulador tinha
+   exercitado.
 5. **Limpeza:** não pode sobrar worktree nem branch criada pelo pipeline
    (estágio 7 e tickets de correção dos estágios 8 a 11). Confira
    `git worktree list` e as branches das worktrees do pipeline (no Claude

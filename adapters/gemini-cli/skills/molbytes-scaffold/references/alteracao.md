@@ -50,9 +50,26 @@ usuário o entregou, sem nada a mais e sem nada a menos.
    confira de novo. Sem isso, essas mudanças entrariam no diff como se fossem
    da rodada.
 3. Grave em `state.md` o commit atual do projeto (`HEAD`) como `base_commit`.
-4. Rode a suíte de testes existente, se houver, e registre em `state.md` quais
-   testes **já falham antes da alteração**. Essas falhas não bloqueiam o gate,
-   desde que não piorem.
+4. Rode a suíte de testes existente, se houver, **duas vezes**, e registre em
+   `state.md`:
+   - `Testes que já falhavam:` os que falham nas duas. Não bloqueiam o gate,
+     desde que não piorem;
+   - `Testes intermitentes da base:` os que falham numa e passam na outra,
+     também em `.project/testes-intermitentes.txt` (um por linha, como o
+     runner os nomeia). Ficam em quarentena: a falha de um deles não é da
+     alteração, não gera ticket de correção nem repete a suíte inteira, e vai
+     para o relatório.
+   Numa execução real, intermitentes que já existiam derrubaram suítes
+   inteiras várias vezes por rodada, e horas foram gastas repetindo a suíte
+   até sair limpa. Duas suítes no começo custam menos.
+5. **Teste da base travado:** os testes que existem no `base_commit` valem
+   como travados desde o estágio 7 (`plano-de-teste.md`, "Trava dos testes"):
+   grave em `.project/testes-travados.txt` os arquivos de teste do projeto
+   (pelo padrão do runner) e `Testes travados: <base_commit>` no `state.md`.
+   Ticket que precisa mudar um deles o lista em `testes_alterados` com o
+   motivo; o plano do estágio 6 mostra essa lista ao usuário, e o plano
+   aprovado vale como o sim para esses arquivos. O que uma rodada anterior
+   provou não muda sem que alguém diga por quê.
 
 ### 2. Documentação do sistema
 

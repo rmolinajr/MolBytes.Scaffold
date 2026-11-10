@@ -35,6 +35,9 @@ que já estava escrita e foi quebrada pede um nível mais forte, não mais texto
 | Correção de segurança começa por um teste que reproduz a falha e falha | 📝 Prompt | `agents/scaffold-implementer.md`, `security.md` |
 | Testes unitários sem banco real, porta fixa ou serviço externo (implementadores em paralelo) | 📝 Prompt | `agents/scaffold-implementer.md` |
 | Modo alteração: teste que já falhava no ponto de partida não bloqueia; falha nova bloqueia | 🧪 Script | `alteracao.md` |
+| Modo alteração: suíte da base rodada duas vezes; o que oscila vai para `testes-intermitentes.txt` e não bloqueia nem gera correção; intermitente da rodada vira correção | 🧪 Script | `alteracao.md`, `plano-de-teste.md` |
+| Modo alteração: testes da base travados desde o estágio 7; mudar um exige `testes_alterados` no ticket, aprovado com o plano | 🧪 Script → 🧭 Pausa | `alteracao.md`, `plano-de-teste.md`, estágio 6 |
+| Premissa sobre terceiros não confirmada encerra como "concluído com premissas abertas", nunca "concluído" | 🧭 Pausa | `stages.md`, estágio 11 |
 
 ## Planejamento e ondas
 
@@ -92,6 +95,8 @@ que já estava escrita e foi quebrada pede um nível mais forte, não mais texto
 | Todo subagente com modelo explícito | 📝 Prompt | `SKILL.md`, `plataformas.md` |
 | Todo subagente no `runs.log`, com orçamento de tempo; travado ou parcial vira ação | 📝 Prompt | `watchdog.md` |
 | Linha do `runs.log` com hora do relógio, minutos calculados e status da lista; turnos e motivo na nota | 🧪 Script | `scripts/runlog.py`, `watchdog.md` |
+| Branch de worktree só é mergeada se nasceu da `Base da onda` (`git merge-base --is-ancestor`) | 🧪 Script (comando que decide) | estágio 7 |
+| Comando longo de subagente com tempo limite; "aguardando" além de 2x o esperado é conferido no processo | 📝 Prompt | `agents/scaffold-implementer.md`, `watchdog.md` |
 | Limite de turnos por agente | 🔧 Ferramentas | `maxTurns` dos agentes |
 | Escalada: teste do ticket falhou 2 vezes, nível acima; falhou em forte, vira pendência e o usuário é avisado | 📝 Prompt | `model-routing.md`, `watchdog.md` |
 | Extensão não remove estágio, pausa, roteamento explícito nem o gate | 📝 Prompt | `extensoes.md` |
