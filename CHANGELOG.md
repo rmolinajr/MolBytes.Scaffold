@@ -2,6 +2,38 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.23.0
+
+Lições de duas rodadas longas de estágio 7, em dois sistemas diferentes
+(ainda sem execução real destas mudanças):
+
+- **`scripts/runlog.py`** (`watchdog.md`): o `runs.log` passa a ser escrito
+  por script. `start` carimba a hora; `end` calcula os minutos pelo relógio a
+  partir do START aberto e só aceita `ok`, `parcial`, `travado` ou `falhou`;
+  turnos e motivo vão num campo de nota no fim da linha; `abertos` dá o que o
+  `status` mostra. Escrito à mão, o log perdeu a forma: minutos viraram
+  turnos, o status ganhou frases e linhas perderam a data.
+- **Ondas finas** (`ondas.py`, estágios 5 e 6): o resumo avisa quando 5 ou
+  mais ondas seguidas têm um ticket só, e o plano mostra a cadeia ao usuário.
+  O planner só põe dependência quando o ticket usa o que o outro cria, e diz
+  o quê no arquivo do ticket: uma cadeia de ordem pôs a maior parte do
+  estágio 7 em série.
+- **Verificação de fim de onda pelo `suite`** (`ondas.py`, estágio 7): cada
+  onda do `agent-map.json` leva `area` (só os testes e builds do que ela tocou)
+  ou `completa` (a cada 5 ondas e na última). A suíte inteira a cada onda
+  deixava o orquestrador sozinho boa parte do estágio.
+- **Ticket medido no código** (estágio 5, planner): no modo alteração, antes
+  de fechar o ticket, linhas, chamadores e testes dos símbolos que ele muda;
+  os que mudam entram em `arquivos`, e acima dos limites o ticket é dividido
+  já no plano, com o molde em `arquivo:linha`. Tickets sobre arquivos grandes
+  que não foram medidos viraram várias partes no estágio 7.
+- **Reconhecimento** (`stages.md`, `scaffold-architect`): antes de o
+  orquestrador escrever um ticket de correção ou dividir um ticket sobre
+  arquivo grande, ou quando a causa não está provada, o architect lê o código
+  e grava `reconhecimento-<id>.md`: linhas, molde, chamadores, testes, cada
+  suposição do orquestrador confirmada ou derrubada. Era feito por fora e
+  funcionou; as suposições não conferidas eram as que voltavam.
+
 ## v0.22.0
 
 Comandos digitados em português ou inglês (ainda sem execução real):

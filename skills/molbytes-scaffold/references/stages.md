@@ -155,6 +155,23 @@ tickets:
   criterios_aceite: [...]
   testes: [...]
 ```
+**Dependências:** `B` depende de `A` só se `B` usa algo que `A` cria (arquivo,
+tipo, endpoint, migração, registro de injeção de dependência); o arquivo de
+`B` diz o quê, numa linha por dependência (`A: cria src/x/servico.py`). Ordem
+de leitura ou "faz sentido vir depois" não é dependência: numa execução real,
+uma cadeia assim pôs dezenas de tickets em ondas de um só, em série. Quem
+registra cada peça (injeção de dependência, rotas, menu) é dito no ticket que
+a cria ou num ticket dono que depende de todos.
+
+**Tamanho pelo código, não pela descrição:** no modo alteração, antes de
+fechar um ticket que muda arquivo existente, meça com busca: linhas do arquivo,
+chamadores e testes dos símbolos que ele muda. Chamadores e testes que mudam
+entram em `arquivos`. Passou de ~1.500 linhas mexidas num arquivo, ~5
+arquivos ou ~40 pontos de chamada, divida já no plano e diga no arquivo do
+ticket onde está o molde a seguir (`arquivo:linha`). Numa execução real, os
+tickets que não foram medidos viraram três a oito partes no estágio 7, cada
+uma relendo o mesmo arquivo grande.
+
 Tickets pequenos (meio dia de trabalho humano no máximo). Inclua os riscos altos
 do MVP como tickets ou critérios de aceite. Cada item de `security_requirements`
 deve aparecer como critério de aceite (com teste) em pelo menos um ticket, que
@@ -221,14 +238,16 @@ classificação (ticket faltando, inventado ou repetido, nível inválido, forte
 sem motivo) e só então grava `.project/agent-map.json`:
 ```json
 { "fonte": "scripts/ondas.py", "ondas": [
-    { "onda": 1, "tickets": [
+    { "onda": 1, "suite": "area", "tickets": [
       {"id": "INFRA-000", "area": "infra", "complexity": "baixa",
        "model": "leve", "motivo": ""} ] } ] }
 ```
 `INFRA-000` fica sozinho na onda 1; cada ticket entra na primeira onda depois
 das dependências em que nenhum outro toca os mesmos arquivos (um diretório
-conflita com o que está dentro dele). A saída é um resumo curto: use-o no
-plano, sem abrir o `agent-map.json`.
+conflita com o que está dentro dele). Cada onda leva `suite`: `completa` a
+cada 5 ondas e na última, `area` nas outras (verificação de fim de onda,
+estágio 7). A saída é um resumo curto: use-o no plano, sem abrir o
+`agent-map.json`.
 
 Com erro, o script não grava nada e sai com código 1. Erro de classificação:
 reenvie ao router com as linhas de erro. Erro do índice (dependência que não
@@ -248,12 +267,19 @@ antes do plano:
 - toda dependência está numa onda **anterior** à do ticket;
 - na mesma onda, nenhum arquivo (nem um diretório e algo dentro dele) aparece
   em dois tickets;
-- forte só com motivo.
+- forte só com motivo;
+- `suite` `completa` a cada 5 ondas e na última, `area` nas outras.
 No plano, diga ao usuário que as ondas foram montadas sem o script.
 
 **Limite do nível forte:** se mais de 25% dos tickets ficarem em `forte`, o
 resumo do script lista cada um com o motivo da lista fechada de
 `model-routing.md`; mostre essa lista ao usuário junto com o plano.
+
+**Ondas finas:** se o resumo avisar `Ondas de um ticket só` (5 ou mais
+seguidas), mostre a cadeia ao usuário com o plano e proponha mandar o planner
+rever essas dependências pela regra do estágio 5 (cada uma cita o que o
+ticket anterior cria). Uma cadeia de ordem roda em série: cada onda paga a
+verificação de fim de onda inteira por um ticket.
 
 Mostre ao usuário: total de tickets, quantos em cada nível (forte/medio/leve), número de
 ondas e tempo estimado (soma dos orçamentos de `watchdog.md` pela onda mais
@@ -284,10 +310,15 @@ Para cada onda, em ordem:
 - Testes unitários rodados durante a onda não podem depender de banco real,
   porta fixa ou serviço externo (vários implementadores rodam ao mesmo tempo na
   mesma pasta). Testes que precisam disso ficam para o estágio 8.
-- Registre START de cada um em `.project/runs.log`. A cada subagente que
+- Registre o START de cada um com `scripts/runlog.py` (`watchdog.md`). A cada subagente que
   termina, faça a verificação de `references/watchdog.md` nos que ainda rodam.
-- Ao terminar a onda, rode os testes unitários da área, com saída filtrada (só
-  falhas e resumo). Falha atribuível a um ticket: relance esse ticket conforme
+- Ao terminar a onda, verifique pelo `suite` da onda no `agent-map.json`, com
+  saída filtrada (só falhas e resumo): `area` roda só os testes e o build dos
+  projetos que a onda tocou (build de uma plataforma, como mobile, só se a
+  onda mexeu nela); `completa` (a cada 5 ondas e na última) roda a suíte
+  inteira e os builds de todas as plataformas. Numa execução real, a suíte
+  inteira a cada onda deixou o orquestrador sozinho quase metade do tempo do
+  estágio 7. Falha atribuível a um ticket: relance esse ticket conforme
   o escalonamento de `model-routing.md`. Conflito de merge ou falha que não é
   de um ticket só vai para um subagente com um **ticket de correção** (fim
   deste arquivo), não para você.
@@ -503,4 +534,30 @@ O ticket de correção não entra no `tickets.yaml`. O implementador o trata
 como qualquer ticket: no prompt, o caminho dele, o de `regras-implementacao.md`
 e o modelo; mexe só nos arquivos listados. Modelo: o da regra do estágio de
 origem (8.3, 9.3, 10); sem regra (merge, falha da onda), medio e, na 2ª
-tentativa, forte. Registre o START no `runs.log` com esse id.
+tentativa, forte. Registre o START com `scripts/runlog.py` e esse id.
+
+Antes de escrever o ticket de correção, faça o **reconhecimento** (abaixo)
+quando a causa não estiver provada por um teste ou uma saída que você viu.
+
+## Reconhecimento (antes de ticket escrito pelo orquestrador)
+
+O ticket que o orquestrador escreve (de correção, ou a divisão de um ticket
+que travou ou bateu o limite) parte do que ele supõe do código, e numa
+execução real essas suposições foram derrubadas pelo implementador várias
+vezes, depois de pago o trabalho. Quando o ticket mexe em arquivo existente
+grande (mais de ~1.500 linhas), em vários arquivos, ou a causa não está
+provada, lance antes um `scaffold-architect` (medio) em **modo
+reconhecimento**, com o caminho de saída `.project/reconhecimento-<id>.md` e
+as suposições que você tem, uma por linha. Ele só lê o código (não tem shell)
+e grava:
+
+- arquivos e linhas que o ticket muda, e o molde a seguir (`arquivo:linha`);
+- chamadores e testes que cobrem esses pontos, inclusive os travados;
+- cada suposição sua: confirmada ou derrubada, com `arquivo:linha`;
+- de onde vem cada dado que o ticket usa quando a dependência ainda não existe
+  (o ticket depende de algo de outro ticket que não rodou?);
+- a divisão proposta, se passar dos limites do estágio 5.
+
+Escreva o ticket a partir do reconhecimento e cite-o. Registre no `runs.log`
+como `reconhecimento <id>`. Nas execuções reais, os tickets que passaram por
+reconhecimento não travaram, e os que não passaram foram os que voltaram.

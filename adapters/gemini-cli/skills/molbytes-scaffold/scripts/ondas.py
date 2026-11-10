@@ -16,6 +16,14 @@ ordem do índice respeitando as dependências, na primeira onda depois de todas
 as dependências em que nenhum outro ticket toca os mesmos arquivos (um
 diretório conflita com o que está dentro dele). Mesma entrada, mesmas ondas.
 
+Verificação de fim de onda: cada onda leva `suite`, "area" (só os testes do
+que a onda tocou) ou "completa" (a suíte inteira e os builds de todas as
+plataformas): a cada SUITE_A_CADA ondas e na última.
+
+O resumo avisa quando há SEQUENCIA_FINA ou mais ondas seguidas de um ticket
+só: quase sempre uma cadeia de dependências de ordem, que deixa a rodada em
+série. A lista vai ao usuário com o plano.
+
 Uso: python ondas.py <pasta de documentos> [--classificacao ARQ] [--saida ARQ]
 """
 from __future__ import annotations
@@ -28,6 +36,8 @@ from pathlib import Path
 NIVEIS = {"leve": "leve", "medio": "medio", "médio": "medio", "forte": "forte",
           "haiku": "leve", "sonnet": "medio", "opus": "forte"}
 LIMITE_FORTE = 0.25
+SUITE_A_CADA = 5
+SEQUENCIA_FINA = 5
 
 
 def _escalar(valor: str) -> str:
@@ -224,10 +234,23 @@ def montar(indice: list, classificacao: list, requisitos: list | None = None) ->
         onda_de[tid] = onda
         ondas.setdefault(onda, []).append(tid)
 
+    ultima = max(ondas) if ondas else 0
     mapa = {"fonte": "scripts/ondas.py", "ondas": [
-        {"onda": n, "tickets": [classes[tid] for tid in sorted(ondas[n], key=ordem_indice.get)]}
+        {"onda": n, "suite": "completa" if n % SUITE_A_CADA == 0 or n == ultima else "area",
+         "tickets": [classes[tid] for tid in sorted(ondas[n], key=ordem_indice.get)]}
         for n in sorted(ondas)]}
     return mapa, [], avisos
+
+
+def sequencia_fina(mapa: dict) -> list:
+    """A maior sequência de ondas seguidas com um ticket só (sem contar o INFRA-000 sozinho na 1)."""
+    maior, atual = [], []
+    for onda in mapa["ondas"]:
+        sozinho = len(onda["tickets"]) == 1 and not onda["tickets"][0]["id"].upper().endswith("INFRA-000")
+        atual = atual + [onda] if sozinho else []
+        if len(atual) > len(maior):
+            maior = atual
+    return maior
 
 
 def resumo(mapa: dict) -> list:
@@ -241,6 +264,13 @@ def resumo(mapa: dict) -> list:
     if pct > LIMITE_FORTE:
         linhas.append(f"Forte acima de {LIMITE_FORTE:.0%}; mostre ao usuário:")
         linhas += [f"- {t['id']}: {t['motivo']}" for t in tickets if t["model"] == "forte"]
+    finas = sequencia_fina(mapa)
+    if len(finas) >= SEQUENCIA_FINA:
+        sozinhas = sum(1 for onda in mapa["ondas"] if len(onda["tickets"]) == 1)
+        ids = [onda["tickets"][0]["id"] for onda in finas]
+        linhas.append(f"Ondas de um ticket só: {sozinhas} de {len(mapa['ondas'])}; {len(finas)} seguidas, "
+                      f"da onda {finas[0]['onda']} à {finas[-1]['onda']} ({' → '.join(ids)}). "
+                      "Mostre ao usuário: essa cadeia roda em série.")
     return linhas
 
 

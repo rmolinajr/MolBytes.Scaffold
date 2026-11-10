@@ -104,7 +104,7 @@ sem subagente, e lê o topo no começo de cada rodada nova.
   mande uma com menos de 100 caracteres: `<projeto>: <o que precisa dele>`
   (ex.: `loja: plano do estágio 6 pronto, aprove o custo`). Sem a
   ferramenta, siga sem avisar.
-- Todo subagente lançado é registrado em `.project/runs.log` e vigiado conforme
+- Todo subagente lançado é registrado em `.project/runs.log` (por `scripts/runlog.py`) e vigiado conforme
   `references/watchdog.md` (orçamento de tempo, resultado parcial, travamento).
   O usuário pode digitar `status` a qualquer momento.
 

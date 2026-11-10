@@ -145,6 +145,35 @@ tech_debt:
 """
 
 
+class OndasFinas(unittest.TestCase):
+    def cadeia(self, n):
+        linhas = ["tickets:", "- id: INFRA-000", "  depende_de: []", "  arquivos: [infra/]"]
+        anterior = "INFRA-000"
+        for i in range(1, n + 1):
+            tid = f"FE-{i:03d}"
+            linhas += [f"- id: {tid}", f"  depende_de: [{anterior}]", f"  arquivos: [web/t{i}.html]"]
+            anterior = tid
+        indice = "\n".join(linhas) + "\n"
+        ids = ["INFRA-000"] + [f"FE-{i:03d}" for i in range(1, n + 1)]
+        mapa, erros, _ = ondas.montar(ondas.ler_indice(indice), [classe(t) for t in ids])
+        self.assertEqual(erros, [])
+        return mapa
+
+    def test_cadeia_de_ordem_vira_aviso_no_resumo(self):
+        texto = "\n".join(ondas.resumo(self.cadeia(6)))
+        self.assertIn("Ondas de um ticket só: 7 de 7; 6 seguidas, da onda 2 à 7", texto)
+        self.assertIn("FE-001 → FE-002", texto)
+
+    def test_cadeia_curta_nao_avisa(self):
+        self.assertNotIn("Ondas de um ticket só", "\n".join(ondas.resumo(self.cadeia(4))))
+
+    def test_suite_completa_a_cada_5_ondas_e_na_ultima(self):
+        mapa = self.cadeia(11)
+        suites = {o["onda"]: o["suite"] for o in mapa["ondas"]}
+        self.assertEqual([n for n, s in suites.items() if s == "completa"], [5, 10, 12])
+        self.assertEqual(suites[1], "area")
+
+
 class Requisitos(unittest.TestCase):
     def test_le_so_a_lista_de_requisitos(self):
         self.assertEqual(ondas.ler_requisitos(RISCOS), ["SR-001", "SR-002"])

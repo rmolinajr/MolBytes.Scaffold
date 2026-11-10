@@ -48,6 +48,10 @@ que já estava escrita e foi quebrada pede um nível mais forte, não mais texto
 | Spec aprovada (2), custo aprovado (6, menos com `--pequeno`), code review (10), premissa negada (3) | 🧭 Pausa | `stages.md` |
 | Planner, router e designer não rodam comandos | 🔧 Ferramentas | `tools:` dos agentes |
 | Spec até ~30 mil caracteres, ticket até ~4 mil, ciclo até ~30 tickets | 📝 Prompt | `stages.md` |
+| Cadeia de 5 ou mais ondas de um ticket só vai ao usuário com o plano | 🧪 Script → 🧭 Pausa | `scripts/ondas.py`, estágio 6 |
+| Suíte inteira a cada 5 ondas e na última; nas outras, só o que a onda tocou | 🧪 Script (`suite` no `agent-map.json`) + 📝 Prompt | `scripts/ondas.py`, estágio 7 |
+| Dependência só quando o ticket usa o que o outro cria, dita no ticket; ticket medido no código antes de fechar | 📝 Prompt | `agents/scaffold-planner.md`, estágio 5 |
+| Ticket do orquestrador sobre arquivo grande ou causa não provada passa por reconhecimento só de leitura | 📝 Prompt + 🔧 Ferramentas (architect sem shell) | `stages.md`, "Reconhecimento" |
 
 ## Escopo do código
 
@@ -87,6 +91,7 @@ que já estava escrita e foi quebrada pede um nível mais forte, não mais texto
 |---|---|---|
 | Todo subagente com modelo explícito | 📝 Prompt | `SKILL.md`, `plataformas.md` |
 | Todo subagente no `runs.log`, com orçamento de tempo; travado ou parcial vira ação | 📝 Prompt | `watchdog.md` |
+| Linha do `runs.log` com hora do relógio, minutos calculados e status da lista; turnos e motivo na nota | 🧪 Script | `scripts/runlog.py`, `watchdog.md` |
 | Limite de turnos por agente | 🔧 Ferramentas | `maxTurns` dos agentes |
 | Escalada: teste do ticket falhou 2 vezes, nível acima; falhou em forte, vira pendência e o usuário é avisado | 📝 Prompt | `model-routing.md`, `watchdog.md` |
 | Extensão não remove estágio, pausa, roteamento explícito nem o gate | 📝 Prompt | `extensoes.md` |

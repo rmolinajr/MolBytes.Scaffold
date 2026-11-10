@@ -27,20 +27,38 @@ Valores iniciais. Ajuste com base em `.project/runs.log`.
 
 ## Camada 2 — orçamento de tempo (o orquestrador verifica)
 
-Ao lançar cada subagente, registre em `.project/runs.log` (use `date` no shell):
+O `.project/runs.log` é escrito por `scripts/runlog.py` (na pasta desta skill,
+ao lado de `references/`; rode como o `ondas.py` do estágio 6), nunca à mão.
+Ao lançar cada subagente:
 
-    <inicio ISO> | START | <agente> | <ticket ou estágio> | <nível>/<modelo> | orçamento <min>
+    python <skill>/scripts/runlog.py <documentos> start <agente> <ticket ou estágio> <nível>/<modelo> <orçamento min>
 
 Ao receber o resultado:
 
-    <fim ISO> | END | <agente> | <ticket ou estágio> | ok|parcial|travado|falhou | <min reais> | <tokens> tokens
+    python <skill>/scripts/runlog.py <documentos> end <agente> <ticket ou estágio> ok|parcial|travado|falhou --tokens <N> [--turnos <N>] [--nota "<texto>"]
 
-`<tokens>` é o total que a plataforma mostra no resultado do subagente (ou
-no aviso de término, em segundo plano); se não mostrar, use `?`. É o dado que
-permite calibrar o roteamento por custo, não só por tempo. Grave o END de
-cada subagente assim que o resultado ou o aviso dele chegar, antes de tratar
-o próximo: numa execução real, os ENDs gravados em lote no fim da onda saíram
+O script grava:
+
+    <inicio ISO> | START | <agente> | <ticket ou estágio> | <nível>/<modelo> | orçamento <min>
+    <fim ISO> | END | <agente> | <ticket ou estágio> | ok|parcial|travado|falhou | <min reais> | <tokens> tokens | <nota>
+
+A hora vem do relógio e os minutos são o fim menos o início do START aberto do
+mesmo agente e ticket; o status só aceita os quatro da lista. Turnos, motivo do
+parcial e o que mais precisar ir junto vão em `--nota`, nunca no status nem nos
+minutos: numa execução real, a coluna de minutos passou a receber turnos, o
+status ganhou frases e linhas perderam a data, e o `status` e a calibração do
+roteamento passaram a contar errado. Sem START aberto, o script não grava e
+diz por quê: grave o START que faltou antes.
+
+`--tokens` é o total que a plataforma mostra no resultado do subagente (ou no
+aviso de término, em segundo plano); sem ele, o script grava `?`. É o dado que
+permite calibrar o roteamento por custo, não só por tempo. Grave o END de cada
+subagente assim que o resultado ou o aviso dele chegar, antes de tratar o
+próximo: numa execução real, os ENDs gravados em lote no fim da onda saíram
 com `?` em 36 de 45 linhas, porque o total já não estava à mão.
+
+**Sem Python nem Docker:** escreva as mesmas linhas à mão, com `date` no shell;
+os minutos são o fim menos o início, contados no relógio.
 
 Orçamento esperado (minutos):
 
@@ -58,6 +76,7 @@ Orçamento esperado (minutos):
 | 9.3 fix por ticket | — | — | 20 |
 | 9.4 verify por ticket | — | — | 15 |
 | ticket de correção (FIX-...) | — | 15 | 20 |
+| reconhecimento (architect, só leitura) | — | 15 | — |
 | estágio 10 | — | 25 | 30 |
 | 10 impacto fora do diff | — | 20 | 25 |
 | 11 testes | — | 20 | — |
@@ -113,4 +132,6 @@ Quando o usuário digitar `status`, responda com uma tabela curta:
 | Ticket | Agente | Nível/modelo | Rodando há | Orçamento | Situação |
 |---|---|---|---|---|---|
 
-seguida do estágio/onda atual. Dados de `.project/runs.log` + `date`.
+seguida do estágio/onda atual. Os que rodam saem de
+`python <skill>/scripts/runlog.py <documentos> abertos` (ticket, agente,
+nível, minutos rodando e orçamento).
