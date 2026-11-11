@@ -2,6 +2,17 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.25.0
+
+- **Contexto alto vira ponto de compactação** (`SKILL.md`, "Estado e
+  compactação"): quando a plataforma ou uma extensão avisa que o contexto da
+  sessão está alto, o orquestrador termina o passo em andamento, grava o
+  `state.md`, commita e oferece a sessão limpa, como nos pontos fixos. Entre
+  dois pontos fixos a conversa crescia até a compactação automática, que no
+  meio de um estágio custa mais e perde o que não foi gravado.
+- **Compactação automática mais cedo no Claude Code** (`plataformas.md`):
+  `autoCompactWindow` para janelas de 1M de tokens.
+
 ## v0.24.0
 
 Mais lições das mesmas rodadas longas (ainda sem execução real destas mudanças):

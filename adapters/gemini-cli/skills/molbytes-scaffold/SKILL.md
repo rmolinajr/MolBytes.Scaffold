@@ -200,6 +200,15 @@ do estágio 7** e a cada 10 itens corrigidos no estágio 8, depois do commit
    `/clear`, `/molbytes:molbytes-scaffold continuar` e `/compact`).
 2. Espere a resposta. Se ele disser para seguir sem limpar, siga.
 
+**Contexto alto também é ponto de compactação.** Se a plataforma ou uma
+extensão avisar que o contexto da sessão está alto, termine o passo em
+andamento (o ticket, o item ou a resposta que está escrevendo; não comece
+outro), espere os subagentes que já rodam, grave o `state.md` com o próximo
+passo exato, commite e siga os passos 1 e 2 acima, dizendo "Passo salvo e
+commitado" no lugar de "Estágio N". Um aviso só vale uma vez: depois da sessão
+limpa ou da compactação, siga normalmente. Compactar sozinho no meio de um
+estágio custa mais e perde o que ainda não foi gravado.
+
 **Depois de qualquer compactação** (manual ou automática), ou ao ser chamado
 com "continuar" ou "continue": antes de qualquer outra ação, releia a seção da sua
 plataforma em `plataformas.md`, resolva a pasta de documentos,

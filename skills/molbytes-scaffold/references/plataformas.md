@@ -35,6 +35,10 @@ quando existe, vale mais que a tabela.
 - **Comandos:** sessão limpa `/clear`; compactar `/compact`; modelo
   `/model sonnet`; retomar `/molbytes:molbytes-scaffold continuar` (cópia
   manual: `/molbytes-scaffold continuar`).
+- **Compactação automática:** com janela de 1M de tokens, ela só começa perto
+  do fim, e cada turno relê a conversa inteira até lá. `"autoCompactWindow":
+  400000` em `~/.claude/settings.json` (de 100000 a 1000000) a faz começar
+  antes.
 - **Pasta fora do projeto:** `permissions.additionalDirectories` em
   `~/.claude/settings.json`, ou `/add-dir <pasta>` na sessão.
 
