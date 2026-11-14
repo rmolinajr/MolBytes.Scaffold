@@ -2,6 +2,26 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.26.0
+
+- **Replano do estágio 7 pelo script** (`ondas.py --feitos`, estágio 7):
+  quando um ticket é partido, nasce ticket novo ou as ondas do mapa acabam com
+  trabalho sobrando, as ondas que faltam saem do `ondas.py`, pelas mesmas
+  regras de dependência e de arquivo, em `ondas-replano.json`; o
+  `agent-map.json` continua o plano aprovado. Entram todos os tickets em
+  aberto; o pai partido sai e quem dependia dele espera as peças; `--fora`
+  deixa tickets de fora de propósito (e quem depende deles, com aviso);
+  `--max-por-onda` limita a onda. A onda que fecha grava os ids em
+  `feitos.txt`. Numa rodada longa, a fila escrita à mão depois do fim do mapa
+  juntou trilhas independentes em ondas de um ticket só e esqueceu uma dúzia
+  de tickets do mapa.
+- **Regra do projeto não troca o `suite` nem o paralelismo** (estágio 7):
+  rotina de fim de onda que o orquestrador escreve para o projeto não
+  substitui `area`/`completa`. Teste que só passa sem implementador ao lado
+  vai para o estágio 8.
+- **Comentário depois de lista no `tickets.yaml`** (`ondas.py`):
+  `depende_de: [A, B]  # motivo` virava a dependência `B]` e o mapa não saía.
+
 ## v0.25.0
 
 - **Contexto alto vira ponto de compactação** (`SKILL.md`, "Estado e

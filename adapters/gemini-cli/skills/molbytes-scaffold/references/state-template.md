@@ -39,6 +39,7 @@ Atualizado: <data/hora> — fim do estágio <N> (<nome>)
 
 ## Estágio 7 (se em andamento)
 - Onda atual: 2 de 4
+- Ondas: agent-map.json | ondas-replano.json (desde a onda N; feitos em feitos.txt)
 - Concluídos: BE-001 (forte), BE-002 (medio), ...
 - Falharam/escalados: FE-003 medio→forte (testes falharam 2x)
 

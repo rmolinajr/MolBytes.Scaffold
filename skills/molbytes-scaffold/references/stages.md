@@ -343,7 +343,30 @@ Para cada onda, em ordem:
   Nunca `--force`: worktree com alteração não commitada é mostrada ao usuário.
   Antes do commit da onda, rode `git worktree prune`; `git worktree list` deve
   mostrar só a pasta do projeto.
-- Commit por onda: `scaffold(7): onda N`.
+- Commit por onda: `scaffold(7): onda N`. Acrescente os ids que a onda fechou
+  a `.project/feitos.txt` (um por linha).
+- **Replanejar pelo script, não à mão.** Quando um ticket é partido, nasce
+  ticket novo que a rodada precisa (não o de correção, que roda na hora e fica
+  fora do índice) ou as ondas do mapa acabam com trabalho sobrando: ponha as
+  peças e os tickets novos no `tickets.yaml` (com `depende_de` e `arquivos`;
+  peça leva o id do pai mais uma letra ou número, `FE-020a`, `BE-030C0`, e o
+  script tira o pai do plano e faz quem dependia dele esperar as peças) e rode
+  `scripts/ondas.py <documentos> --feitos .project/feitos.txt --a-partir <próxima onda>`
+  (`--fora ARQ` para o que fica de fora de propósito, com o motivo no
+  `state.md`). Ele grava `ondas-replano.json` só com os tickets em aberto,
+  pelas mesmas regras de dependência e de arquivo, com o `suite` de cada onda;
+  o `agent-map.json` continua o plano aprovado. Siga as ondas dele e, depois
+  de outra divisão, rode de novo. O `Próximo passo` do `state.md` aponta a
+  onda do replano; não é uma fila. Numa execução real, a fila escrita à mão
+  juntou trilhas independentes numa série de um ticket por onda e esqueceu
+  uma dúzia de tickets do mapa (o script põe de volta todo ticket em aberto).
+- **Regra do projeto não troca estas.** Rotina de fim de onda, limite de
+  implementadores ou ordem que o orquestrador escreve para o projeto não
+  substituem o `suite` (`area`/`completa`) nem o paralelismo das ondas. Teste
+  que só passa sem implementador rodando ao lado depende de banco, porta ou
+  arquivo compartilhado: vai para o estágio 8, e a suíte da onda não cresce
+  por causa dele. Limite de implementadores por onda que a plataforma ou o
+  usuário impõe vai no `--max-por-onda N`, não numa fila.
 - **Modo alteração:** o ticket traz a lista `docs`; o implementador atualiza
   esses documentos junto com o código.
 - **Modo novo:** depois do commit da última onda, gere o `mapa-codigo.md`
