@@ -36,6 +36,7 @@ Ao lançar cada subagente:
 Ao receber o resultado:
 
     python <skill>/scripts/runlog.py <documentos> end <agente> <ticket ou estágio> ok|parcial|travado|falhou --tokens <N> [--turnos <N>] [--nota "<texto>"]
+    (sem total na plataforma: --sem-tokens no lugar de --tokens <N>)
 
 O script grava:
 
@@ -51,7 +52,9 @@ roteamento passaram a contar errado. Sem START aberto, o script não grava e
 diz por quê: grave o START que faltou antes.
 
 `--tokens` é o total que a plataforma mostra no resultado do subagente (ou no
-aviso de término, em segundo plano); sem ele, o script grava `?`. É o dado que
+aviso de término, em segundo plano). O script não grava o END sem ele; só
+quando a plataforma não mostra total nenhum, passe `--sem-tokens`, e ele grava
+`?`. Numa execução real, um terço dos END saiu com `?`. É o dado que
 permite calibrar o roteamento por custo, não só por tempo. Grave o END de cada
 subagente assim que o resultado ou o aviso dele chegar, antes de tratar o
 próximo: numa execução real, os ENDs gravados em lote no fim da onda saíram

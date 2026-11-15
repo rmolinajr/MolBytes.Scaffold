@@ -125,7 +125,13 @@ chamada. Por isso:
 - **Você só orquestra.** Não faça trabalho pesado na sessão principal: merge com
   conflito, correção de teste, depuração, investigação de falha e refatoração
   vão para um subagente (`scaffold-implementer`) com um ticket de correção
-  (fim de `references/stages.md`).
+  (fim de `references/stages.md`). Entender o código também: se precisar de
+  mais de duas leituras seguidas de código, diff ou testes para responder uma
+  pergunta, ela vira um reconhecimento (`scaffold-architect`, fim de
+  `references/stages.md`), que grava a resposta em arquivo. Uma chamada sua
+  custa o que várias de um subagente custam, porque ele começa com o contexto
+  pequeno: numa execução real, a proporção era de cinco a sete para uma, e o
+  orquestrador passava um quinto da sessão lendo código.
 - **Leia pouco.** Nunca leia arquivo grande inteiro (spec, tickets, logs,
   relatórios de ferramenta): use busca e trechos. Saída de teste e build sempre
   filtrada (só falhas e o resumo final).
@@ -227,6 +233,12 @@ leia `.project/state.md` e `git log --oneline -15` (no modo externo, dos dois
 repositórios), invoque de novo a extensão de `Extensão:` (se houver),
 reaplique as flags de `Flags:`, confirme em uma linha onde está, e retome do
 próximo passo listado em "Próximo passo". Não refaça estágios já commitados.
+Leia pouco também aqui, numa chamada só: de `plataformas.md`, só a seção da
+plataforma do `state.md` (do título dela até o próximo `## `, ex.:
+`sed -n '/^## Claude Code/,/^## Codex/p'`), não o arquivo inteiro; e, se
+`Documentos:` do `state.md` aponta uma pasta que existe, use-a sem reler
+`documentos.md`. O que a retomada lê fica no contexto em todas as chamadas
+seguintes da sessão.
 
 ## Retomada
 

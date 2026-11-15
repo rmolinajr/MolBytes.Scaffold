@@ -7,8 +7,13 @@ passou a contar errado. O script carimba a hora, calcula os minutos pelo
 relógio e só aceita os status da lista. Só biblioteca padrão do Python 3.8+.
 
     python runlog.py <documentos> start <agente> <ticket> <nível>/<modelo> <orçamento min>
-    python runlog.py <documentos> end <agente> <ticket> <ok|parcial|travado|falhou> [--tokens N] [--turnos N] [--nota TEXTO]
+    python runlog.py <documentos> end <agente> <ticket> <ok|parcial|travado|falhou> (--tokens N | --sem-tokens) [--turnos N] [--nota TEXTO]
     python runlog.py <documentos> abertos
+
+`end` pede `--tokens` (o total que a plataforma mostra no resultado ou no
+aviso de término) ou `--sem-tokens` quando ela não mostra nenhum: numa
+execução real, um terço dos END saiu sem tokens e a calibração do roteamento
+por custo ficou sem dado. `--sem-tokens` grava `?`.
 
 Formato (watchdog.md):
 
@@ -130,10 +135,16 @@ def main(args: list) -> int:
         if comando == "start" and len(resto) == 4:
             nova = linha_start(agora(), *resto)
         elif comando == "end":
-            opcoes, soltos = _opcoes(resto, ("--tokens", "--turnos", "--nota"))
+            sem_tokens = "--sem-tokens" in resto
+            opcoes, soltos = _opcoes([a for a in resto if a != "--sem-tokens"], ("--tokens", "--turnos", "--nota"))
             if len(soltos) != 3:
                 print(uso)
                 return 2
+            if opcoes["--tokens"] is None and not sem_tokens:
+                raise ValueError("falta --tokens <total que a plataforma mostrou>; se ela não mostra nenhum, "
+                                 "use --sem-tokens")
+            if opcoes["--tokens"] is not None and sem_tokens:
+                raise ValueError("--tokens e --sem-tokens juntos")
             nova = linha_end(texto, agora(), *soltos, tokens=opcoes["--tokens"],
                              turnos=opcoes["--turnos"], nota=opcoes["--nota"])
         elif comando == "abertos" and not resto:

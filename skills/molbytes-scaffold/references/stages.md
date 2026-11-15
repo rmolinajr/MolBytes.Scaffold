@@ -622,3 +622,15 @@ e grava:
 Escreva o ticket a partir do reconhecimento e cite-o. Registre no `runs.log`
 como `reconhecimento <id>`. Nas execuções reais, os tickets que passaram por
 reconhecimento não travaram, e os que não passaram foram os que voltaram.
+
+**Do tamanho de uma passagem.** Um reconhecimento cobre um ticket, com até 5
+suposições; com mais (uma onda inteira, um ticket com muitas áreas), lance
+dois ou mais em paralelo, cada um com a sua parte e o seu arquivo de saída. O
+nível é medio (`model-routing.md`), passado de forma explícita: o agente tem
+o forte como padrão na definição. Numa execução real, os reconhecimentos
+saíam em forte e com a onda inteira, batiam o limite de turnos, voltavam
+parciais e pagavam uma segunda passagem.
+
+O mesmo vale para as suas perguntas sobre o código fora de um ticket: mais de
+duas leituras seguidas de código, diff ou testes viram um reconhecimento com a
+pergunta como suposição (`SKILL.md`, "Custo").

@@ -20,6 +20,24 @@ Todas as mudanças relevantes do molbytes.scaffold.
   e o END junto da ação seguinte, nunca numa chamada só para isso. Numa
   rodada longa, três de cada quatro chamadas levavam uma ferramenta só, e as
   que só gravavam o runlog eram um décimo do custo da sessão principal.
+- **Investigar é reconhecimento** (`SKILL.md`, "Custo"; `stages.md`): mais de
+  duas leituras seguidas de código, diff ou testes viram um reconhecimento,
+  que grava a resposta em arquivo. Uma chamada do orquestrador custava o que
+  cinco a sete de um subagente custam, e ele passava um quinto da sessão
+  lendo código.
+- **Reconhecimento em medio e do tamanho de uma passagem**
+  (`model-routing.md`, `stages.md`): linha própria na tabela (forte só depois
+  de duas passagens parciais), nível passado de forma explícita (o agente tem
+  o forte como padrão) e um ticket com até 5 suposições por chamada; mais que
+  isso, vários em paralelo. Os reconhecimentos saíam em forte com a onda
+  inteira, batiam o limite de turnos e pagavam uma segunda passagem.
+- **END do runlog com tokens** (`runlog.py`): `end` não grava sem
+  `--tokens`; quando a plataforma não mostra total, `--sem-tokens` grava `?`
+  de propósito. Um terço dos END saía sem tokens, e a calibração por custo
+  ficava sem dado.
+- **Retomada que lê pouco** (`SKILL.md`): só a seção da plataforma do
+  `plataformas.md` e, com `Documentos:` válido no `state.md`, sem reler o
+  `documentos.md`; o que a retomada lê fica em todas as chamadas da sessão.
 - **`testes_alterados` no índice** (`ondas.py`): o leitor do `tickets.yaml`
   guarda a lista, nas formas `- caminho: motivo`, `[caminho]` e
   `- arquivo: caminho` com `motivo:` embaixo; campo mais recuado dentro de um

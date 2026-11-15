@@ -95,6 +95,8 @@ que já estava escrita e foi quebrada pede um nível mais forte, não mais texto
 | Todo subagente com modelo explícito | 📝 Prompt | `SKILL.md`, `plataformas.md` |
 | Todo subagente no `runs.log`, com orçamento de tempo; travado ou parcial vira ação | 📝 Prompt | `watchdog.md` |
 | Linha do `runs.log` com hora do relógio, minutos calculados e status da lista; turnos e motivo na nota | 🧪 Script | `scripts/runlog.py`, `watchdog.md` |
+| END com o total de tokens; sem ele, só com `--sem-tokens` dito de propósito | 🧪 Script | `scripts/runlog.py`, `watchdog.md` |
+| Reconhecimento em medio, do tamanho de uma passagem (um ticket, até 5 suposições) | 📝 Prompt | `model-routing.md`, `stages.md` |
 | Branch de worktree só é mergeada se nasceu da `Base da onda` (`git merge-base --is-ancestor`) | 🧪 Script (comando que decide) | estágio 7 |
 | Comando longo de subagente com tempo limite; "aguardando" além de 2x o esperado é conferido no processo | 📝 Prompt | `agents/scaffold-implementer.md`, `watchdog.md` |
 | Limite de turnos por agente | 🔧 Ferramentas | `maxTurns` dos agentes |

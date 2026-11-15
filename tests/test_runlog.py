@@ -80,10 +80,22 @@ class TestComando(unittest.TestCase):
 
     def test_erro_nao_grava(self):
         with tempfile.TemporaryDirectory() as pasta:
-            codigo, texto = self.rodar(pasta, "end", "scaffold-planner", "estágio 5", "ok")
+            codigo, texto = self.rodar(pasta, "end", "scaffold-planner", "estágio 5", "ok", "--sem-tokens")
             self.assertEqual(codigo, 1)
             self.assertIn("Nada gravado", texto)
             self.assertFalse((pathlib.Path(pasta) / "runs.log").exists())
+
+    def test_end_pede_tokens_ou_sem_tokens(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            self.rodar(pasta, "start", "scaffold-planner", "estágio 5", "medio/sonnet", "15")
+            codigo, texto = self.rodar(pasta, "end", "scaffold-planner", "estágio 5", "ok")
+            self.assertEqual(codigo, 1)
+            self.assertIn("--sem-tokens", texto)
+            self.assertEqual(self.rodar(pasta, "end", "scaffold-planner", "estágio 5", "ok", "--tokens", "9",
+                                        "--sem-tokens")[0], 1)
+            self.assertEqual(self.rodar(pasta, "end", "scaffold-planner", "estágio 5", "ok", "--sem-tokens")[0], 0)
+            ultima = (pathlib.Path(pasta) / "runs.log").read_text(encoding="utf-8").splitlines()[-1]
+            self.assertTrue(ultima.endswith("| ? tokens"), ultima)
 
 
 if __name__ == "__main__":
