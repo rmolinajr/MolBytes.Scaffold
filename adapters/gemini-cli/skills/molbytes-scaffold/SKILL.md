@@ -129,6 +129,17 @@ chamada. Por isso:
 - **Leia pouco.** Nunca leia arquivo grande inteiro (spec, tickets, logs,
   relatórios de ferramenta): use busca e trechos. Saída de teste e build sempre
   filtrada (só falhas e o resumo final).
+- **Menos chamadas.** Cada chamada sua relê o contexto inteiro, então o que
+  conta é o número de chamadas, mais que o tamanho de cada leitura. O que não
+  depende do resultado de outra coisa vai junto: vários comandos num shell só
+  (`&&`) e várias ferramentas na mesma mensagem. Nunca gaste uma chamada só
+  com o `runlog.py`: o START vai na mesma mensagem que lança o subagente, e o
+  END de quem terminou vai junto da próxima ação (o relançamento, o próximo
+  ticket, o fim da onda). Feche cada onda do estágio 7 com
+  `scripts/fechar-onda.py` e o commit no mesmo comando (`references/stages.md`).
+  Numa execução real, três de cada quatro chamadas do orquestrador levavam uma
+  ferramenta só, e as que só gravavam o runlog eram um décimo do custo da
+  sessão.
 - **Recomece limpo** nos pontos de compactação abaixo, inclusive a cada onda
   do estágio 7: sessão limpa com `continuar` custa menos que compactar, que
   relê a conversa inteira para resumi-la.

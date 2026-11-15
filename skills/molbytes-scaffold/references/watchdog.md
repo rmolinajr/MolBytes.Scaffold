@@ -57,6 +57,13 @@ subagente assim que o resultado ou o aviso dele chegar, antes de tratar o
 próximo: numa execução real, os ENDs gravados em lote no fim da onda saíram
 com `?` em 36 de 45 linhas, porque o total já não estava à mão.
 
+**Sem chamada só para o runlog.** Cada chamada do orquestrador relê o
+contexto inteiro da sessão. O START vai na mesma mensagem que lança o
+subagente (as duas chamadas juntas); o END vai na mesma mensagem da ação
+seguinte, ou no mesmo comando de shell (`runlog.py ... end ... && runlog.py
+... start ...` quando um ticket termina e o próximo começa). Numa execução
+real, as chamadas que só gravavam o runlog eram um décimo do custo da sessão.
+
 **Sem Python nem Docker:** escreva as mesmas linhas à mão, com `date` no shell;
 os minutos são o fim menos o início, contados no relógio.
 

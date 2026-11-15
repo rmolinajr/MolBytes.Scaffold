@@ -73,12 +73,14 @@ def _lista(valor: str) -> list:
 
 
 def ler_indice(texto: str) -> list:
-    """Tickets do índice: id, area, depende_de, arquivos, security_reqs (e a linha onde começam).
+    """Tickets do índice: id, area, depende_de, arquivos, security_reqs, testes_alterados (e a linha onde começam).
 
     Lê o formato do estágio 5: um ticket por item `- id:`, campos um por linha,
-    listas como `[a, b]` ou em bloco (`- a`). Outros campos são ignorados.
+    listas como `[a, b]` ou em bloco (`- a`). Outros campos são ignorados, e
+    também o que vem mais recuado dentro de um item de lista (`motivo:` de um
+    `- arquivo: ...`).
     """
-    tickets, atual, recuo, chave_lista, acumulado = [], None, 0, None, None
+    tickets, atual, recuo, chave_lista, acumulado, recuo_lista = [], None, 0, None, None, 0
     for numero, linha in enumerate(texto.splitlines(), 1):
         if acumulado is not None:                       # lista [..] em várias linhas
             acumulado[1] += " " + linha.strip()
@@ -92,7 +94,7 @@ def ler_indice(texto: str) -> list:
         novo = re.match(r"(\s*)-\s+id:\s*(.+)$", linha)
         if novo:
             atual = {"id": _escalar(novo.group(2)), "area": "", "depende_de": [],
-                     "arquivos": [], "security_reqs": [], "linha": numero}
+                     "arquivos": [], "security_reqs": [], "testes_alterados": [], "linha": numero}
             tickets.append(atual)
             recuo, chave_lista = len(novo.group(1)), None
             continue
@@ -108,9 +110,11 @@ def ler_indice(texto: str) -> list:
         campo = re.match(r"\s*([\w-]+):\s*(.*)$", linha)
         if not campo:
             continue
+        if chave_lista and espacos > recuo_lista:       # campo dentro de um item da lista
+            continue
         chave, valor = campo.group(1), campo.group(2).strip()
         chave_lista = None
-        if chave not in ("area", "depende_de", "arquivos", "security_reqs"):
+        if chave not in ("area", "depende_de", "arquivos", "security_reqs", "testes_alterados"):
             continue
         if chave == "area":
             atual["area"] = _escalar(valor)
@@ -119,7 +123,7 @@ def ler_indice(texto: str) -> list:
         elif valor.startswith("["):
             atual[chave] = _lista(valor)
         elif not valor:
-            chave_lista = chave
+            chave_lista, recuo_lista = chave, espacos
         else:
             atual[chave] = [_escalar(valor)]
     return tickets

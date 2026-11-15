@@ -36,7 +36,7 @@ que já estava escrita e foi quebrada pede um nível mais forte, não mais texto
 | Testes unitários sem banco real, porta fixa ou serviço externo (implementadores em paralelo) | 📝 Prompt | `agents/scaffold-implementer.md` |
 | Modo alteração: teste que já falhava no ponto de partida não bloqueia; falha nova bloqueia | 🧪 Script | `alteracao.md` |
 | Modo alteração: suíte da base rodada duas vezes; o que oscila vai para `testes-intermitentes.txt` e não bloqueia nem gera correção; intermitente da rodada vira correção | 🧪 Script | `alteracao.md`, `plano-de-teste.md` |
-| Modo alteração: testes da base travados desde o estágio 7; mudar um exige `testes_alterados` no ticket, aprovado com o plano | 🧪 Script → 🧭 Pausa | `alteracao.md`, `plano-de-teste.md`, estágio 6 |
+| Modo alteração: testes da base travados desde o estágio 7; mudar um exige `testes_alterados` no ticket, aprovado com o plano | 🧪 Script → 🧭 Pausa | `alteracao.md`, `plano-de-teste.md`, estágio 6, `scripts/fechar-onda.py` a cada onda |
 | Premissa sobre terceiros não confirmada encerra como "concluído com premissas abertas", nunca "concluído" | 🧭 Pausa | `stages.md`, estágio 11 |
 
 ## Planejamento e ondas
@@ -63,7 +63,7 @@ que já estava escrita e foi quebrada pede um nível mais forte, não mais texto
 | O implementador mexe só nos arquivos do ticket; outro arquivo, ele para e pede | 📝 Prompt | `agents/scaffold-implementer.md` |
 | Manifestos de dependência só no `INFRA-000` ou em ticket de infra; pacote novo, ele pede | 📝 Prompt | `agents/scaffold-implementer.md`, estágio 5 |
 | Só o orquestrador faz commit, um por estágio ou onda | 📝 Prompt | `SKILL.md` |
-| Worktree e branch de tentativa saem sem `--force`; no fim, `git worktree list` só com a pasta do projeto | 📝 Prompt + 🧪 Script no gate | estágios 7 e 11 |
+| Worktree e branch de tentativa saem sem `--force`; no fim, `git worktree list` só com a pasta do projeto | 📝 Prompt + 🧪 Script a cada onda (`scripts/fechar-onda.py` não fecha a onda com worktree de subagente) e no gate | estágios 7 e 11 |
 | Reviewer e auditor não editam código (sem `Edit`) | 🔧 Ferramentas | `tools:` dos agentes |
 
 ## Segurança

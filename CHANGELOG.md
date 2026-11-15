@@ -2,7 +2,28 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
-## v0.26.0
+## v0.27.0
+
+- **Fechar a onda num comando** (`scripts/fechar-onda.py`, estágio 7): depois
+  da suíte da onda, o script confere a trava dos testes (modo alteração: o que
+  mudou fora dos `testes_alterados` dos tickets da onda), roda `git worktree
+  prune` e acusa worktree de subagente que ficou, acrescenta os ids do índice
+  a `feitos.txt` (sem repetir; ticket de correção fica de fora) e mostra a
+  próxima onda com nível e `suite`, do `ondas-replano.json` ou do
+  `agent-map.json`. Com problema, sai com código 1 sem gravar nada; o commit
+  vai no mesmo comando. Numa rodada longa, fechar a onda à mão levava uma
+  dezena de chamadas do orquestrador, no ponto em que o contexto da sessão
+  está maior.
+- **Menos chamadas do orquestrador** (`SKILL.md`, "Custo"; `watchdog.md`):
+  cada chamada relê o contexto inteiro, então comandos independentes vão
+  juntos. O START do `runlog.py` vai na mesma mensagem que lança o subagente
+  e o END junto da ação seguinte, nunca numa chamada só para isso. Numa
+  rodada longa, três de cada quatro chamadas levavam uma ferramenta só, e as
+  que só gravavam o runlog eram um décimo do custo da sessão principal.
+- **`testes_alterados` no índice** (`ondas.py`): o leitor do `tickets.yaml`
+  guarda a lista, nas formas `- caminho: motivo`, `[caminho]` e
+  `- arquivo: caminho` com `motivo:` embaixo; campo mais recuado dentro de um
+  item de lista não corta mais a lista.
 
 - **Replano do estágio 7 pelo script** (`ondas.py --feitos`, estágio 7):
   quando um ticket é partido, nasce ticket novo ou as ondas do mapa acabam com

@@ -315,8 +315,10 @@ Para cada onda, em ordem:
 - Testes unitários rodados durante a onda não podem depender de banco real,
   porta fixa ou serviço externo (vários implementadores rodam ao mesmo tempo na
   mesma pasta). Testes que precisam disso ficam para o estágio 8.
-- Registre o START de cada um com `scripts/runlog.py` (`watchdog.md`). A cada subagente que
-  termina, faça a verificação de `references/watchdog.md` nos que ainda rodam.
+- Registre o START de cada um com `scripts/runlog.py` (`watchdog.md`), na
+  mesma mensagem que o lança. A cada subagente que termina, faça a
+  verificação de `references/watchdog.md` nos que ainda rodam; o END dele vai
+  junto da ação seguinte, nunca numa chamada só para isso.
 - Ao terminar a onda, verifique pelo `suite` da onda no `agent-map.json`, com
   saída filtrada (só falhas e resumo): `area` roda só os testes e o build dos
   projetos que a onda tocou (build de uma plataforma, como mobile, só se a
@@ -341,10 +343,22 @@ Para cada onda, em ordem:
   `git branch -d <branch>` (ex.: `worktree-agent-…` no Claude Code). Ticket relançado ou descartado também: a worktree e a
   branch da tentativa que não vai ser mergeada saem (`-D` só para essas).
   Nunca `--force`: worktree com alteração não commitada é mostrada ao usuário.
-  Antes do commit da onda, rode `git worktree prune`; `git worktree list` deve
-  mostrar só a pasta do projeto.
-- Commit por onda: `scaffold(7): onda N`. Acrescente os ids que a onda fechou
-  a `.project/feitos.txt` (um por linha).
+- **Fechar a onda num comando.** Com a suíte da onda passando e o `state.md`
+  já atualizado, feche e commite de uma vez:
+
+      python <skill>/scripts/fechar-onda.py <documentos> <N> <ids que a onda fechou> && git add -A && git commit -m "scaffold(7): onda N" && git rev-parse --short HEAD
+
+  O script confere a trava dos testes (modo alteração: o que mudou e não está
+  em `testes_alterados` dos tickets da onda), roda `git worktree prune` e
+  acusa worktree de subagente que ficou, acrescenta os ids do índice a
+  `.project/feitos.txt` e mostra a próxima onda (do `ondas-replano.json` ou do
+  `agent-map.json`), com o nível de cada ticket e o `suite`; o sha do fim é a
+  `Base da onda:` seguinte. Saiu com código 1: nada foi gravado nem
+  commitado; trate o que ele listou (teste travado: a conferência de
+  `plano-de-teste.md`; worktree: o item acima) e rode de novo. No modo de
+  documentos externos, passe `--repo <projeto>` e commite nos dois
+  repositórios. Numa execução real, fechar a onda à mão levava uma dezena de
+  chamadas, todas no ponto em que o contexto da sessão está maior.
 - **Replanejar pelo script, não à mão.** Quando um ticket é partido, nasce
   ticket novo que a rodada precisa (não o de correção, que roda na hora e fica
   fora do índice) ou as ondas do mapa acabam com trabalho sobrando: ponha as
