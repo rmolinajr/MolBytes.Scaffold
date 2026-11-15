@@ -145,6 +145,17 @@ class TestComando(unittest.TestCase):
         self.assertIn("worktree-agent-x1", saida)
         self.assertFalse((self.docs / "feitos.txt").exists())
 
+    def test_sem_feitos_depois_da_onda_1_recusa(self):
+        saida = io.StringIO()
+        with redirect_stdout(saida):
+            codigo = fo.main([str(self.docs), "2", "BE-002", "--repo", str(self.repo)])
+        self.assertEqual(codigo, 2, saida.getvalue())
+        self.assertFalse((self.docs / "feitos.txt").exists())
+        (self.docs / "feitos.txt").write_text("BE-001\n", encoding="utf-8")
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(fo.main([str(self.docs), "2", "BE-002", "--repo", str(self.repo)]), 0)
+        self.assertEqual((self.docs / "feitos.txt").read_text(encoding="utf-8"), "BE-001\nBE-002\n")
+
     def test_replano_tem_prioridade_e_sem_trava_ainda(self):
         (self.docs / "state.md").write_text("Testes travados: ainda não\n", encoding="utf-8")
         replano = {"fonte": "scripts/ondas.py --feitos", "ondas": [

@@ -19,7 +19,9 @@ Roda depois da suíte da onda passar e antes do commit `scaffold(7): onda N`:
    (sessões abertas do usuário) só aparecem como aviso.
 3. **Feitos:** com 1 e 2 limpos, acrescenta a `feitos.txt` os ids que estão
    no `tickets.yaml` e ainda não estão lá. Id fora do índice (ticket de
-   correção) não entra. Rodar de novo não repete nada.
+   correção) não entra. Rodar de novo não repete nada. Sem `feitos.txt` depois
+   da onda 1 (rodada que começou antes dele), recusa: criar o arquivo só com
+   esta onda faria o replano trazer de volta tudo o que já foi feito.
 4. **Próxima onda:** a onda seguinte do `ondas-replano.json` (se ele tem essa
    onda) ou do `agent-map.json`, com o nível de cada ticket e o `suite`.
 
@@ -221,6 +223,11 @@ def main(args: list) -> int:
         return 1
 
     feitos_arq = pasta / "feitos.txt"
+    if not feitos_arq.exists() and numero > 1:
+        print(f"erro: {feitos_arq} não existe e esta é a onda {numero}. Crie-o antes com os ids que as "
+              "ondas anteriores fecharam (um por linha): um feitos.txt só com esta onda faria o "
+              "ondas.py --feitos trazer de volta tudo o que já foi feito. Nada gravado.")
+        return 2
     texto = feitos_arq.read_text(encoding="utf-8") if feitos_arq.exists() else ""
     novo, acrescentados = acrescentar(texto, ids_indice)
     if acrescentados:
