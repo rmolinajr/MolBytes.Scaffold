@@ -95,7 +95,9 @@ Usar: abra o Codex na pasta do projeto e rode
 
 Os subagentes não fixam modelo: o orquestrador passa o de cada nível
 (`gpt-6-luna`, `gpt-6.1-sol`, `gpt-6-astra`). Se quiser outros, diga no
-início; a skill grava a escolha em `state.md`. Para gravar documentos fora
+início; a skill grava a escolha em `state.md`. Antes de cada delegação, o
+verificador Codex da skill confere agente, nível mínimo e modelo e mostra a
+tabela do lote; uma combinação inválida não é lançada. Para gravar documentos fora
 do projeto, abra o Codex com `--add-dir <pasta>`. No estágio 9 o Codex pede
 aprovação para rodar o Docker fora do sandbox.
 

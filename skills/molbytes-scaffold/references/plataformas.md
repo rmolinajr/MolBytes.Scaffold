@@ -44,8 +44,26 @@ quando existe, vale mais que a tabela.
 
 ## Codex
 
+- **Verificar o modelo:** uma vez por sessão, confira se os três nomes da
+  tabela "Níveis de modelo" estão disponíveis neste host. Se algum não
+  estiver, peça uma vez os substitutos e grave o mapa completo em `state.md`.
+  Antes de **cada** delegação, rode, junto das outras ações preparatórias:
+
+  ```powershell
+  python <skill>/scripts/verificar-modelo-codex.py --agente scaffold-planner --nivel medio --tarefa "estágio 5: tickets"
+  ```
+
+  Se `state.md` trouxer modelos alternativos, acrescente
+  `--modelos "leve=...,medio=...,forte=..."`. Para tarefa com piso obrigatório,
+  acrescente `--minimo forte` (auditoria e correção de segurança, por exemplo).
+  Use o modelo devolvido por `MODELO OK`; código 2 ou ausência dessa linha
+  bloqueia a delegação até corrigir agente, nível ou mapa. Em uma onda, rode
+  uma verificação por ticket na mesma chamada e mostre ao usuário uma tabela
+  compacta `tarefa | agente | nível | modelo` antes de lançar o lote.
 - **Lançar:** peça ao Codex um subagente pelo nome (`scaffold-architect`
-  etc.) e informe o modelo do nível ao lançar. As definições do molbytes
+  etc.) e informe o modelo validado ao lançar. Use `fork_turns="none"` quando
+  a API do Codex exigir isso para aceitar um modelo explícito; nesse caso, o
+  prompt leva todo o contexto necessário para a tarefa. As definições do molbytes
   (`.codex/agents/` ou `~/.codex/agents/`) não fixam modelo, então vale o que
   você passar; sem modelo, o Codex usa `[agents] default_subagent_model` ou o
   modelo da sessão, o que este pipeline não permite.

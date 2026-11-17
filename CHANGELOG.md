@@ -2,6 +2,15 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## Próxima versão
+
+- **Verificação de modelo no Codex:** antes de cada delegação, o orquestrador
+  roda `verificar-modelo-codex.py`, que valida o agente, o nível, o piso da
+  tarefa e o mapa `leve`/`medio`/`forte`, e devolve o nome exato do modelo.
+  Sem `MODELO OK`, o subagente não é lançado. Ondas mostram uma tabela compacta
+  de tarefa, agente, nível e modelo antes do lote. O fluxo do Claude Code não
+  muda.
+
 ## v0.27.0
 
 - **Fechar a onda num comando** (`scripts/fechar-onda.py`, estágio 7): depois
