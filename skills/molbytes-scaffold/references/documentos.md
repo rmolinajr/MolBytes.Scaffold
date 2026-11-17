@@ -117,7 +117,8 @@ e só arquive com a resposta `arquivar`.
    `tickets.yaml`, `tickets/`, `classificacao.json`, `agent-map.json`,
    `regras-implementacao.md`, `plano-de-teste.yaml`, `testes-travados.txt`, `test-report.md`,
    `security/`, `code-review-report.md`, `impacto.md`, `pipeline-report.md`, `runs.log` e
-   `model-log.md`. O que não existir, pule.
+   `model-log.md`, `runs-faixa.jsonl`, `runs-orquestrador.jsonl` e
+   `ondas-replano.json`. O que não existir, pule.
 4. **Ficam na raiz e evoluem:** `spec.md`, `design/`, `docs-sistema.yaml`,
    `mapa-codigo.md` e `historico.md` descrevem o sistema inteiro. A rodada nova os atualiza (ver
    `alteracao.md`); a versão de cada fase fica no git.

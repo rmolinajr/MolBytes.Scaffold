@@ -227,7 +227,7 @@ algum adaptador estiver desatualizado.
 
 ## Status
 
-v0.27.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
+v0.28.0, em evolução: os ajustes da v0.10 em diante vieram de execuções reais
 no Claude Code, a mais recente (v0.17.0) alterando um sistema existente. O
 mapa do código (v0.18.0), o histórico das rodadas (v0.19.0) e o impacto
 fora do diff (v0.20.0), a trava dos testes (v0.21.0) e o script do

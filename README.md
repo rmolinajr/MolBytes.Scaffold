@@ -231,7 +231,7 @@ After changing `skills/`, `agents/` or the version in
 
 ## Status
 
-v0.27.0, evolving: the changes from v0.10 onward came from real runs in
+v0.28.0, evolving: the changes from v0.10 onward came from real runs in
 Claude Code, the most recent one (v0.17.0) changing an existing system. The
 code map (v0.18.0), the round history (v0.19.0) and the impact check
 (v0.20.0), the test lock (v0.21.0) and the run log script, the thin-wave

@@ -74,7 +74,7 @@ sem subagente, e lê o topo no começo de cada rodada nova.
   passe o modelo correspondente de forma explícita, como manda
   `references/plataformas.md`. Nunca deixe um subagente herdar o modelo da
   sessão por acaso. No Codex, faça também a verificação determinística descrita
-  na seção Codex de `plataformas.md`; sem `MODELO OK`, não delegue.
+  na seção Codex de `plataformas.md`; se a verificação falhar, não delegue.
 - Ao fim de cada estágio: confira que o arquivo esperado existe e não está vazio,
   atualize `.project/state.md` (ver "Estado e compactação"), depois faça
   `git add` + `git commit -m "scaffold(N): <estágio>"` (no modo externo, nos

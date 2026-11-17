@@ -44,22 +44,26 @@ quando existe, vale mais que a tabela.
 
 ## Codex
 
-- **Verificar o modelo:** uma vez por sessão, confira se os três nomes da
-  tabela "Níveis de modelo" estão disponíveis neste host. Se algum não
-  estiver, peça uma vez os substitutos e grave o mapa completo em `state.md`.
-  Antes de **cada** delegação, rode, junto das outras ações preparatórias:
+- **Verificar o modelo:** se o ambiente expuser os modelos aceitos pela
+  ferramenta de delegação, passe essa lista em `--disponiveis` (IDs separados
+  por vírgula). Se faltar algum modelo, peça substitutos e grave o mapa em
+  `state.md`. Sem lista, a disponibilidade fica não verificada: faça o
+  lançamento com modelo explícito e, se o Codex o recusar, pare e peça um
+  substituto. Use o Python local na preparação do lançamento:
 
   ```powershell
-  python <skill>/scripts/verificar-modelo-codex.py --agente scaffold-planner --nivel medio --tarefa "estágio 5: tickets"
+  python <skill>/scripts/verificar-modelo-codex.py --agente scaffold-planner --nivel medio --estagio 5 --tarefa "estágio 5: tickets"
   ```
 
   Se `state.md` trouxer modelos alternativos, acrescente
-  `--modelos "leve=...,medio=...,forte=..."`. Para tarefa com piso obrigatório,
-  acrescente `--minimo forte` (auditoria e correção de segurança, por exemplo).
-  Use o modelo devolvido por `MODELO OK`; código 2 ou ausência dessa linha
-  bloqueia a delegação até corrigir agente, nível ou mapa. Em uma onda, rode
-  uma verificação por ticket na mesma chamada e mostre ao usuário uma tabela
-  compacta `tarefa | agente | nível | modelo` antes de lançar o lote.
+  `--modelos "leve=...,medio=...,forte=..."`. O estágio 9 exige forte;
+  use `--minimo` para os demais pisos específicos de `model-routing.md`.
+  Para a onda inteira, passe uma lista JSON com `--lote -` pela entrada
+  padrão (ou indique um arquivo), com `tarefa`, `agente`, `nivel`, `estagio`,
+  `motivo` e, quando aplicável, `minimo` por tarefa. Um erro no lote
+  bloqueia todo o lançamento. Use a mesma saída para a linha de status, o
+  modelo explícito na delegação e o campo `nível/modelo` do START em
+  `runs.log`; agrupe os STARTs com as demais operações de lançamento.
 - **Lançar:** peça ao Codex um subagente pelo nome (`scaffold-architect`
   etc.) e informe o modelo validado ao lançar. Use `fork_turns="none"` quando
   a API do Codex exigir isso para aceitar um modelo explícito; nesse caso, o

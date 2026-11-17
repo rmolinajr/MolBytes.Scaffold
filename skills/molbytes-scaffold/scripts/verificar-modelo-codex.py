@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from pathlib import Path
 
 
 MODELOS_PADRAO = {
@@ -31,7 +32,7 @@ def modelos_configurados(valor: str | None) -> dict[str, str]:
     modelos: dict[str, str] = {}
     for item in valor.split(","):
         nivel, separador, modelo = item.strip().partition("=")
-        if not separador or nivel not in ORDEM or not modelo.strip():
+        if not separador or nivel not in ORDEM or nivel in modelos or not modelo.strip():
             raise ValueError(
                 "--modelos deve usar leve=<modelo>,medio=<modelo>,forte=<modelo>"
             )
@@ -48,7 +49,13 @@ def verificar(
     tarefa: str,
     minimo: str | None,
     modelos: dict[str, str],
+    *,
+    estagio: int,
 ) -> dict[str, str]:
+    if type(estagio) is not int or not 1 <= estagio <= 11:
+        raise ValueError("estágio deve ser um inteiro de 1 a 11")
+    if not tarefa.strip():
+        raise ValueError("tarefa vazia")
     if agente not in NIVEIS_POR_AGENTE:
         raise ValueError(f"agente desconhecido: {agente}")
     if nivel not in ORDEM:
@@ -56,6 +63,10 @@ def verificar(
     if nivel not in NIVEIS_POR_AGENTE[agente]:
         permitidos = ", ".join(sorted(NIVEIS_POR_AGENTE[agente], key=ORDEM.get))
         raise ValueError(f"{agente} não aceita nível {nivel}; use: {permitidos}")
+    if minimo is not None and minimo not in ORDEM:
+        raise ValueError(f"nível mínimo desconhecido: {minimo}")
+    if estagio == 9:
+        minimo = "forte"
     if minimo and ORDEM[nivel] < ORDEM[minimo]:
         raise ValueError(f"a tarefa exige no mínimo {minimo}; recebido: {nivel}")
     return {
@@ -66,37 +77,76 @@ def verificar(
     }
 
 
+def verificar_lote(tarefas, modelos, disponiveis=None):
+    if not isinstance(tarefas, list) or not tarefas:
+        raise ValueError("informe uma lista de tarefas não vazia")
+    if disponiveis is not None:
+        ausentes = set(modelos.values()) - disponiveis
+        if ausentes:
+            raise ValueError("modelos ausentes no Codex: " + ", ".join(sorted(ausentes)))
+    resultados = []
+    for i, item in enumerate(tarefas, 1):
+        try:
+            resultado = verificar(
+                item["agente"], item["nivel"], item["tarefa"],
+                item.get("minimo"), modelos, estagio=item["estagio"],
+            )
+            resultado["motivo"] = item.get("motivo", "")
+            resultado["disponibilidade"] = "confirmada" if disponiveis is not None else "não verificada"
+            resultados.append(resultado)
+        except (KeyError, TypeError, AttributeError, ValueError) as erro:
+            raise ValueError(f"tarefa {i}: {erro}") from erro
+    return resultados
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Valida o nível e resolve o modelo antes de lançar um subagente no Codex."
     )
-    parser.add_argument("--agente", required=True, choices=sorted(NIVEIS_POR_AGENTE))
-    parser.add_argument("--nivel", required=True, choices=sorted(ORDEM, key=ORDEM.get))
-    parser.add_argument("--tarefa", required=True)
+    parser.add_argument("--lote", help="Arquivo JSON com tarefas ou - para ler da entrada padrão")
+    parser.add_argument("--agente", choices=sorted(NIVEIS_POR_AGENTE))
+    parser.add_argument("--nivel", choices=sorted(ORDEM, key=ORDEM.get))
+    parser.add_argument("--tarefa")
+    parser.add_argument("--estagio", type=int)
+    parser.add_argument("--motivo")
     parser.add_argument("--minimo", choices=sorted(ORDEM, key=ORDEM.get))
     parser.add_argument(
         "--modelos",
         help="Mapa alternativo: leve=<modelo>,medio=<modelo>,forte=<modelo>",
     )
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--disponiveis", help="IDs separados por vírgula, obtidos do ambiente Codex")
     args = parser.parse_args()
     try:
-        resultado = verificar(
-            args.agente,
-            args.nivel,
-            args.tarefa,
-            args.minimo,
-            modelos_configurados(args.modelos),
+        modelos = modelos_configurados(args.modelos)
+        disponiveis = (
+            {item.strip() for item in args.disponiveis.split(",") if item.strip()}
+            if args.disponiveis is not None else None
         )
-    except ValueError as erro:
+        campos = {
+            chave: getattr(args, chave)
+            for chave in ("agente", "nivel", "tarefa", "estagio", "minimo", "motivo")
+        }
+        if args.lote:
+            if any(valor is not None for valor in campos.values()):
+                raise ValueError("--lote deve ser usado sem os campos da tarefa individual")
+            tarefas = json.loads(sys.stdin.read() if args.lote == "-" else Path(args.lote).read_text(encoding="utf-8-sig"))
+        else:
+            if any(campos[chave] is None for chave in ("agente", "nivel", "tarefa", "estagio")):
+                raise ValueError("informe --agente, --nivel, --tarefa e --estagio, ou use --lote")
+            tarefas = [campos]
+        resultados = verificar_lote(tarefas, modelos, disponiveis)
+    except (ValueError, OSError) as erro:
         print(f"ERRO: {erro}", file=sys.stderr)
         return 2
-    if args.json:
-        print(json.dumps(resultado, ensure_ascii=False))
+    if args.json or args.lote:
+        print(json.dumps(resultados if args.lote else resultados[0], ensure_ascii=True))
     else:
+        resultado = resultados[0]
         print(
-            f"MODELO OK | {resultado['tarefa']} | {resultado['agente']} | "
-            f"{resultado['nivel']} | {resultado['modelo']}"
+            f"ROTA OK | {resultado['tarefa']} | {resultado['agente']} | "
+            f"{resultado['nivel']} | {resultado['modelo']} | "
+            f"disponibilidade: {resultado['disponibilidade']}"
         )
     return 0
 
