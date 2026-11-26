@@ -11,10 +11,10 @@ Valida antes de gravar (com erro, não grava nada e sai com código 1):
 - classificação: ticket sem classificação, ticket que não está no índice,
   ticket repetido, nível inválido, `forte` sem motivo.
 
-Ondas: o ticket `*INFRA-000` fica sozinho na onda 1. Os outros entram, na
-ordem do índice respeitando as dependências, na primeira onda depois de todas
-as dependências em que nenhum outro ticket toca os mesmos arquivos (um
-diretório conflita com o que está dentro dele). Mesma entrada, mesmas ondas.
+Ondas: o ticket `*INFRA-000` fica sozinho na primeira onda, se não depender
+de trabalho em aberto. Os demais priorizam o caminho de dependências mais
+longo, com desempate pela ordem do índice, e entram na primeira onda que
+comporta o ticket sem conflito de arquivos. Mesma entrada, mesmas ondas.
 
 Verificação de fim de onda: cada onda leva `suite`, "area" (só os testes do
 que a onda tocou) ou "completa" (a suíte inteira e os builds de todas as
@@ -55,92 +55,182 @@ SEQUENCIA_FINA = 5
 
 def _escalar(valor: str) -> str:
     valor = valor.strip()
-    aspas = re.match(r"([\"'])(.*?)\1", valor)          # entre aspas, com ou sem comentário depois
-    if aspas:
-        return aspas.group(2)
+    if valor.startswith("#"):
+        return ""
+    if valor.startswith(("'", '"')):
+        aspas = re.fullmatch(r"""("(?:[^"\\]|\\.)*"|'(?:[^']|'')*')(?:\s+#.*|\s*)""", valor)
+        if not aspas:
+            raise ValueError(f"texto entre aspas inválido: {valor}")
+        citado = aspas.group(1)
+        return json.loads(citado) if citado.startswith('"') else citado[1:-1].replace("''", "'")
     return re.sub(r"\s+#.*$", "", valor).strip()
 
 
 def _lista(valor: str) -> list:
-    # Até o primeiro `]`: o que vem depois (`[A, B]  # motivo`) é comentário.
-    texto = valor.strip()
-    fim = texto.find("]")
-    corpo = (texto[1:fim] if fim >= 0 else texto[1:]).strip()
-    if not corpo:
+    """Lê a lista de textos, preservando aspas, vírgulas e colchetes de caminhos."""
+    nivel, aspas, escape, comentario = 0, None, False, False
+    itens, item = [], []
+    for pos, char in enumerate(valor):
+        if comentario:
+            if char == "\n":
+                item.append(" ")
+                comentario = False
+            continue
+        if aspas:
+            item.append(char)
+            if escape:
+                escape = False
+            elif char == "\\" and aspas == '"':
+                escape = True
+            elif char == aspas == "'" and valor[pos + 1:pos + 2] == "'":
+                escape = True
+            elif char == aspas:
+                aspas = None
+            continue
+        if char == "#" and pos > 0 and valor[pos - 1].isspace():
+            comentario = True
+        elif char in ('"', "'") and not "".join(item).strip():
+            aspas = char
+            item.append(char)
+        elif char == "[":
+            nivel += 1
+            if nivel > 1:
+                item.append(char)
+        elif char == "]" and nivel > 1:
+            nivel -= 1
+            item.append(char)
+        elif nivel == 1 and char in ",]":
+            escalar = _escalar("".join(item))
+            if escalar:
+                itens.append(escalar)
+            elif char == ",":
+                raise ValueError("item vazio na lista")
+            item.clear()
+            if char == "]":
+                resto = valor[pos + 1:].strip()
+                if resto and not all(l.strip().startswith("#") or not l.strip() for l in resto.splitlines()):
+                    raise ValueError(f"texto após o fim da lista: {resto}")
+                return itens
+        else:
+            item.append(char)
+    raise ValueError("lista sem fechamento")
+
+
+def _recuo(linha: str) -> int:
+    return len(linha) - len(linha.lstrip())
+
+
+def _itens_da_secao(texto: str, secao: str) -> list | None:
+    """Obtém os itens em bloco de uma chave da raiz, com suas linhas."""
+    linhas = [(n, l) for n, l in enumerate(texto.splitlines(), 1)
+              if l.strip() and not l.lstrip().startswith("#")]
+    inicio = next((i for i, (_, l) in enumerate(linhas) if l.startswith(secao + ":")), None)
+    if inicio is None:
+        return None
+    numero, cabecalho = linhas[inicio]
+    valor = _escalar(cabecalho.split(":", 1)[1])
+    if valor == "[]":
         return []
-    itens = re.findall(r"\"[^\"]*\"|'[^']*'|[^,]+", corpo)
-    return [_escalar(i) for i in itens if _escalar(i)]
+    if valor:
+        raise ValueError(f"linha {numero}: {secao} deve ser uma lista em bloco")
+    itens, recuo = [], None
+    for numero, linha in linhas[inicio + 1:]:
+        marcador = re.match(r"^(\s*)-(?: +|$)", linha)
+        if _recuo(linha) == 0 and not marcador:
+            break
+        if marcador and (recuo is None or len(marcador.group(1)) == recuo):
+            recuo = len(marcador.group(1))
+            itens.append((numero, [(numero, " " * marcador.end() + linha[marcador.end():])]))
+        elif itens and _recuo(linha) > recuo:
+            itens[-1][1].append((numero, linha))
+        else:
+            raise ValueError(f"linha {numero}: item inválido em {secao}")
+    return itens
+
+
+def _campos(linhas: list, usados: set) -> dict:
+    """Campos diretos do item, incluindo o conteúdo de listas multilinha."""
+    campos, chave = {}, None
+    linhas = [(numero, linha) for numero, linha in linhas if linha.strip()]
+    if not linhas:
+        return campos
+    recuo = _recuo(linhas[0][1])
+    for numero, linha in linhas:
+        campo = re.fullmatch(r"\s*([\w-]+):(?:\s+(.*)|$)", linha)
+        if campo and _recuo(linha) == recuo:
+            chave = campo.group(1)
+            if chave not in usados:
+                continue
+            if chave in campos:
+                raise ValueError(f"linha {numero}: campo {chave} repetido")
+            campos[chave] = (numero, campo.group(2) or "", [])
+        elif chave in campos:
+            campos[chave][2].append(linha)
+    return campos
+
+
+def _ler_campo_lista(chave: str, valor: str, continuacao: list) -> list:
+    if valor.startswith("["):
+        # Índices antigos aceitavam um motivo antes do último colchete.
+        if chave == "testes_alterados" and not continuacao:
+            valor = re.sub(r"\s+#.*]$", "]", valor)
+        return _lista("\n".join([valor, *continuacao]))
+    if not _escalar(valor):
+        itens = []
+        recuo = _recuo(continuacao[0]) if continuacao else 0
+        for linha in continuacao:
+            item = re.match(r"\s*-\s+(.+)", linha)
+            if item and _recuo(linha) == recuo:
+                itens.append(_escalar(item.group(1)))
+            elif chave != "testes_alterados" or _recuo(linha) <= recuo:
+                raise ValueError(f"item de lista inválido: {linha.strip()}")
+        return itens
+    if continuacao:
+        raise ValueError("texto extra após o campo")
+    return [_escalar(valor)]
 
 
 def ler_indice(texto: str) -> list:
     """Tickets do índice: id, area, depende_de, arquivos, security_reqs, testes_alterados (e a linha onde começam).
 
-    Lê o formato do estágio 5: um ticket por item `- id:`, campos um por linha,
+    Lê o formato do estágio 5: um ticket por item, campos um por linha,
     listas como `[a, b]` ou em bloco (`- a`). Outros campos são ignorados, e
     também o que vem mais recuado dentro de um item de lista (`motivo:` de um
     `- arquivo: ...`).
     """
-    tickets, atual, recuo, chave_lista, acumulado, recuo_lista = [], None, 0, None, None, 0
-    for numero, linha in enumerate(texto.splitlines(), 1):
-        if acumulado is not None:                       # lista [..] em várias linhas
-            acumulado[1] += " " + linha.strip()
-            if "]" in linha:
-                atual[acumulado[0]] = _lista(acumulado[1])
-                acumulado = None
-            continue
-        if not linha.strip() or linha.lstrip().startswith("#"):
-            continue
-        espacos = len(linha) - len(linha.lstrip())
-        novo = re.match(r"(\s*)-\s+id:\s*(.+)$", linha)
-        if novo:
-            atual = {"id": _escalar(novo.group(2)), "area": "", "depende_de": [],
-                     "arquivos": [], "security_reqs": [], "testes_alterados": [], "linha": numero}
-            tickets.append(atual)
-            recuo, chave_lista = len(novo.group(1)), None
-            continue
-        if atual is None:
-            continue
-        if espacos <= recuo:                            # saiu do ticket (outra chave do topo)
-            atual, chave_lista = None, None
-            continue
-        item = re.match(r"\s*-\s+(.*)$", linha)
-        if item and chave_lista:
-            atual[chave_lista].append(_escalar(item.group(1)))
-            continue
-        campo = re.match(r"\s*([\w-]+):\s*(.*)$", linha)
-        if not campo:
-            continue
-        if chave_lista and espacos > recuo_lista:       # campo dentro de um item da lista
-            continue
-        chave, valor = campo.group(1), campo.group(2).strip()
-        chave_lista = None
-        if chave not in ("area", "depende_de", "arquivos", "security_reqs", "testes_alterados"):
-            continue
-        if chave == "area":
-            atual["area"] = _escalar(valor)
-        elif valor.startswith("[") and "]" not in valor:
-            acumulado = [chave, valor]
-        elif valor.startswith("["):
-            atual[chave] = _lista(valor)
-        elif not valor:
-            chave_lista, recuo_lista = chave, espacos
-        else:
-            atual[chave] = [_escalar(valor)]
+    listas = ("depende_de", "arquivos", "security_reqs", "testes_alterados")
+    itens = _itens_da_secao(texto, "tickets")
+    if itens is None:
+        raise ValueError("seção tickets não encontrada")
+    tickets = []
+    for numero, linhas in itens:
+        campos = _campos(linhas, {"id", "area", *listas})
+        ticket = {"id": "", "area": "", "linha": numero, **{chave: [] for chave in listas}}
+        for chave, (n, valor, continuacao) in campos.items():
+            try:
+                if chave in listas:
+                    ticket[chave] = _ler_campo_lista(chave, valor, continuacao)
+                else:
+                    if continuacao:
+                        raise ValueError("esperava texto em uma linha")
+                    ticket[chave] = _escalar(valor)
+            except ValueError as erro:
+                raise ValueError(f"linha {n}, {chave}: {erro}") from erro
+        if not ticket["id"]:
+            raise ValueError(f"linha {numero}: ticket sem id")
+        tickets.append(ticket)
     return tickets
 
 
 def ler_requisitos(texto: str) -> list:
     """Ids da lista `security_requirements` do `risks.yaml`, na ordem."""
-    ids, dentro = [], False
-    for linha in texto.splitlines():
-        if not linha.strip() or linha.lstrip().startswith("#"):
-            continue
-        if not linha[:1].isspace() and not linha.startswith("-"):   # chave do topo
-            dentro = linha.split(":", 1)[0].strip() == "security_requirements"
-            continue
-        item = re.match(r"\s*-\s+id:\s*(.+)$", linha)
-        if dentro and item:
-            ids.append(_escalar(item.group(1)))
+    ids = []
+    for numero, linhas in _itens_da_secao(texto, "security_requirements") or []:
+        campo = _campos(linhas, {"id"}).get("id")
+        tid = _escalar(campo[1]) if campo else ""
+        if not tid or campo[2]:
+            raise ValueError(f"linha {numero}: requisito de segurança sem id em uma linha")
+        ids.append(tid)
     return ids
 
 
@@ -212,16 +302,10 @@ def montar(indice: list, classificacao: list, requisitos: list | None = None,
         if not t["arquivos"]:
             avisos.append(f"tickets.yaml: {t['id']} sem `arquivos` (não entra na checagem de conflito)")
     if requisitos is not None:
-        cobertos = set()
         for t in por_id.values():
             for sr in t["security_reqs"]:
-                if sr in requisitos:
-                    cobertos.add(sr)
-                else:
+                if sr not in requisitos:
                     erros.append(f"tickets.yaml: {t['id']} lista {sr} em `security_reqs`, que não existe no risks.yaml")
-        for sr in requisitos:
-            if sr not in cobertos:
-                erros.append(f"tickets.yaml: {sr} (risks.yaml) não está em `security_reqs` de nenhum ticket")
 
     classes = {}
     for c in classificacao:
@@ -242,39 +326,70 @@ def montar(indice: list, classificacao: list, requisitos: list | None = None,
         if not nivel:
             erros.append(f"classificação: {tid} com nível inválido {c.get('model')!r} (use leve, medio ou forte)")
             continue
-        if nivel == "forte" and not str(c.get("motivo", "")).strip():
+        motivo = c.get("motivo")
+        motivo = motivo.strip() if isinstance(motivo, str) else ""
+        if nivel == "forte" and not motivo:
             erros.append(f"classificação: {tid} em forte sem motivo")
         classes[tid] = {"id": tid, "area": c.get("area") or por_id[tid]["area"],
                         "complexity": c.get("complexity", ""), "model": nivel,
-                        "motivo": str(c.get("motivo", "")).strip()}
+                        "motivo": motivo}
+
     abertos = list(por_id)
+    dependencias = {tid: list(t["depende_de"]) for tid, t in por_id.items()}
     if replano:
         for nome, ids in (("--feitos", feitos_set), ("--fora", fora_set)):
             for tid in sorted(ids - set(por_id)):
                 avisos.append(f"{nome}: {tid} não está no tickets.yaml")
-        # Quem depende de ticket fora fica fora também (em cadeia), com aviso.
+        # Descobre a divisão mesmo quando uma peça saiu. Um ticket que depende
+        # de suas peças fecha a série e continua no plano.
+        for pai in por_id:
+            if pai in feitos_set:
+                continue
+            filhos = [filho for filho in por_id if _peca(filho, pai)]
+            if filhos and not set(filhos).intersection(dependencias[pai]):
+                pecas[pai] = filhos
+                avisos.append(f"{pai} partido em {', '.join(filhos)}: entra pelas peças")
+
+        # Um consumidor mantém as dependências originais do pai além das
+        # peças. As próprias peças continuam com as dependências declaradas.
+        originais = dict(dependencias)
+        for tid, deps in dependencias.items():
+            expandidas = list(dict.fromkeys(deps))
+            vistos = set(expandidas)
+            for dep in expandidas:
+                if dep not in pecas:
+                    continue
+                for anterior in [*originais[dep], *pecas[dep]]:
+                    if anterior not in vistos:
+                        vistos.add(anterior)
+                        expandidas.append(anterior)
+            dependencias[tid] = expandidas
+
+        # Uma exclusão propaga pelas dependências já expandidas e pelas partes
+        # de um pai expressamente deixado de fora.
         fora_tudo = set(fora_set) - feitos_set
+        for pai in fora_set - feitos_set:
+            fora_tudo.update(set(pecas.get(pai, [])) - feitos_set)
         mudou = True
         while mudou:
             mudou = False
-            for tid, t in por_id.items():
+            for tid, deps in dependencias.items():
                 if tid in fora_tudo or tid in feitos_set:
                     continue
-                motivo = next((d for d in t["depende_de"] if d in fora_tudo), None)
+                motivo = next((d for d in deps if d in fora_tudo), None)
                 if motivo:
                     fora_tudo.add(tid)
                     avisos.append(f"{tid} fica fora também: depende de {motivo}, que está fora")
                     mudou = True
-        abertos = [tid for tid in por_id if tid not in feitos_set and tid not in fora_tudo]
-        # Pai partido com as peças no índice (FE-020 → FE-020a, BE-030 → BE-030A): sai do plano
-        # e quem depende dele espera todas as peças. O que depende de uma das "peças" é o ticket
-        # que fecha a série (BE-030C depois de BE-030C0…C11) e fica.
-        for pai in abertos:
-            filhos = [f for f in por_id if _peca(f, pai)]
-            if filhos and not set(filhos) & set(por_id[pai]["depende_de"]):
-                pecas[pai] = filhos
-                avisos.append(f"{pai} partido em {', '.join(filhos)}: entra pelas peças")
-        abertos = [tid for tid in abertos if tid not in pecas]
+        abertos = [tid for tid in por_id if tid not in feitos_set and tid not in fora_tudo and tid not in pecas]
+
+    if requisitos is not None:
+        efetivos = set(abertos) | (feitos_set & por_id.keys())
+        cobertos = {sr for tid in efetivos for sr in por_id[tid]["security_reqs"]}
+        for sr in requisitos:
+            if sr not in cobertos:
+                destino = "ticket feito ou em aberto no replano" if replano else "ticket"
+                erros.append(f"tickets.yaml: {sr} (risks.yaml) não está em `security_reqs` de nenhum {destino}")
     for tid in abertos:
         if tid in classes or any(e.startswith(f"classificação: {tid} ") for e in erros):
             continue
@@ -286,17 +401,12 @@ def montar(indice: list, classificacao: list, requisitos: list | None = None,
     if erros:
         return None, erros, avisos
 
-    # Ordem topológica estável: entre os prontos, o que vem antes no índice. Dependência de
-    # ticket feito (replanejar) já está satisfeita.
+    # Valida o grafo dos tickets em aberto e calcula o caminho restante de cada
+    # nó. O caminho de um pré-requisito é sempre maior que o de seu dependente.
     ordem_indice = {tid: i for i, tid in enumerate(por_id)}
-
-    def deps_de(tid):
-        saida = set(por_id[tid]["depende_de"])
-        for d in por_id[tid]["depende_de"]:
-            saida.update(pecas.get(d, []))
-        return saida
-
-    pendentes = {tid: deps_de(tid) & set(abertos) for tid in abertos}
+    abertos_set = set(abertos)
+    abertas = {tid: set(dependencias[tid]) & abertos_set for tid in abertos}
+    pendentes = {tid: set(deps) for tid, deps in abertas.items()}
     ordem = []
     while pendentes:
         prontos = sorted((tid for tid, deps in pendentes.items() if not deps), key=ordem_indice.get)
@@ -308,14 +418,24 @@ def montar(indice: list, classificacao: list, requisitos: list | None = None,
         for deps in pendentes.values():
             deps.difference_update(prontos)
 
-    infra = [tid for tid in ordem if tid.upper().endswith("INFRA-000")]
+    infra = next((tid for tid in abertos if tid.upper().endswith("INFRA-000")), None)
+    if infra and abertas[infra]:
+        deps = ", ".join(sorted(abertas[infra], key=ordem_indice.get))
+        return None, [f"tickets.yaml: {infra} precisa ficar sozinho na primeira onda, mas depende de {deps}"], avisos
+
+    caminho = dict.fromkeys(ordem, 1)
+    for tid in reversed(ordem):
+        for dep in abertas[tid]:
+            caminho[dep] = max(caminho[dep], caminho[tid] + 1)
+    ordem.sort(key=lambda tid: (-caminho[tid], ordem_indice[tid]))
+
     onda_de, ondas = {}, {}
     for tid in ordem:
-        if tid in infra[:1]:
+        if tid == infra:
             onda_de[tid] = 1
             ondas.setdefault(1, []).append(tid)
             continue
-        onda = max([onda_de[d] for d in deps_de(tid) if d in onda_de] + [1 if infra else 0]) + 1
+        onda = max([onda_de[d] for d in abertas[tid]] + [1 if infra else 0]) + 1
         while (any(conflitam(por_id[tid]["arquivos"], por_id[outro]["arquivos"]) for outro in ondas.get(onda, []))
                or (max_por_onda and len(ondas.get(onda, [])) >= max_por_onda)):
             onda += 1
@@ -328,6 +448,8 @@ def montar(indice: list, classificacao: list, requisitos: list | None = None,
         {"onda": n + desloca, "suite": "completa" if (n + desloca) % SUITE_A_CADA == 0 or n + desloca == ultima else "area",
          "tickets": [classes[tid] for tid in sorted(ondas[n], key=ordem_indice.get)]}
         for n in sorted(ondas)]}
+    if replano:
+        mapa["a_partir"] = inicio
     return mapa, [], avisos
 
 
@@ -421,9 +543,18 @@ def main(args: list) -> int:
     except (ValueError, json.JSONDecodeError) as erro:
         print(f"erro: {classes_arq}: {erro}")
         return 1
+    try:
+        indice = ler_indice(indice_arq.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError) as erro:
+        print(f"erro: {indice_arq}: {erro}")
+        return 1
     riscos_arq = pasta / "risks.yaml"
-    requisitos = ler_requisitos(riscos_arq.read_text(encoding="utf-8")) if riscos_arq.exists() else None
-    mapa, erros, avisos = montar(ler_indice(indice_arq.read_text(encoding="utf-8")), classificacao, requisitos,
+    try:
+        requisitos = ler_requisitos(riscos_arq.read_text(encoding="utf-8-sig")) if riscos_arq.exists() else None
+    except (OSError, ValueError) as erro:
+        print(f"erro: {riscos_arq}: {erro}")
+        return 1
+    mapa, erros, avisos = montar(indice, classificacao, requisitos,
                                  feitos=listas.get("--feitos"), fora=listas.get("--fora"),
                                  inicio=numeros.get("--a-partir", 1), max_por_onda=numeros.get("--max-por-onda"))
     for aviso in avisos:

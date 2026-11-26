@@ -2,6 +2,17 @@
 
 Todas as mudanças relevantes do molbytes.scaffold.
 
+## v0.29.0
+
+- Corrige o fechamento da onda quando um teste aprovado mudou numa onda
+  anterior e valida os tickets concluídos contra o plano ativo.
+- Revalida dependências e requisitos de segurança após divisão ou exclusão,
+  preserva caminhos entre aspas e prioriza a cadeia de dependências.
+- Arquiva o progresso, a base de testes e a telemetria da rodada com um comando.
+- No Codex, valida os modelos usados no lote. O modo econômico preserva o nível
+  leve e o nível exigido pelos riscos da implementação.
+- Testa duas rodadas com IDs reutilizados em CI no Windows e no Linux.
+
 ## v0.28.0
 
 - **Verificação de modelo no Codex:** antes de cada delegação, o orquestrador

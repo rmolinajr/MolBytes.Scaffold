@@ -80,10 +80,6 @@ def verificar(
 def verificar_lote(tarefas, modelos, disponiveis=None):
     if not isinstance(tarefas, list) or not tarefas:
         raise ValueError("informe uma lista de tarefas não vazia")
-    if disponiveis is not None:
-        ausentes = set(modelos.values()) - disponiveis
-        if ausentes:
-            raise ValueError("modelos ausentes no Codex: " + ", ".join(sorted(ausentes)))
     resultados = []
     for i, item in enumerate(tarefas, 1):
         try:
@@ -96,6 +92,10 @@ def verificar_lote(tarefas, modelos, disponiveis=None):
             resultados.append(resultado)
         except (KeyError, TypeError, AttributeError, ValueError) as erro:
             raise ValueError(f"tarefa {i}: {erro}") from erro
+    if disponiveis is not None:
+        ausentes = {resultado["modelo"] for resultado in resultados} - disponiveis
+        if ausentes:
+            raise ValueError("modelos ausentes no Codex: " + ", ".join(sorted(ausentes)))
     return resultados
 
 

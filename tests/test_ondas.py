@@ -79,6 +79,34 @@ class LerIndice(unittest.TestCase):
         self.assertEqual(a1["arquivos"], [])
         self.assertEqual(a2["depende_de"], ["B-1"])
 
+    def test_campo_id_fora_de_ordem_e_caminhos_com_colchetes_e_virgula(self):
+        texto = (
+            "tickets: # ordem das chaves livre\n"
+            "- area: frontend\n"
+            "  arquivos: [src/[slug]/page.ts, \"src/relatorio,a.ts\", 'src/d''agua,b.ts']\n"
+            "  id: FE-001\n"
+            "  depende_de: []\n"
+        )
+        (ticket,) = ondas.ler_indice(texto)
+        self.assertEqual(ticket["id"], "FE-001")
+        self.assertEqual(ticket["arquivos"], ["src/[slug]/page.ts", "src/relatorio,a.ts", "src/d'agua,b.ts"])
+
+    def test_lista_multilinha_respeita_comentario_entre_caminhos(self):
+        texto = (
+            "tickets:\n"
+            "- id: FE-001\n"
+            "  arquivos: [src/[slug]/page.ts, # ] no comentário\n"
+            "    \"src/dashboard.ts\"]\n"
+        )
+        (ticket,) = ondas.ler_indice(texto)
+        self.assertEqual(ticket["arquivos"], ["src/[slug]/page.ts", "src/dashboard.ts"])
+
+    def test_falha_se_ticket_nao_tiver_id_ou_lista_nao_fechar(self):
+        with self.assertRaisesRegex(ValueError, "ticket sem id"):
+            ondas.ler_indice("tickets:\n- titulo: Página\n  arquivos: [src/pagina.ts]\n")
+        with self.assertRaisesRegex(ValueError, "arquivos: lista sem fechamento"):
+            ondas.ler_indice("tickets:\n- id: FE-001\n  arquivos: [src/[slug]/page.ts\n")
+
 
 class Montar(unittest.TestCase):
     def montar(self, indice=INDICE, classificacao=TODOS):
@@ -114,6 +142,42 @@ class Montar(unittest.TestCase):
         _, erros, _ = self.montar(classificacao=classes)
         self.assertTrue(any("nível inválido" in e for e in erros))
         self.assertTrue(any("BE-001 em forte sem motivo" in e for e in erros))
+
+    def test_motivo_forte_precisa_ser_texto_nao_vazio(self):
+        for valor in (None, False, 5, {"motivo": "auth"}, "  "):
+            with self.subTest(valor=valor):
+                classes = [dict(c, motivo=valor) if c["id"] == "BE-001" else c for c in TODOS]
+                mapa, erros, _ = self.montar(classificacao=classes)
+                self.assertIsNone(mapa)
+                self.assertIn("classificação: BE-001 em forte sem motivo", erros)
+
+    def test_infra_nao_pode_passar_na_frente_da_dependencia_aberta(self):
+        texto = (
+            "tickets:\n"
+            "- id: INFRA-000\n  depende_de: [PRE-001]\n  arquivos: [infra.yml]\n"
+            "- id: PRE-001\n  depende_de: []\n  arquivos: [README.md]\n"
+        )
+        indice = ondas.ler_indice(texto)
+        classes = [classe("INFRA-000"), classe("PRE-001")]
+        mapa, erros, _ = ondas.montar(indice, classes)
+        self.assertIsNone(mapa)
+        self.assertIn("depende de PRE-001", "\n".join(erros))
+        mapa, erros, _ = ondas.montar(indice, classes, feitos=["PRE-001"], inicio=2)
+        self.assertEqual(erros, [])
+        self.assertEqual(ondas_de(mapa), {"INFRA-000": 2})
+
+    def test_com_limite_prioriza_caminho_critico_sem_quarta_onda(self):
+        tickets = [("X", []), ("Y", []), ("A", []), ("B", ["A"]), ("C", ["B"])]
+        texto = "tickets:\n" + "".join(
+            f"- id: {tid}\n  depende_de: [{', '.join(deps)}]\n  arquivos: [{tid}.py]\n"
+            for tid, deps in tickets
+        )
+        mapa, erros, _ = ondas.montar(ondas.ler_indice(texto), [classe(tid) for tid, _ in tickets], max_por_onda=2)
+        self.assertEqual(erros, [])
+        # Na ordem do índice, X e Y tomavam a onda 1 e a cadeia A → B → C
+        # precisava de mais três ondas.
+        self.assertEqual(ondas_de(mapa), {"X": 1, "A": 1, "Y": 2, "B": 2, "C": 3})
+        self.assertEqual([o["suite"] for o in mapa["ondas"]], ["area", "area", "completa"])
 
     def test_nomes_do_claude_valem_como_nivel(self):
         classes = [dict(c, model={"leve": "haiku", "medio": "sonnet", "forte": "opus"}[c["model"]]) for c in TODOS]
@@ -252,6 +316,58 @@ class Replanejar(unittest.TestCase):
         self.assertIn("FE-004 fica fora também: depende de FE-002, que está fora", avisos)
         self.assertIn("BE-010 fica fora também: depende de FE-004, que está fora", avisos)
 
+    def test_exclusao_de_parte_retira_consumidor_do_pai(self):
+        texto = (
+            "tickets:\n"
+            "- id: FE-001\n  arquivos: [web/]\n"
+            "- id: FE-001a\n  arquivos: [web/a.html]\n"
+            "- id: FE-001b\n  arquivos: [web/b.html]\n"
+            "- id: FE-002\n  depende_de: [FE-001]\n  arquivos: [web/index.html]\n"
+        )
+        mapa, erros, avisos = ondas.montar(ondas.ler_indice(texto), [], feitos=[], fora=["FE-001a"])
+        self.assertEqual(erros, [])
+        self.assertEqual(ondas_de(mapa), {"FE-001b": 1})
+        self.assertIn("FE-002 fica fora também: depende de FE-001a, que está fora", avisos)
+        mapa, erros, _ = ondas.montar(ondas.ler_indice(texto), [], feitos=[], fora=["FE-001"])
+        self.assertEqual(erros, [])
+        self.assertEqual(mapa["ondas"], [])
+
+    def test_consumidor_espera_pecas_e_dependencias_originais_do_pai(self):
+        texto = (
+            "tickets:\n"
+            "- id: BE-002\n  depende_de: [BE-001]\n  arquivos: [src/consumidor.py]\n"
+            "- id: BE-001\n  depende_de: [DB-001]\n  arquivos: [src/]\n"
+            "- id: BE-001a\n  arquivos: [src/parte.py]\n"
+            "- id: DB-001\n  arquivos: [db/schema.sql]\n"
+        )
+        indice = ondas.ler_indice(texto)
+        mapa, erros, _ = ondas.montar(indice, [], feitos=[], max_por_onda=1)
+        self.assertEqual(erros, [])
+        agendados = ondas_de(mapa)
+        self.assertLess(agendados["BE-001a"], agendados["BE-002"])
+        self.assertLess(agendados["DB-001"], agendados["BE-002"])
+        mapa, erros, _ = ondas.montar(indice, [], feitos=[], fora=["DB-001"])
+        self.assertEqual(erros, [])
+        self.assertEqual(ondas_de(mapa), {"BE-001a": 1})
+
+    def test_replaneja_cobertura_somente_ticket_feito_ou_agendado(self):
+        texto = (
+            "tickets:\n"
+            "- id: FE-001\n  arquivos: [web/]\n  security_reqs: [SR-001]\n"
+            "- id: FE-001a\n  arquivos: [web/a.html]\n"
+            "- id: FE-001b\n  arquivos: [web/b.html]\n"
+        )
+        indice = ondas.ler_indice(texto)
+        for fora in ([], ["FE-001"]):
+            with self.subTest(fora=fora):
+                mapa, erros, _ = ondas.montar(indice, [], ["SR-001"], feitos=[], fora=fora)
+                self.assertIsNone(mapa)
+                self.assertIn("SR-001 (risks.yaml)", "\n".join(erros))
+        indice[1]["security_reqs"] = ["SR-001"]
+        for feitos in ([], ["FE-001a"]):
+            with self.subTest(feitos=feitos):
+                _, erros, _ = ondas.montar(indice, [], ["SR-001"], feitos=feitos)
+                self.assertEqual(erros, [])
     def test_id_que_nao_existe_e_aviso(self):
         _, _, avisos = self.montar(["INFRA-000", "BE-001", "BE-002", "FE-001", "FE-002", "FE-999"])
         self.assertIn("--feitos: FE-999 não está no tickets.yaml", avisos)
@@ -276,6 +392,7 @@ class Replanejar(unittest.TestCase):
             self.assertFalse((p / "agent-map.json").exists())
             mapa = json.loads((p / "ondas-replano.json").read_text(encoding="utf-8"))
             self.assertEqual([o["onda"] for o in mapa["ondas"]], [118, 119])
+            self.assertEqual(mapa["a_partir"], 118)
             self.assertEqual(ondas.main([pasta, "--feitos", str(p / "feitos.txt"), "--saida", str(p / "agent-map.json")]), 2)
             self.assertEqual(ondas.main([pasta, "--a-partir", "118"]), 2)
 

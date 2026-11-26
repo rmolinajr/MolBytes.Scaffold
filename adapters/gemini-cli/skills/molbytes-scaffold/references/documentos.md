@@ -112,18 +112,22 @@ e só arquive com a resposta `arquivar`.
 2. **`.gitignore`:** confira que cobre `security/raw/` também nas subpastas
    (`.project/**/security/raw/` no modo interno, `**/security/raw/` no
    externo). Se a entrada for a antiga, sem `**`, troque antes de mover.
-3. **Mover** para `.project/<fase>/`, com `git mv` (ou `mv` no que não está no
-   git), o que é só da rodada: `state.md`, `qa.json`, `risks.yaml`,
-   `tickets.yaml`, `tickets/`, `classificacao.json`, `agent-map.json`,
-   `regras-implementacao.md`, `plano-de-teste.yaml`, `testes-travados.txt`, `test-report.md`,
-   `security/`, `code-review-report.md`, `impacto.md`, `pipeline-report.md`, `runs.log` e
-   `model-log.md`, `runs-faixa.jsonl`, `runs-orquestrador.jsonl` e
-   `ondas-replano.json`. O que não existir, pule.
+3. **Mover** os artefatos da rodada para `.project/<fase>/` com o script da
+   skill, depois de encerrar os subagentes da rodada:
+
+       python <skill>/scripts/arquivar-rodada.py <documentos> <fase>
+
+   O script inclui `feitos.txt`, `ondas-replano.json`, `testes-intermitentes.txt`,
+   `sondagens.md`, os reconhecimentos e os logs da rodada, inclusive arquivos
+   de telemetria por sessão. Se a extensão da rodada indicar arquivos extras,
+   passe `--extra <arquivo>` para cada um. Pasta de fase existente é erro.
+   Na falta de Python, use a lista e os padrões do script para mover os
+   mesmos arquivos para uma pasta de fase nova.
 4. **Ficam na raiz e evoluem:** `spec.md`, `design/`, `docs-sistema.yaml`,
    `mapa-codigo.md` e `historico.md` descrevem o sistema inteiro. A rodada nova os atualiza (ver
    `alteracao.md`); a versão de cada fase fica no git.
-5. **Commit:** `scaffold(0): arquiva <fase>` (no modo externo, no git da pasta
-   de documentos).
+5. **Commit:** confira os caminhos movidos, inclua-os no índice do git e faça
+   `scaffold(0): arquiva <fase>` (no modo externo, no git da pasta de documentos).
 6. **Estado novo:** `state.md` do modelo, com `Fase: <nome da rodada nova>`
    (proponha o próximo número e confirme) e `Fases anteriores: <fase>, ...`.
    Siga a escolha do modo (`alteracao.md`): com código, a rodada nova é

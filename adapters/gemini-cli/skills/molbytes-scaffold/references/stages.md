@@ -346,18 +346,22 @@ Para cada onda, em ordem:
 - **Fechar a onda num comando.** Com a suíte da onda passando e o `state.md`
   já atualizado, feche e commite de uma vez:
 
-      python <skill>/scripts/fechar-onda.py <documentos> <N> <ids que a onda fechou> && git add -A && git commit -m "scaffold(7): onda N" && git rev-parse --short HEAD
+    python <skill>/scripts/fechar-onda.py <documentos> <N> <ids que a onda fechou> && git add -A -- <caminhos desta onda> && git commit -m "scaffold(7): onda N" && git rev-parse --short HEAD
 
-  O script confere a trava dos testes (modo alteração: o que mudou e não está
-  em `testes_alterados` dos tickets da onda), roda `git worktree prune` e
+  O script valida os ids da onda ativa e confere a trava dos testes (modo
+  alteração: mudanças da onda contra a `Base da onda:` e o histórico de
+  liberações). Roda `git worktree prune` e
   acusa worktree de subagente que ficou, acrescenta os ids do índice a
   `.project/feitos.txt` e mostra a próxima onda (do `ondas-replano.json` ou do
   `agent-map.json`), com o nível de cada ticket e o `suite`; o sha do fim é a
-  `Base da onda:` seguinte. Saiu com código 1: nada foi gravado nem
+  `Base da onda:` seguinte. Use esse resumo para preparar o próximo lote sem
+  reler o mapa inteiro. Saiu com erro: nada foi gravado nem
   commitado; trate o que ele listou (teste travado: a conferência de
   `plano-de-teste.md`; worktree: o item acima) e rode de novo. No modo de
   documentos externos, passe `--repo <projeto>` e commite nos dois
-  repositórios. Numa execução real, fechar a onda à mão levava uma dezena de
+  repositórios. Se precisar salvar só o subconjunto validado, use `--parcial`
+  e mantenha o número e a base da onda. Avance após o fechamento completo.
+  Numa execução real, fechar a onda à mão levava uma dezena de
   chamadas, todas no ponto em que o contexto da sessão está maior.
 - **Replanejar pelo script, não à mão.** Quando um ticket é partido, nasce
   ticket novo que a rodada precisa (não o de correção, que roda na hora e fica
@@ -509,8 +513,9 @@ no nível forte (`FIX-IMPACTO-<n>` para os que vêm do `impacto.md`).
 3. **Mapa do código:** atualize-o pelo diff (`references/mapa-codigo.md`,
    "Atualizar"), depois de toda correção de código deste estágio.
 4. **Gate** (você, lendo os resumos): o pipeline só termina como "concluído" se:
-   - todos os testes passam e todo item automatizado do plano está `passou`
-     ou `aceito` (itens `manual` não bloqueiam);
+   - todo item automatizado do plano está `passou` ou `aceito` (itens `manual`
+     não bloqueiam). Modo novo: todos os testes passam. Modo alteração: as
+     falhas e os intermitentes do ponto de partida seguem a regra abaixo;
    - não há achado crítico ou alto aberto;
    - todo achado médio aberto está em `accepted.md`;
    - **modo alteração:** nenhuma falha de teste nova em relação ao ponto de
@@ -518,11 +523,13 @@ no nível forte (`FIX-IMPACTO-<n>` para os que vêm do `impacto.md`).
      para o relatório), e todo documento do sistema da "Documentação
      afetada" foi atualizado (os de `site` vão para o relatório como
      atualização manual);
-   - `git diff --name-only <Testes travados> -- <testes-travados.txt>` vazio:
+   - `git diff --name-only <Testes travados> -- <caminhos de testes-travados.txt>` vazio:
      toda mudança em teste travado passou pela conferência da trava
      (`plano-de-teste.md`);
    - **modo alteração:** todo `bug` do `impacto.md` foi corrigido e todo
      `não provado` de impacto alto foi corrigido ou aceito;
+   - o code review está sem crítico aberto. Crítico aceito pelo usuário
+     entra no relatório e o resultado é "concluído com pendências";
    - o `Commit:` do `mapa-codigo.md` cobre o código: diff dele até o `HEAD`
      do código vazio.
    Se algo falhar, mostre o motivo e pergunte ao usuário: corrigir agora, ou

@@ -24,7 +24,12 @@ In Claude Code:
     /plugin marketplace add rmolinajr/MolBytes.Scaffold
     /plugin install molbytes@molbytes
 
-To update later: `/plugin marketplace update molbytes`.
+To update later:
+
+    /plugin marketplace update molbytes
+    /plugin update molbytes@molbytes
+
+Restart Claude Code after updating the plugin.
 
 As a plugin, the command is `/molbytes:molbytes-scaffold` and the subagents
 show up as `molbytes:scaffold-*` (check under `/plugin` → Installed → molbytes).
@@ -89,8 +94,12 @@ skill and the subagents (bash; on Windows, Git Bash):
     cp MolBytes.Scaffold/adapters/codex/agents/*.toml ~/.codex/agents/
 
 For a single project, use `.agents/skills/` and `.codex/agents/` at its root.
-Alternative for the skill: `codex plugin marketplace add rmolinajr/MolBytes.Scaffold`
-(the subagents still need copying: Codex plugins don't ship agents).
+To install the skill in Codex with support for Claude Code-compatible marketplaces:
+
+    codex plugin marketplace add rmolinajr/MolBytes.Scaffold
+    codex plugin add molbytes@molbytes
+
+Copy the subagent profiles as shown above.
 
 Use: open Codex in the project folder and run
 
@@ -114,7 +123,8 @@ The extension lives in `adapters/gemini-cli/` (skill, command and subagents):
     git clone https://github.com/rmolinajr/MolBytes.Scaffold.git
     gemini extensions install ./MolBytes.Scaffold/adapters/gemini-cli
 
-To update: `git pull` in the clone and install again.
+To update, run `git pull` in the clone, run `gemini extensions update molbytes`,
+and restart Gemini CLI.
 
 Use: open Gemini CLI in the project folder and run
 
@@ -234,7 +244,7 @@ where the documents are when the skill asks).
 
 ## Status
 
-v0.28.0, evolving: the changes from v0.10 onward came from real runs in
+v0.29.0, evolving: the changes from v0.10 onward came from real runs in
 Claude Code. Expect adjustments with each project. Tune models in
 `references/model-routing.md` based on `.project/model-log.md`.
 
