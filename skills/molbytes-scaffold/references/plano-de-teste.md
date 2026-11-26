@@ -63,9 +63,9 @@ partir daqui, o que muda é o código, não o teste.
 
 **Modo alteração, estágio 7:** os testes da base já estão travados desde o
 `base_commit`. Ao fim de cada onda, o `scripts/fechar-onda.py` (estágio 7)
-roda a mesma conferência abaixo: arquivo mudado que está em
-`testes_alterados` de um ticket da onda já foi aprovado com o plano, e o que
-ele listar segue a conferência.
+usa a `Base da onda:` para distinguir mudanças novas das aprovadas em ondas
+anteriores. Arquivo em `testes_alterados` de um ticket da onda já foi aprovado
+com o plano. Mudança fora dessas aprovações segue a conferência abaixo.
 
 **Intermitente:** um teste que falha e, rodado de novo sem mudança de código,
 passa. Antes de gastar outra suíte inteira, rode só a classe dele cinco vezes

@@ -88,7 +88,7 @@ class TestFuncoes(unittest.TestCase):
 
 
 def _git(repo, *args):
-    subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True)
+    return subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True).stdout.decode("utf-8").strip()
 
 
 class TestComando(unittest.TestCase):
@@ -108,17 +108,22 @@ class TestComando(unittest.TestCase):
         (self.docs / "testes-travados.txt").write_text("tests/test_a.py\ntests/test_b.py\n", encoding="utf-8")
         _git(self.repo, "add", "-A")
         _git(self.repo, "commit", "-qm", "base")
-        sha = subprocess.run(["git", "-C", str(self.repo), "rev-parse", "--short", "HEAD"],
-                             capture_output=True, text=True, check=True).stdout.strip()
-        (self.docs / "state.md").write_text(f"Modo: alteração\nTestes travados: {sha}\n", encoding="utf-8")
+        self.sha_travado = _git(self.repo, "rev-parse", "HEAD")
+        self.gravar_estado()
 
     def tearDown(self):
         self.tmp.cleanup()
 
-    def rodar(self, *ids):
+    def gravar_estado(self, base_onda=None):
+        estado = f"Modo: alteração\nTestes travados: {self.sha_travado}\n"
+        if base_onda:
+            estado += f"- Base da onda: {base_onda}\n"
+        (self.docs / "state.md").write_text(estado, encoding="utf-8")
+
+    def rodar(self, *ids, onda=1):
         saida = io.StringIO()
         with redirect_stdout(saida):
-            codigo = fo.main([str(self.docs), "1", *ids, "--repo", str(self.repo)])
+            codigo = fo.main([str(self.docs), str(onda), *ids, "--repo", str(self.repo)])
         return codigo, saida.getvalue()
 
     def test_teste_liberado_pelo_plano_fecha_e_mostra_a_proxima(self):
@@ -137,6 +142,89 @@ class TestComando(unittest.TestCase):
         self.assertEqual(codigo, 1, saida)
         self.assertIn("tests/test_a.py", saida)
         self.assertFalse((self.docs / "feitos.txt").exists())
+
+    def test_trava_respeita_onda_anterior_com_ou_sem_base_no_estado(self):
+        self.gravar_estado(base_onda=self.sha_travado)
+        teste = self.repo / "tests" / "test_b.py"
+        teste.write_text("x = 2\n", encoding="utf-8")
+        _git(self.repo, "add", "tests/test_b.py")
+        _git(self.repo, "commit", "-qm", "ticket BE-001")
+        codigo, saida = self.rodar("BE-001")
+        self.assertEqual(codigo, 0, saida)
+        _git(self.repo, "add", "-A")
+        _git(self.repo, "commit", "-qm", "scaffold(7): onda 1")
+        base = _git(self.repo, "rev-parse", "HEAD")
+
+        for base_no_estado in (None, base):
+            with self.subTest(base_no_estado=base_no_estado):
+                self.gravar_estado(base_onda=base_no_estado)
+                codigo, saida = self.rodar("BE-002", onda=2)
+                self.assertEqual(codigo, 0, saida)
+                self.assertIn(f"trava: ok desde {base}", saida)
+
+        teste.write_text("x = 3\n", encoding="utf-8")
+        _git(self.repo, "add", "tests/test_b.py")
+        _git(self.repo, "commit", "-qm", "mudança da onda 2")
+        codigo, saida = self.rodar("BE-002", onda=2)
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("tests/test_b.py", saida)
+
+    def test_base_da_onda_nao_legitima_alteracao_anterior_sem_aprovacao(self):
+        (self.repo / "tests" / "test_a.py").write_text("x = 2\n", encoding="utf-8")
+        _git(self.repo, "add", "tests/test_a.py")
+        _git(self.repo, "commit", "-qm", "alteração antes da primeira onda")
+        self.gravar_estado(base_onda=_git(self.repo, "rev-parse", "HEAD"))
+        codigo, saida = self.rodar("BE-001")
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("tests/test_a.py", saida)
+
+    def test_trava_com_nome_acentuado_em_arquivo_comitado(self):
+        caminho = "tests/test_paginação.py"
+        teste = self.repo / caminho
+        teste.write_text("x = 1\n", encoding="utf-8")
+        (self.docs / "testes-travados.txt").write_text(caminho + "\n", encoding="utf-8")
+        _git(self.repo, "config", "core.quotePath", "true")
+        _git(self.repo, "add", "-A")
+        _git(self.repo, "commit", "-qm", "teste de paginação na base")
+        self.sha_travado = _git(self.repo, "rev-parse", "HEAD")
+        self.gravar_estado()
+        teste.write_text("x = 2\n", encoding="utf-8")
+
+        codigo, saida = self.rodar("BE-001")
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn(caminho, saida)
+        self.assertFalse((self.docs / "feitos.txt").exists())
+
+    def test_ids_fora_da_onda_sao_erro_sem_gravar(self):
+        for tid in ("BE-002", "BE-404"):
+            with self.subTest(tid=tid):
+                codigo, saida = self.rodar("BE-001", tid)
+                self.assertEqual(codigo, 1, saida)
+                self.assertIn(f"ids fora da onda 1 (agent-map.json): {tid}", saida)
+                self.assertFalse((self.docs / "feitos.txt").exists())
+
+    def test_fechamento_parcial_nao_avanca_e_pode_ser_retomado(self):
+        mapa = {**MAPA, "ondas": [
+            {**MAPA["ondas"][0], "tickets": [*MAPA["ondas"][0]["tickets"], {"id": "BE-003", "model": "medio"}]},
+            MAPA["ondas"][1],
+        ]}
+        (self.docs / "agent-map.json").write_text(json.dumps(mapa), encoding="utf-8")
+        teste = self.repo / "tests" / "test_b.py"
+        teste.write_text("x = 2\n", encoding="utf-8")
+
+        codigo, saida = self.rodar("BE-001")
+        self.assertEqual(codigo, 1, saida)
+        self.assertIn("onda 1 incompleta", saida)
+        self.assertFalse((self.docs / "feitos.txt").exists())
+        for _ in range(2):
+            codigo, saida = self.rodar("BE-001", "--parcial")
+            self.assertEqual(codigo, 0, saida)
+            self.assertIn("onda 1 parcial", saida)
+            self.assertNotIn("próxima:", saida)
+            self.assertEqual((self.docs / "feitos.txt").read_text(encoding="utf-8"), "BE-001\n")
+        codigo, saida = self.rodar("BE-003")
+        self.assertEqual(codigo, 0, saida)
+        self.assertIn("próxima: onda 2", saida)
 
     def test_worktree_de_subagente_que_ficou_nao_grava(self):
         _git(self.repo, "worktree", "add", "-q", "-b", "worktree-agent-x1", str(self.repo.parent / "agent-x1"))
@@ -165,6 +253,20 @@ class TestComando(unittest.TestCase):
         self.assertEqual(codigo, 0, saida)
         self.assertIn("trava: sem testes travados ainda", saida)
         self.assertIn("próxima: onda 2 (ondas-replano.json, suite area): BE-003 leve", saida)
+
+    def test_fim_do_replano_inclusive_vazio_nao_revive_mapa_original(self):
+        for inicio, ondas_replano in ((1, [MAPA["ondas"][0]]), (2, [])):
+            with self.subTest(inicio=inicio):
+                replano = {"a_partir": inicio, "ondas": ondas_replano}
+                (self.docs / "ondas-replano.json").write_text(json.dumps(replano), encoding="utf-8")
+                codigo, saida = self.rodar("BE-001")
+                self.assertEqual(codigo, 0, saida)
+                self.assertIn("Fim de ondas-replano.json", saida)
+                self.assertNotIn("BE-002", saida)
+                codigo, saida = self.rodar("BE-002", onda=2)
+                self.assertEqual(codigo, 1, saida)
+                self.assertIn("não pertence ao plano ativo", saida)
+                self.assertEqual((self.docs / "feitos.txt").read_text(encoding="utf-8"), "BE-001\n")
 
 
 if __name__ == "__main__":

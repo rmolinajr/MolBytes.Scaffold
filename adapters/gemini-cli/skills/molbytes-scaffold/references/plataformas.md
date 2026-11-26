@@ -46,7 +46,7 @@ quando existe, vale mais que a tabela.
 
 - **Verificar o modelo:** se o ambiente expuser os modelos aceitos pela
   ferramenta de delegação, passe essa lista em `--disponiveis` (IDs separados
-  por vírgula). Se faltar algum modelo, peça substitutos e grave o mapa em
+  por vírgula). Se faltar algum modelo usado no lote, peça substitutos e grave o mapa em
   `state.md`. Sem lista, a disponibilidade fica não verificada: faça o
   lançamento com modelo explícito e, se o Codex o recusar, pare e peça um
   substituto. Use o Python local na preparação do lançamento:

@@ -24,7 +24,7 @@ acaso.
 | 4 design | medio | medio | trabalho estruturado |
 | 5 tickets | medio | medio | decomposição da spec |
 | 6 assign | leve | leve | classificação simples |
-| 7 implement | por ticket (abaixo) | medio em tudo | depende da complexidade |
+| 7 implement | por ticket (abaixo) | por ticket (abaixo) | mantém tickets leves em leve e o piso dos riscos da lógica |
 | 8 tests: plano e execução | medio | medio | escrever e rodar testes |
 | 8 tests: correção de falha | o mais alto entre os tickets de `origem` (sem ticket: medio); forte na 2ª tentativa | medio; forte na 2ª | corrigir sem afrouxar o teste |
 | 9 security: audit, triage, verify | forte | forte | auditor precisa ser o mais forte |

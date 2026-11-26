@@ -1,0 +1,21 @@
+name: Verificar o Scaffold
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  publico:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -B adapters/build.py --check
+      - run: python -B -m unittest discover -s tests

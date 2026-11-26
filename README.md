@@ -6,7 +6,7 @@
 
 > By [MolBytes](https://www.molbytes.io) · created by Roberto Molina · [project page](https://www.molbytes.io/en/projetos/molbytes-scaffold)
 
-![version](https://img.shields.io/badge/version-0.27.0-blue)
+![version](https://img.shields.io/badge/version-0.29.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![made for](https://img.shields.io/badge/made%20for-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI%20·%20Cursor-d97757)
 
@@ -231,7 +231,7 @@ After changing `skills/`, `agents/` or the version in
 
 ## Status
 
-v0.28.0, evolving: the changes from v0.10 onward came from real runs in
+v0.29.0, evolving: the changes from v0.10 onward came from real runs in
 Claude Code, the most recent one (v0.17.0) changing an existing system. The
 code map (v0.18.0), the round history (v0.19.0) and the impact check
 (v0.20.0), the test lock (v0.21.0) and the run log script, the thin-wave

@@ -65,9 +65,19 @@ class VerificarModeloCodexTests(unittest.TestCase):
         lote = [{"agente": "scaffold-planner", "nivel": "medio", "tarefa": "tickets", "estagio": 5}]
         modelos = MODULO.modelos_configurados("leve=l,medio=m,forte=f")
         self.assertEqual(MODULO.verificar_lote(lote, modelos)[0]["disponibilidade"], "não verificada")
+        with self.assertRaisesRegex(ValueError, "modelos ausentes no Codex: m"):
+            MODULO.verificar_lote(lote, modelos, {"l", "f"})
+        self.assertEqual(MODULO.verificar_lote(lote, modelos, {"m"})[0]["disponibilidade"], "confirmada")
+
+    def test_lote_exige_todos_os_modelos_que_usa(self):
+        lote = [
+            {"agente": "scaffold-implementer", "nivel": "medio", "tarefa": "A", "estagio": 7},
+            {"agente": "scaffold-implementer", "nivel": "forte", "tarefa": "B", "estagio": 7},
+        ]
+        modelos = MODULO.modelos_configurados("leve=l,medio=m,forte=f")
         with self.assertRaisesRegex(ValueError, "modelos ausentes no Codex: f"):
-            MODULO.verificar_lote(lote, modelos, {"l", "m"})
-        self.assertEqual(MODULO.verificar_lote(lote, modelos, {"l", "m", "f"})[0]["disponibilidade"], "confirmada")
+            MODULO.verificar_lote(lote, modelos, {"m"})
+        self.assertEqual([item["modelo"] for item in MODULO.verificar_lote(lote, modelos, {"m", "f"})], ["m", "f"])
 
     def test_lote_recusa_onda_inteira_se_uma_tarefa_for_invalida(self):
         lote = [
